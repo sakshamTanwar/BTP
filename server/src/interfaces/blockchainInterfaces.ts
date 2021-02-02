@@ -1,4 +1,4 @@
-interface Point {
+export interface Point {
     lat : Number,
     long : Number
 }
