@@ -13,6 +13,7 @@ import 'react-native-gesture-handler'
 import { SafeAreaView, ScrollView, StatusBar, StyleSheet } from 'react-native'
 
 import { Colors } from 'react-native/Libraries/NewAppScreen'
+import { LocationComponent } from './src'
 import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 
@@ -27,7 +28,9 @@ const App = () => {
 		<NavigationContainer>
 			<StatusBar barStyle="dark-content" />
 			<SafeAreaView>
-				<ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView} />
+				<ScrollView contentInsetAdjustmentBehavior="automatic" style={styles.scrollView}>
+					<LocationComponent />
+				</ScrollView>
 			</SafeAreaView>
 		</NavigationContainer>
 	)

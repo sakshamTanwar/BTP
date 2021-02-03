@@ -62,5 +62,6 @@ module.exports = {
 		'no-nested-ternary': 2,
 		'comma-dangle': 0,
 		semi: 0,
+		'@typescript-eslint/explicit-function-return-type': 0,
 	},
 }
