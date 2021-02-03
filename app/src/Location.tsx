@@ -14,12 +14,6 @@ const styles = StyleSheet.create({
 	contentContainer: {
 		padding: 12,
 	},
-	option: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		paddingBottom: 12,
-	},
 	result: {
 		borderWidth: 1,
 		borderColor: '#666',
@@ -28,13 +22,6 @@ const styles = StyleSheet.create({
 	},
 	buttonContainer: {
 		alignItems: 'center',
-	},
-	buttons: {
-		flexDirection: 'row',
-		justifyContent: 'space-around',
-		alignItems: 'center',
-		marginVertical: 12,
-		width: '100%',
 	},
 })
 
@@ -55,9 +42,9 @@ const hasLocationPermissionIOS = async () => {
 	}
 
 	if (status === 'disabled') {
-		Alert.alert(`Turn on Location Services to determine your location.`, '', [
+		Alert.alert('Turn on Location Services to determine your location.', '', [
 			{ text: 'Go to Settings', onPress: openSetting },
-			{ text: "Don't Use Location", onPress: () => {} },
+			{ text: "Don't Use Location", onPress: () => null },
 		])
 	}
 
