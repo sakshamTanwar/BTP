@@ -63,5 +63,6 @@ module.exports = {
 		'comma-dangle': 0,
 		semi: 0,
 		'@typescript-eslint/explicit-function-return-type': 0,
+		'@typescript-eslint/member-delimiter-style': 0,
 	},
 }
