@@ -2,9 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "build": "tsc",
+    "copy-files": "copyfiles -u 1 src/**/*.html src/**/*.css dist/",
     "start": "tsc & node .",
     "watch": "tsc -w & nodemon .",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +17,8 @@
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
+    "mongodb": "^3.6.4",
+    "mongoose": "^5.11.15",
     "node-fetch": "^2.6.1",
     "pdfmake": "^0.1.70"
   },
@@ -26,6 +29,7 @@
     "@types/pdfmake": "^0.1.16",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
+    "copyfiles": "^2.4.1",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",

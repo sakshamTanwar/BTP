@@ -4,7 +4,7 @@ import {resolveCoords} from "../services/coordResolver"
 var router = express.Router();
 
 
-router.get( "/", async (req, res) => {
+router.get( "/", (req, res) => {
     //Takes lat and long as query params 
     let lat = req.query.lat;
     let long = req.query.long;
