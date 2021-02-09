@@ -9,7 +9,10 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 export class LandRecordExtractor {
     getTableRowFromTxn(transaction: TransferLandTxn): Array<String> {
         let row = [];
-        row.push(transaction.timestamp.toLocaleString());
+        row.push(
+            `${transaction.timestamp.getDate()}/${transaction.timestamp.getMonth() +
+                1}/${transaction.timestamp.getFullYear()}`,
+        );
         row.push('₹ ' + transaction.price.toString());
         row.push(transaction.prevKhataOwner);
         row.push(transaction.newKhataOwner);
@@ -35,16 +38,45 @@ export class LandRecordExtractor {
         const docDefinition: TDocumentDefinitions = {
             content: [
                 {
-                    text: 'Land Parcel:-',
+                    text: 'Land Ownership History',
+                    alignment: 'center',
+                    fontSize: 20,
+                    bold: true,
+                },
+                {
+                    text: '\n\n\nLand Parcel:-\n\n',
                     bold: true,
                     fontSize: 15,
                 },
                 {
-                    text: `State :- ${landRecord.state}\nDistrict :- ${
-                        landRecord.district
-                    }\nSub-District :- ${landRecord.subDistrict}\nVillage :- ${
-                        landRecord.village
-                    }\nArea :- ${landRecord.area.toString()} m^2\n\n\n`,
+                    layout: 'noBorders',
+                    table: {
+                        headerRows: 0,
+                        widths: ['*', '*', '*'],
+                        body: [
+                            [
+                                `Khasra No :- ${landRecord.khasraNo}`,
+                                `Village :- ${landRecord.village}`,
+                                `Sub-District :- ${landRecord.subDistrict}`,
+                            ],
+                            [
+                                `District :- ${landRecord.district}`,
+                                `State :- ${landRecord.state}`,
+                                `Area :- ${landRecord.area} sq m`,
+                            ],
+                            [
+                                {
+                                    text: `Current Owner :- ${landRecord.khataOwner}`,
+                                    colSpan: 3,
+                                },
+                            ],
+                        ],
+                    },
+                },
+                {
+                    text: '\n\n\nOwnership History :- \n\n',
+                    bold: true,
+                    fontSize: 15,
                 },
                 {
                     layout: 'headerLineOnly',
