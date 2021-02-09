@@ -1,19 +1,18 @@
 /* eslint-disable no-nested-ternary */
-import * as Yup from 'yup'
-
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React, { useRef, useState } from 'react'
+import { View, StyleSheet, Dimensions, Text } from 'react-native'
 import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
-
-import { Formik } from 'formik'
-import Icon from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import Icon from 'react-native-vector-icons/Feather'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
 import { useNavigation } from '@react-navigation/native'
 
 const { height } = Dimensions.get('window')
 
-const LoginSchema = Yup.object().shape({
+const SignUpSchema = Yup.object().shape({
 	password: Yup.string().min(6, 'Too Short!').max(20, 'Too Long!').required('Required'),
+	passwordConformation: Yup.string().equals([Yup.ref('password')], "Password don't match"),
 	email: Yup.string().email('Invalid email').required('Required'),
 })
 
@@ -24,8 +23,8 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 	},
 	imageContainer: {
-		borderBottomLeftRadius: 75,
-		// borderBottomRightRadius: 75,
+		// borderBottomLeftRadius: 75,
+		borderBottomRightRadius: 75,
 		overflow: 'hidden',
 		height: height * 0.2,
 	},
@@ -33,7 +32,17 @@ const styles = StyleSheet.create({
 		flex: 1,
 		padding: 30,
 	},
+	footer: {
+		// height: 125,
+		flex: 1,
+		borderTopLeftRadius: 75,
+		// borderTopRightRadius: 75,
+		backgroundColor: '#0C0D34',
+		alignItems: 'center',
+		justifyContent: 'space-evenly',
+	},
 	subTitle: {
+		fontFamily: 'SFProDisplay-Semibold',
 		fontSize: 28,
 		lineHeight: 30,
 		marginBottom: 20,
@@ -41,6 +50,7 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 	},
 	description: {
+		fontFamily: 'SFProDisplay-Regular',
 		fontSize: 19,
 		lineHeight: 24,
 		color: 'grey',
@@ -74,39 +84,36 @@ const styles = StyleSheet.create({
 		fontSize: 15,
 		textAlign: 'center',
 	},
-	footer: {
-		// height: 125,
-		flex: 1,
-		// borderTopLeftRadius: 75,
-		borderTopRightRadius: 75,
-		backgroundColor: '#0C0D34',
-		alignItems: 'center',
-		justifyContent: 'space-evenly',
-	},
 })
 
-const Login = () => {
+const Signup = () => {
 	const passwordRef = useRef<TextInput>(null)
+	const passwordConformationRef = useRef<TextInput>(null)
 	const [isLoggingIn, setIsLoggingIn] = useState(false)
 	const navigation = useNavigation()
+
 	return (
 		<View style={styles.container}>
 			<KeyboardAwareScrollView extraHeight={40} enableOnAndroid={true} style={{ paddingBottom: 0, marginBottom: 0 }}>
 				<View style={styles.imageContainer} />
 				<View style={styles.middle}>
-					<Text style={styles.subTitle}>Welcome Back</Text>
-					<Text style={styles.description}>Use your credentials below and login to your account</Text>
+					<Text style={styles.subTitle}>Create Account</Text>
+					<Text style={styles.description}>Let us know your credentials</Text>
 					<Formik
-						initialValues={{ email: '', password: '' }}
-						validationSchema={LoginSchema}
+						initialValues={{ email: '', password: '', passwordConformation: '' }}
+						validationSchema={SignUpSchema}
 						onSubmit={(values) => {
-							console.log(values)
 							setIsLoggingIn(true)
-							navigation.navigate('Location')
+							console.log(values)
 						}}>
 						{({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
 							const colorEmail = !touched.email ? 'grey' : !errors.email ? '#2CB9B0' : 'red'
 							const colorPassword = !touched.password ? 'grey' : !errors.password ? '#2CB9B0' : 'red'
+							const colorPasswordConformation = !touched.passwordConformation
+								? 'grey'
+								: !errors.passwordConformation
+								? '#2CB9B0'
+								: 'red'
 							return (
 								<View>
 									<View style={[styles.textinputContainer, { borderColor: colorEmail }]}>
@@ -151,15 +158,48 @@ const Login = () => {
 												textContentType="password"
 												secureTextEntry={true}
 												autoCompleteType="password"
-												returnKeyType="go"
-												returnKeyLabel="go"
-												onSubmitEditing={() => handleSubmit()}
+												returnKeyType="next"
+												returnKeyLabel="next"
+												onSubmitEditing={() => passwordConformationRef.current?.focus()}
 											/>
 										</View>
 										{touched.password && (
 											<View style={[styles.validationOutput, { backgroundColor: colorPassword }]}>
 												<Icon
 													name={!errors.password ? 'check' : 'x'}
+													size={16}
+													color="white"
+													style={{ height: 16 }}
+												/>
+											</View>
+										)}
+									</View>
+
+									<View style={[styles.textinputContainer, { borderColor: colorPasswordConformation }]}>
+										<View style={{ padding: 20 }}>
+											<Icon name="lock" color={colorPasswordConformation} size={16} style={{ height: 16 }} />
+										</View>
+										<View style={{ flex: 1 }}>
+											<TextInput
+												ref={passwordConformationRef}
+												underlineColorAndroid="transparent"
+												onChangeText={handleChange('passwordConformation')}
+												onBlur={handleBlur('passwordConformation')}
+												value={values.passwordConformation}
+												placeholder="Confirm your password"
+												placeholderTextColor={colorPasswordConformation}
+												textContentType="password"
+												secureTextEntry={true}
+												autoCompleteType="password"
+												returnKeyType="go"
+												returnKeyLabel="go"
+												onSubmitEditing={() => handleSubmit()}
+											/>
+										</View>
+										{touched.passwordConformation && (
+											<View style={[styles.validationOutput, { backgroundColor: colorPasswordConformation }]}>
+												<Icon
+													name={!errors.passwordConformation ? 'check' : 'x'}
 													size={16}
 													color="white"
 													style={{ height: 16 }}
@@ -187,13 +227,13 @@ const Login = () => {
 				</View>
 			</KeyboardAwareScrollView>
 			<View style={styles.footer}>
-				<TouchableWithoutFeedback style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('Signup')}>
-					<Text style={{ color: 'white' }}>Don't have an account?</Text>
-					<Text style={{ color: '#2CB9B0', marginLeft: 5 }}>Sign Up here</Text>
+				<TouchableWithoutFeedback style={{ flexDirection: 'row' }} onPress={() => navigation.navigate('Login')}>
+					<Text style={{ color: 'white', fontFamily: 'SFProDisplay-Regular' }}>Already have an account?</Text>
+					<Text style={{ color: '#2CB9B0', marginLeft: 5, fontFamily: 'SFProDisplay-Regular' }}>Login here</Text>
 				</TouchableWithoutFeedback>
 			</View>
 		</View>
 	)
 }
 
-export default Login
+export default Signup
