@@ -4,7 +4,8 @@ import {IUser, User} from "../models/user"
 import bcrypt from "bcrypt"
 import passport from "passport"
 import {validateSignup} from "../validators/signup"
-import {IError} from "../interfaces/error"
+import {AppError} from "../utils/error"
+
 const {isEmpty} = require('lodash');
 
 const router = express.Router();
@@ -14,34 +15,23 @@ router.get( "/login", (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname,'..','views','login.html'))
 });
 
+
 router.get("/signup", (req: Request, res: Response) => {
     res.sendFile(path.join(__dirname,'..','views','signup.html'))
 });
 
+
 router.post( "/login", (req: Request, res: Response, next: NextFunction) => {
-    let errors: IError[]  = [];
     passport.authenticate('local', function(err:Error, user: IUser) {
         if (err) { 
-            errors.push({
-                error:"server_err",
-                message:"Internal Server Error"
-            });
-            return res.status(500).json({success: false, errors: errors}); 
+            return next(err);
         }
         if (!user) { 
-            errors.push({
-                error:"credentials_inv", 
-                message:"Invalid Email or password"
-            });
-            return res.json({success: false, errors: errors}); 
+            return next(new AppError(401, "credentials_inv", "Invalid Email or password"));
         }
         req.logIn(user, function(err) {
             if (err) { 
-                errors.push({
-                    error:"server_err",
-                    message:"Internal Server Error"
-                });
-                return res.status(500).json({success: false, errors: errors}); 
+                next(err);
             }
             return res.json({success: true, message: "Login Succesful."});
         });
@@ -49,15 +39,13 @@ router.post( "/login", (req: Request, res: Response, next: NextFunction) => {
 });
 
 
-router.post("/signup", async (req: Request, res: Response) => {
+router.post("/signup", async (req: Request, res: Response, next: NextFunction) => {
     
     try{
-        let errors: IError[]  = [];
 
-        await validateSignup(errors, req);
-
-        if(!isEmpty(errors)){
-                return res.json({success: false, errors: errors});
+        let error = await validateSignup(req);
+        if(error){
+                return next(error);
         }
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         let user = new User({
@@ -71,33 +59,18 @@ router.post("/signup", async (req: Request, res: Response) => {
         return res.json({success: true, message: "User Registered"});
 
     } catch(err){
-        return res.status(500).json({
-            success: false,
-            errors:[
-                {
-                    error:"server_err", 
-                    message:"Internal Server Error"
-                }
-            ]
-        });
+        return next(err);
     }
     
 }); 
 
-router.get("/logout", (req: Request, res: Response)=>{
+
+router.get("/logout", (req: Request, res: Response, next: NextFunction)=>{
     if(req.isAuthenticated()){
         req.logout();
         req.session.destroy((err) => {
             if (err) {
-                return res.status(500).json({
-                    success: false,
-                    errors:[
-                        {
-                            error:"server_err", 
-                            message:"Internal Server Error"
-                        }
-                    ]
-                });
+                return next(err);
             }
     
             req.user = null;
@@ -105,15 +78,7 @@ router.get("/logout", (req: Request, res: Response)=>{
         });
     }
     else{
-        return res.json({
-            success: false,
-             errors:[
-                {
-                    error:"req_inv", 
-                    message:"Request is invalid: No login session found."
-                }
-            ]
-        });
+        return next(new AppError(400, "req_inv", "Request is invalid: No login session found."));
     }
     
 });
