@@ -1,27 +1,34 @@
-import express, {NextFunction, Request, Response} from "express";
+import express from "express";
 import path from "path"
 import {IUser, User} from "../models/user"
 import bcrypt from "bcrypt"
 import passport from "passport"
 import {validateSignup} from "../validators/signup"
 import {AppError} from "../utils/error"
+import { IRequest, IResponse, INext} from "../interfaces/httpinterfaces"
 
-const {isEmpty} = require('lodash');
 
 const router = express.Router();
 
+router.get( "/", (req: IRequest, res: IResponse) => {
+    if(req.isAuthenticated()) res.redirect("/landrecord");
+    else res.redirect("/login");
+});
 
-router.get( "/login", (req: Request, res: Response) => {
+
+router.get( "/login", (req: IRequest, res: IResponse) => {
+    if(req.isAuthenticated()) return res.redirect('/');
     res.sendFile(path.join(__dirname,'..','views','login.html'))
 });
 
 
-router.get("/signup", (req: Request, res: Response) => {
+router.get("/signup", (req: IRequest, res: IResponse) => {
+    if(req.isAuthenticated()) return res.redirect('/');
     res.sendFile(path.join(__dirname,'..','views','signup.html'))
 });
 
 
-router.post( "/login", (req: Request, res: Response, next: NextFunction) => {
+router.post( "/login", (req: IRequest, res: IResponse, next: INext) => {
     passport.authenticate('local', function(err:Error, user: IUser) {
         if (err) { 
             return next(err);
@@ -39,7 +46,7 @@ router.post( "/login", (req: Request, res: Response, next: NextFunction) => {
 });
 
 
-router.post("/signup", async (req: Request, res: Response, next: NextFunction) => {
+router.post("/signup", async (req: IRequest, res: IResponse, next: INext) => {
     
     try{
 
@@ -65,7 +72,7 @@ router.post("/signup", async (req: Request, res: Response, next: NextFunction) =
 }); 
 
 
-router.get("/logout", (req: Request, res: Response, next: NextFunction)=>{
+router.post("/logout", (req: IRequest, res: IResponse, next: INext)=>{
     if(req.isAuthenticated()){
         req.logout();
         req.session.destroy((err) => {

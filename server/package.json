@@ -19,7 +19,6 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "fs": "^0.0.1-security",
-    "lodash": "^4.17.20",
     "mongodb": "^3.6.4",
     "mongoose": "^5.11.15",
     "node-fetch": "^2.6.1",
