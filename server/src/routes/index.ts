@@ -7,7 +7,6 @@ import {validateSignup} from "../validators/signup"
 import {AppError} from "../utils/error"
 import { IRequest, IResponse, INext} from "../interfaces/httpinterfaces"
 
-
 const router = express.Router();
 
 router.get( "/", (req: IRequest, res: IResponse) => {
@@ -54,6 +53,7 @@ router.post("/signup", async (req: IRequest, res: IResponse, next: INext) => {
         if(error){
                 return next(error);
         }
+        
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         let user = new User({
             name: req.body.name,

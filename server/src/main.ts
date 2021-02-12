@@ -5,9 +5,12 @@ import passport from "passport"
 import passportInit from "./setup/passport" 
 import indexRouter from "./routes/index"
 import landrecordRouter from "./routes/landrecord"
+import bodyParser from "body-parser"
+import multer from "multer"
 
 passportInit(passport);
-
+// var multer = require('multer');
+// var upload = multer();
 
 const app = express();
 const port = 8080; // default port to listen
@@ -17,8 +20,11 @@ DbConnection.connect();
 
 
 //Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+const upload = multer();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(upload.any());
 app.use(session({secret: "SESSION_KEY"})); // Randomize it later
 app.use(passport.initialize());
 app.use(passport.session());
