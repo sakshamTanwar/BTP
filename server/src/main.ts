@@ -7,10 +7,14 @@ import indexRouter from "./routes/index"
 import landrecordRouter from "./routes/landrecord"
 import bodyParser from "body-parser"
 import multer from "multer"
+import cors from "cors"
+import { IRequest, IResponse } from "./interfaces/httpinterfaces";
+import path from "path"
+import https from "https"
+import fs from "fs"
 
 passportInit(passport);
-// var multer = require('multer');
-// var upload = multer();
+
 
 const app = express();
 const port = 8080; // default port to listen
@@ -24,7 +28,8 @@ DbConnection.connect();
 const upload = multer();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(upload.any());
+app.use(upload.none());
+app.use(cors());
 app.use(session({secret: "SESSION_KEY"})); // Randomize it later
 app.use(passport.initialize());
 app.use(passport.session());
@@ -47,7 +52,17 @@ app.use((err:any, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
+
+const options = {
+    key: fs.readFileSync(path.join(__dirname,'..','ssl','key.pem')),
+    cert: fs.readFileSync(path.join(__dirname,'..','ssl','cert.pem'))
+};
+  
+
+
 // start the Express server
+https.createServer(options, app).listen(443);
+
 app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );
 } );
