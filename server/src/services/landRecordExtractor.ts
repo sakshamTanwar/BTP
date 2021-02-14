@@ -1,27 +1,25 @@
-import {
-    LandRecord,
-    TransferLandTxn,
-} from '../interfaces/blockchainInterfaces';
+import { ILandRecord, ILandTransfer } from '../interfaces/blockchainInterfaces';
 import pdfmake from 'pdfmake';
 import fs, { PathLike } from 'fs';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 export class LandRecordExtractor {
-    getTableRowFromTxn(transaction: TransferLandTxn): Array<String> {
+    getTableRowFromTxn(transaction: ILandTransfer): Array<String> {
         let row = [];
+        let txnTimeStamp = new Date(transaction.timestamp as number);
         row.push(
-            `${transaction.timestamp.getDate()}/${transaction.timestamp.getMonth() +
-                1}/${transaction.timestamp.getFullYear()}`,
+            `${txnTimeStamp.getDate()}/${txnTimeStamp.getMonth() +
+                1}/${txnTimeStamp.getFullYear()}`,
         );
         row.push('₹ ' + transaction.price.toString());
-        row.push(transaction.prevKhataOwner);
-        row.push(transaction.newKhataOwner);
+        row.push(transaction.prevOwner.name);
+        row.push(transaction.newOwner.name);
         return row;
     }
 
     generatePDF(
-        landRecord: LandRecord,
-        transactions: Array<TransferLandTxn>,
+        landRecord: ILandRecord,
+        transactions: Array<ILandTransfer>,
         saveFile: PathLike,
     ) {
         const fonts = {
@@ -66,7 +64,7 @@ export class LandRecordExtractor {
                             ],
                             [
                                 {
-                                    text: `Current Owner :- ${landRecord.khataOwner}`,
+                                    text: `Current Owner :- ${landRecord.owner.name}`,
                                     colSpan: 3,
                                 },
                             ],

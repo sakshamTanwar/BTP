@@ -1,31 +1,33 @@
-export interface Point {
-    lat : Number,
-    long : Number
+export interface IPoint {
+    lat: Number;
+    long: Number;
 }
 
-export interface LandRecord {
-    khasraNo: String,
-    village: String,
-    subDistrict : String,
-    district : String,
-    state : String,
-    landID : String,
-    polygonPoints : Array<Point>,
-    area : Number,
-    khataNo : Number,
-    khataOwner : String,
-    parentLandLastTxnID : String | null
+export interface IOwner {
+    khataNo: Number;
+    name: string;
 }
 
-export interface TransferLandTxn {
-    txnID : String,
-    price : Number,
-    timestamp : Date,
-    landID : String,
-    prevKhataNo : Number,
-    prevKhataOwner : String,
-    newKhataNo : Number,
-    newKhataOwner : String,
-    lastTxnID : String,
-    landRecordTxnID : String
+export interface ILandRecord {
+    khasraNo: string;
+    village: string;
+    subDistrict: string;
+    district: string;
+    state: string;
+    landID: string;
+    polygonPoints: Array<IPoint>;
+    area: Number;
+    owner: IOwner;
+    parentLandLastTxnID: string | null;
+}
+
+export interface ILandTransfer {
+    txnID: string;
+    price: Number;
+    timestamp: Number;
+    landID: string;
+    prevOwner: IOwner;
+    newOwner: IOwner;
+    lastTxnID: string;
+    landRecordTxnID: string;
 }
