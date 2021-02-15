@@ -123,14 +123,20 @@ const Signup = () => {
 										navigation.navigate('Location')
 										setIsLoggingIn(false)
 									} else {
-										if (Platform.OS === 'ios') Alert.alert(JSON.stringify(data))
-										else ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+										if (Platform.OS === 'ios') {
+											Alert.alert(JSON.stringify(data))
+										} else {
+											ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+										}
 										setIsLoggingIn(false)
 									}
 								})
 								.catch((err) => {
-									if (Platform.OS === 'ios') Alert.alert(JSON.stringify(err))
-									else ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+									if (Platform.OS === 'ios') {
+										Alert.alert(JSON.stringify(err))
+									} else {
+										ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+									}
 									setIsLoggingIn(false)
 								})
 						}}>

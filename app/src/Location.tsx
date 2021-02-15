@@ -114,13 +114,19 @@ const LocationComponent = () => {
 								state: data.address.state,
 							})
 						} else {
-							if (Platform.OS === 'ios') Alert.alert(JSON.stringify(data))
-							else ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+							if (Platform.OS === 'ios') {
+								Alert.alert(JSON.stringify(data))
+							} else {
+								ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+							}
 						}
 					})
 					.catch((err) => {
-						if (Platform.OS === 'ios') Alert.alert(JSON.stringify(err))
-						else ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+						if (Platform.OS === 'ios') {
+							Alert.alert(JSON.stringify(err))
+						} else {
+							ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+						}
 					})
 			},
 			(error) => {
