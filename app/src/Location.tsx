@@ -1,34 +1,30 @@
-import { Alert, Button, Linking, PermissionsAndroid, Platform, ScrollView, StyleSheet, Text, ToastAndroid, View } from 'react-native'
-import React, { useState } from 'react'
+import { Alert, Dimensions, Linking, PermissionsAndroid, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
+import React, { useEffect, useState } from 'react'
 
 import Geolocation from 'react-native-geolocation-service'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
-interface ResolvedLocationInterface {
-	village: string
-	subDistrict: string
-	district: string
-	state: string
-}
+const { width, height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		flex: 1,
+		width,
+		height,
 	},
-	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF',
+	map: {
+		...StyleSheet.absoluteFillObject,
 	},
-	contentContainer: {
-		padding: 12,
-	},
-	result: {
-		borderWidth: 1,
-		borderColor: '#666',
-		width: '100%',
-		padding: 10,
-	},
-	buttonContainer: {
+	containerTouchableOpacity: {
+		borderRadius: 25,
+		height: 50,
+		width: width * 0.9,
+		justifyContent: 'center',
 		alignItems: 'center',
+	},
+	label: {
+		fontSize: 15,
+		textAlign: 'center',
 	},
 })
 
@@ -90,8 +86,13 @@ const hasLocationPermission = async () => {
 }
 
 const LocationComponent = () => {
-	const [location, setLocation] = useState<Geolocation.GeoPosition | null>(null)
-	const [resolvedLocation, setResolvedLocation] = useState<ResolvedLocationInterface>()
+	const [location, setLocation] = useState<LatLng>()
+	const [region, onRegionChange] = useState({
+		latitude: 0,
+		longitude: 0,
+		latitudeDelta: 0,
+		longitudeDelta: 0,
+	})
 
 	const getLocation = async () => {
 		const hasPermission = await hasLocationPermission()
@@ -102,32 +103,16 @@ const LocationComponent = () => {
 
 		Geolocation.getCurrentPosition(
 			(position) => {
-				setLocation(position)
-				fetch(`http://3.131.13.54:8080/landrecord?lat=${position.coords.latitude}&long=${position.coords.longitude}`)
-					.then((res) => res.json())
-					.then((data) => {
-						if (data) {
-							setResolvedLocation({
-								village: data.address.city,
-								subDistrict: data.address.county,
-								district: data.address.state_district,
-								state: data.address.state,
-							})
-						} else {
-							if (Platform.OS === 'ios') {
-								Alert.alert(JSON.stringify(data))
-							} else {
-								ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
-							}
-						}
-					})
-					.catch((err) => {
-						if (Platform.OS === 'ios') {
-							Alert.alert(JSON.stringify(err))
-						} else {
-							ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
-						}
-					})
+				setLocation({
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude,
+				})
+				onRegionChange({
+					latitude: position.coords.latitude,
+					longitude: position.coords.longitude,
+					latitudeDelta: 0.005,
+					longitudeDelta: 0.005,
+				})
 			},
 			(error) => {
 				Alert.alert(`Code ${error.code}`, error.message)
@@ -148,27 +133,38 @@ const LocationComponent = () => {
 		)
 	}
 
+	useEffect(() => {
+		getLocation()
+	})
+
+	if (!location) {
+		return null
+	}
+
 	return (
 		<View style={styles.mainContainer}>
-			<ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-				<View style={styles.buttonContainer}>
-					<Button title="Get Location" onPress={getLocation} />
-				</View>
-				<View style={styles.result}>
-					<Text>Latitude: {location?.coords?.latitude || ''}</Text>
-					<Text>Longitude: {location?.coords?.longitude || ''}</Text>
-					<Text>Heading: {location?.coords?.heading}</Text>
-					<Text>Accuracy: {location?.coords?.accuracy}</Text>
-					<Text>Altitude: {location?.coords?.altitude}</Text>
-					<Text>Speed: {location?.coords?.speed}</Text>
-					<Text>Timestamp: {location?.timestamp ? new Date(location.timestamp).toLocaleString() : ''}</Text>
-
-					<Text>Village/City: {resolvedLocation?.village ? resolvedLocation.village : ''}</Text>
-					<Text>Sub District: {resolvedLocation?.subDistrict ? resolvedLocation.subDistrict : ''}</Text>
-					<Text>Distrcit: {resolvedLocation?.district ? resolvedLocation.district : ''}</Text>
-					<Text>State: {resolvedLocation?.state ? resolvedLocation.state : ''}</Text>
-				</View>
-			</ScrollView>
+			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE}>
+				<Marker
+					// draggable
+					coordinate={location}
+					// onDragEnd={(e) => {
+					// 	setLocation(e.nativeEvent.coordinate)
+					// 	setLocation(location)
+					// 	console.log('cor', e.nativeEvent.coordinate)
+					// 	console.log('l', location)
+					// }}
+				/>
+			</MapView>
+			<View
+				style={{
+					position: 'absolute',
+					top: height * 0.875,
+					left: width * 0.05,
+				}}>
+				<TouchableWithoutFeedback style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]} onPress={() => true}>
+					<Text style={[styles.label, { color: '#fff' }]}>Submit</Text>
+				</TouchableWithoutFeedback>
+			</View>
 		</View>
 	)
 }

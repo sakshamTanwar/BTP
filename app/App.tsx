@@ -9,13 +9,13 @@ import { StatusBar } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { LocationComponent, LoginComponent, SignupComponent } from './src'
 
-type RouteType = {
+type Routes = {
 	Login: undefined
 	Location: undefined
 	Signup: undefined
 }
 
-const Stack = createStackNavigator<RouteType>()
+const Stack = createStackNavigator<Routes>()
 
 const App = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
