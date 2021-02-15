@@ -3,6 +3,13 @@ import React, { useState } from 'react'
 
 import Geolocation from 'react-native-geolocation-service'
 
+interface ResolvedLocationInterface {
+	village: string
+	subDistrict: string
+	district: string
+	state: string
+}
+
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
@@ -84,6 +91,7 @@ const hasLocationPermission = async () => {
 
 const LocationComponent = () => {
 	const [location, setLocation] = useState<Geolocation.GeoPosition | null>(null)
+	const [resolvedLocation, setResolvedLocation] = useState<ResolvedLocationInterface>()
 
 	const getLocation = async () => {
 		const hasPermission = await hasLocationPermission()
@@ -95,7 +103,25 @@ const LocationComponent = () => {
 		Geolocation.getCurrentPosition(
 			(position) => {
 				setLocation(position)
-				console.log(position)
+				fetch(`http://3.131.13.54:8080/landrecord?lat=${position.coords.latitude}&long=${position.coords.longitude}`)
+					.then((res) => res.json())
+					.then((data) => {
+						if (data) {
+							setResolvedLocation({
+								village: data.address.city,
+								subDistrict: data.address.county,
+								district: data.address.state_district,
+								state: data.address.state,
+							})
+						} else {
+							if (Platform.OS === 'ios') Alert.alert(JSON.stringify(data))
+							else ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+						}
+					})
+					.catch((err) => {
+						if (Platform.OS === 'ios') Alert.alert(JSON.stringify(err))
+						else ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+					})
 			},
 			(error) => {
 				Alert.alert(`Code ${error.code}`, error.message)
@@ -130,6 +156,11 @@ const LocationComponent = () => {
 					<Text>Altitude: {location?.coords?.altitude}</Text>
 					<Text>Speed: {location?.coords?.speed}</Text>
 					<Text>Timestamp: {location?.timestamp ? new Date(location.timestamp).toLocaleString() : ''}</Text>
+
+					<Text>Village/City: {resolvedLocation?.village ? resolvedLocation.village : ''}</Text>
+					<Text>Sub District: {resolvedLocation?.subDistrict ? resolvedLocation.subDistrict : ''}</Text>
+					<Text>Distrcit: {resolvedLocation?.district ? resolvedLocation.district : ''}</Text>
+					<Text>State: {resolvedLocation?.state ? resolvedLocation.state : ''}</Text>
 				</View>
 			</ScrollView>
 		</View>

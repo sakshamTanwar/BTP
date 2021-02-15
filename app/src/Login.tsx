@@ -1,10 +1,11 @@
 /* eslint-disable no-nested-ternary */
 import * as Yup from 'yup'
 
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
+import { Alert, Dimensions, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import React, { useRef, useState } from 'react'
 import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import { Formik } from 'formik'
 import Icon from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -89,6 +90,7 @@ const Login = () => {
 	const passwordRef = useRef<TextInput>(null)
 	const [isLoggingIn, setIsLoggingIn] = useState(false)
 	const navigation = useNavigation()
+
 	return (
 		<View style={styles.container}>
 			<KeyboardAwareScrollView extraHeight={40} enableOnAndroid={true} style={{ paddingBottom: 0, marginBottom: 0 }}>
@@ -100,9 +102,33 @@ const Login = () => {
 						initialValues={{ email: '', password: '' }}
 						validationSchema={LoginSchema}
 						onSubmit={(values) => {
-							console.log(values)
 							setIsLoggingIn(true)
-							navigation.navigate('Location')
+							fetch('http://3.131.13.54:8080/login', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+								},
+								body: Object.entries(values)
+									.map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
+									.join('&'),
+							})
+								.then((res) => res.json())
+								.then(async (data) => {
+									if (data.success) {
+										AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+										navigation.navigate('Location')
+										setIsLoggingIn(false)
+									} else {
+										if (Platform.OS === 'ios') Alert.alert(JSON.stringify(data))
+										else ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+										setIsLoggingIn(false)
+									}
+								})
+								.catch((err) => {
+									if (Platform.OS === 'ios') Alert.alert(JSON.stringify(err))
+									else ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+									setIsLoggingIn(false)
+								})
 						}}>
 						{({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
 							const colorEmail = !touched.email ? 'grey' : !errors.email ? '#2CB9B0' : 'red'

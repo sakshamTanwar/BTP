@@ -1,11 +1,13 @@
 /* eslint-disable no-nested-ternary */
-import React, { useRef, useState } from 'react'
-import { View, StyleSheet, Dimensions, Text } from 'react-native'
-import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import Icon from 'react-native-vector-icons/Feather'
-import { Formik } from 'formik'
 import * as Yup from 'yup'
+
+import { Alert, Dimensions, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import React, { useRef, useState } from 'react'
+import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
+
+import { Formik } from 'formik'
+import Icon from 'react-native-vector-icons/Feather'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useNavigation } from '@react-navigation/native'
 
 const { height } = Dimensions.get('window')
@@ -14,6 +16,7 @@ const SignUpSchema = Yup.object().shape({
 	password: Yup.string().min(6, 'Too Short!').max(20, 'Too Long!').required('Required'),
 	passwordConformation: Yup.string().equals([Yup.ref('password')], "Password don't match"),
 	email: Yup.string().email('Invalid email').required('Required'),
+	name: Yup.string().required('Required'),
 })
 
 const styles = StyleSheet.create({
@@ -87,6 +90,7 @@ const styles = StyleSheet.create({
 })
 
 const Signup = () => {
+	const emailRef = useRef<TextInput>(null)
 	const passwordRef = useRef<TextInput>(null)
 	const passwordConformationRef = useRef<TextInput>(null)
 	const [isLoggingIn, setIsLoggingIn] = useState(false)
@@ -100,13 +104,38 @@ const Signup = () => {
 					<Text style={styles.subTitle}>Create Account</Text>
 					<Text style={styles.description}>Let us know your credentials</Text>
 					<Formik
-						initialValues={{ email: '', password: '', passwordConformation: '' }}
+						initialValues={{ name: '', email: '', password: '', passwordConformation: '' }}
 						validationSchema={SignUpSchema}
 						onSubmit={(values) => {
 							setIsLoggingIn(true)
-							console.log(values)
+							fetch('http://3.131.13.54:8080/signup', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded',
+								},
+								body: Object.entries(values)
+									.map(([key, value]) => encodeURIComponent(key) + '=' + encodeURIComponent(value))
+									.join('&'),
+							})
+								.then((res) => res.json())
+								.then((data) => {
+									if (data.success) {
+										navigation.navigate('Location')
+										setIsLoggingIn(false)
+									} else {
+										if (Platform.OS === 'ios') Alert.alert(JSON.stringify(data))
+										else ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+										setIsLoggingIn(false)
+									}
+								})
+								.catch((err) => {
+									if (Platform.OS === 'ios') Alert.alert(JSON.stringify(err))
+									else ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+									setIsLoggingIn(false)
+								})
 						}}>
 						{({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => {
+							const colorName = !touched.name ? 'grey' : !errors.name ? '#2CB9B0' : 'red'
 							const colorEmail = !touched.email ? 'grey' : !errors.email ? '#2CB9B0' : 'red'
 							const colorPassword = !touched.password ? 'grey' : !errors.password ? '#2CB9B0' : 'red'
 							const colorPasswordConformation = !touched.passwordConformation
@@ -116,12 +145,39 @@ const Signup = () => {
 								: 'red'
 							return (
 								<View>
+									<View style={[styles.textinputContainer, { borderColor: colorName }]}>
+										<View style={{ padding: 20 }}>
+											<Icon name="user" color={colorName} size={16} style={{ height: 16 }} />
+										</View>
+										<View style={{ flex: 1 }}>
+											<TextInput
+												underlineColorAndroid="transparent"
+												onChangeText={handleChange('name')}
+												onBlur={handleBlur('name')}
+												value={values.name}
+												placeholder="Enter your Full Name"
+												placeholderTextColor={colorName}
+												textContentType="name"
+												autoCompleteType="name"
+												returnKeyType="next"
+												returnKeyLabel="next"
+												onSubmitEditing={() => emailRef.current?.focus()}
+											/>
+										</View>
+										{touched.name && (
+											<View style={[styles.validationOutput, { backgroundColor: colorName }]}>
+												<Icon name={!errors.name ? 'check' : 'x'} size={16} color="white" style={{ height: 16 }} />
+											</View>
+										)}
+									</View>
+
 									<View style={[styles.textinputContainer, { borderColor: colorEmail }]}>
 										<View style={{ padding: 20 }}>
 											<Icon name="mail" color={colorEmail} size={16} style={{ height: 16 }} />
 										</View>
 										<View style={{ flex: 1 }}>
 											<TextInput
+												ref={emailRef}
 												underlineColorAndroid="transparent"
 												onChangeText={handleChange('email')}
 												onBlur={handleBlur('email')}
