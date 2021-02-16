@@ -29,15 +29,7 @@ export class LandRecordExtractor{
              throw new Error("Corresponding land entry not found.");
         }
         
-        let ownershipHistory: Array<ILandTransfer> = await queryOwnershipHistory(
-            landRecord.khasraNo,
-            landRecord.village,
-            landRecord.subDistrict,
-            landRecord.district,
-            landRecord.state,
-        );
-        
-        // Extract latest transaction from ownershipHistory 
+        return landRecord;
 
     }
 }
