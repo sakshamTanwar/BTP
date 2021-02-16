@@ -53,15 +53,15 @@ app.use((err:any, req: Request, res: Response, next: NextFunction) => {
 });
 
 
-const options = {
-    key: fs.readFileSync(path.join(__dirname,'..','ssl','key.pem')),
-    cert: fs.readFileSync(path.join(__dirname,'..','ssl','cert.pem'))
-};
+// const options = {
+//     key: fs.readFileSync(path.join(__dirname,'..','ssl','key.pem')),
+//     cert: fs.readFileSync(path.join(__dirname,'..','ssl','cert.pem'))
+// };
   
 
 
 // start the Express server
-https.createServer(options, app).listen(443);
+// https.createServer(options, app).listen(443);
 
 app.listen( port, () => {
     console.log( `server started at http://localhost:${ port }` );

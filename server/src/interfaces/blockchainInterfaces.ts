@@ -1,6 +1,6 @@
 export interface IPoint {
-    lat: Number;
-    long: Number;
+    lat: number;
+    lon: number;
 }
 
 export interface IOwner {
