@@ -3,7 +3,7 @@ import yaml from 'js-yaml';
 import path from 'path';
 import { Wallets, Gateway } from 'fabric-network';
 
-export async function submitTransaction(txnName: string, args: Array<any>) {
+export async function submitTransaction(txnName: string, args: Array<string>) {
     const walletPath = path.join(
         process.cwd(),
         '../identity/user/isabella/wallet',
