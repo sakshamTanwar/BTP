@@ -13,7 +13,7 @@ export async function submitTransaction(txnName: string, args: Array<any>) {
         const userName = 'lrsp';
         const yamlFile = path.join(
             process.cwd(),
-            '../gateway/connection-org2.yaml',
+            '../gateway/connection-org1.yaml',
         );
         let connectionProfile: any = yaml.load(
             fs.readFileSync(yamlFile, 'utf8'),

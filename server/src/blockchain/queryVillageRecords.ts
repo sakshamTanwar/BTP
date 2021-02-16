@@ -1,11 +1,12 @@
 import { submitTransaction } from './submitTransaction';
+import { ILandRecord } from '../interfaces/blockchainInterfaces';
 
 export async function queryAllVillageRecords(
     village: string,
     subDistrict: string,
     district: string,
     state: string,
-) {
+): Promise<Array<ILandRecord>> {
     let result = await submitTransaction('getAllRecordsInVillage', [
         village,
         subDistrict,
@@ -13,5 +14,5 @@ export async function queryAllVillageRecords(
         state,
     ]);
 
-    return result;
+    return result.map((data: any) => data.Record);
 }
