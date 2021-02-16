@@ -25,7 +25,7 @@ export interface ILandTransfer {
     txnID: string;
     price: Number;
     timestamp: Number;
-    landID: string;
+    landKey: string;
     prevOwner: IOwner;
     newOwner: IOwner;
     lastTxnID: string;

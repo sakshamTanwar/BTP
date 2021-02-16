@@ -59,4 +59,3 @@ export async function enrollUser() {
         process.exit(1);
     }
 }
-enrollUser();

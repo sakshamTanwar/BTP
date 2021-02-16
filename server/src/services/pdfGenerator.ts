@@ -1,12 +1,21 @@
-import { ILandRecord, ILandTransfer } from '../interfaces/blockchainInterfaces';
+import {
+    IOwnershipHistory,
+    ILandRecord,
+    ILandTransfer,
+} from '../interfaces/blockchainInterfaces';
 import pdfmake from 'pdfmake';
 import fs, { PathLike } from 'fs';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
-export class LandRecordExtractor {
-    getTableRowFromTxn(transaction: ILandTransfer): Array<String> {
+export class PDFGenerator {
+    private static getTableRowFromTxn(
+        transaction: ILandTransfer,
+    ): Array<String> {
         let row = [];
         let txnTimeStamp = new Date(transaction.timestamp as number);
+        row.push(
+            transaction.landKey.slice(transaction.landKey.lastIndexOf(':') + 1),
+        );
         row.push(
             `${txnTimeStamp.getDate()}/${txnTimeStamp.getMonth() +
                 1}/${txnTimeStamp.getFullYear()}`,
@@ -17,11 +26,7 @@ export class LandRecordExtractor {
         return row;
     }
 
-    generatePDF(
-        landRecord: ILandRecord,
-        transactions: Array<ILandTransfer>,
-        saveFile: PathLike,
-    ) {
+    static generatePDF(history: Array<IOwnershipHistory>, saveFile: PathLike) {
         const fonts = {
             Roboto: {
                 normal: 'fonts/Roboto-Regular.ttf',
@@ -31,7 +36,19 @@ export class LandRecordExtractor {
             },
         };
 
-        const headers: any = [['Date', 'Price', 'Seller', 'Buyer']];
+        const headers: any = [
+            ['Khasra Number', 'Date', 'Price', 'Seller', 'Buyer'],
+        ];
+
+        let landRecord: ILandRecord = history[0].land;
+        let transactions: Array<ILandTransfer> = [];
+
+        history.forEach((record: IOwnershipHistory) => {
+            record.transferHistory.sort((a, b) => {
+                return (b.timestamp as number) - (a.timestamp as number);
+            });
+            transactions.push(...record.transferHistory);
+        });
 
         const docDefinition: TDocumentDefinitions = {
             content: [
@@ -80,7 +97,7 @@ export class LandRecordExtractor {
                     layout: 'headerLineOnly',
                     table: {
                         headerRows: 1,
-                        widths: ['*', '*', '*', '*'],
+                        widths: ['*', '*', '*', '*', '*'],
                         body: headers.concat(
                             transactions.map(this.getTableRowFromTxn),
                         ),
