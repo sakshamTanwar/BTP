@@ -8,14 +8,14 @@ export async function enrollUser() {
     try {
         const yamlFile = path.join(
             process.cwd(),
-            '../gateway/connection-org2.yaml',
+            '../gateway/connection-org1.yaml',
         );
         let connectionProfile: any = yaml.load(
             fs.readFileSync(yamlFile, 'utf8'),
         );
 
         const caInfo =
-            connectionProfile.certificateAuthorities['ca.org2.example.com'];
+            connectionProfile.certificateAuthorities['ca.org1.example.com'];
         const caTLSCACerts = caInfo.tlsCACerts.pem;
         const ca = new FabricCAServices(
             caInfo.url,
@@ -47,7 +47,7 @@ export async function enrollUser() {
                 certificate: enrollment.certificate,
                 privateKey: enrollment.key.toBytes(),
             },
-            mspId: 'Org2MSP',
+            mspId: 'Org1MSP',
             type: 'X.509',
         };
         await wallet.put('lrsp', x509Identity);
@@ -59,3 +59,4 @@ export async function enrollUser() {
         process.exit(1);
     }
 }
+enrollUser();

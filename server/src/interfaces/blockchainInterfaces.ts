@@ -31,3 +31,8 @@ export interface ILandTransfer {
     lastTxnID: string;
     landRecordTxnID: string;
 }
+
+export interface IOwnershipHistory {
+    land: ILandRecord;
+    transferHistory: Array<ILandTransfer>;
+}
