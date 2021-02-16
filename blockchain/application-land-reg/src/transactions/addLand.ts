@@ -22,8 +22,8 @@ export async function addLand(
         district,
         state,
         JSON.stringify(pts),
-        area,
-        khataNo,
+        area.toString(),
+        khataNo.toString(),
         ownerName,
     ]);
 }

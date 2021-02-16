@@ -21,10 +21,10 @@ export async function splitLand(
         district,
         state,
         newKhasraNoA,
-        newPolygonPointsA,
-        areaA,
+        JSON.stringify(newPolygonPointsA),
+        areaA.toString(),
         newKhasraNoB,
-        newPolygonPointsB,
-        areaB,
+        JSON.stringify(newPolygonPointsB),
+        areaB.toString(),
     ]);
 }

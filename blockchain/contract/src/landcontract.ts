@@ -120,10 +120,10 @@ export class LandContract extends Contract {
         district: string,
         state: string,
         newKhasraNoA: string,
-        newPolygonPointsA: Array<IPoint>,
+        newPolygonPointsA: string,
         areaA: Number,
         newKhasraNoB: string,
-        newPolygonPointsB: Array<IPoint>,
+        newPolygonPointsB: string,
         areaB: Number,
     ) {
         let landKey = Land.makeKey([
@@ -142,25 +142,27 @@ export class LandContract extends Contract {
 
         land.setExpired();
 
+        let ptsA = JSON.parse(newPolygonPointsA);
         let landA: Land = Land.createInstance(
             newKhasraNoA,
             village,
             subDistrict,
             district,
             state,
-            newPolygonPointsA,
+            ptsA,
             areaA,
             land.getOwner(),
             landKey,
         );
 
+        let ptsB = JSON.parse(newPolygonPointsB);
         let landB: Land = Land.createInstance(
             newKhasraNoB,
             village,
             subDistrict,
             district,
             state,
-            newPolygonPointsB,
+            ptsB,
             areaB,
             land.getOwner(),
             landKey,

@@ -19,11 +19,11 @@ export async function transferLand(
         subDistrict,
         district,
         state,
-        currentKhataNo,
+        currentKhataNo.toString(),
         currentOwnerName,
-        newKhataNo,
+        newKhataNo.toString(),
         newOwnerName,
-        price,
-        date.getTime(),
+        price.toString(),
+        date.getTime().toString(),
     ]);
 }
