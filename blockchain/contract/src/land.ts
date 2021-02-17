@@ -2,8 +2,8 @@ import { State } from './ledger-api/state';
 import { IOwner } from './constants';
 
 export interface IPoint {
-    lat: Number;
-    long: Number;
+    lat: number;
+    lon: number;
 }
 
 export interface ILand {
@@ -13,7 +13,7 @@ export interface ILand {
     district: string;
     state: string;
     polygonPoints: Array<IPoint>;
-    area: Number;
+    area: number;
     owner: IOwner;
     parentLandKey: string;
     expired: Boolean;
@@ -26,7 +26,7 @@ export class Land extends State {
     private district: string;
     private state: string;
     private polygonPoints: Array<IPoint>;
-    private area: Number;
+    private area: number;
     private owner: IOwner;
     private parentLandKey: string | null;
     private expired: Boolean;
@@ -116,7 +116,7 @@ export class Land extends State {
         district: string,
         state: string,
         polygonPoints: Array<IPoint>,
-        area: Number,
+        area: number,
         owner: IOwner,
         parentLandKey: string | null = null,
         expired: Boolean = false,

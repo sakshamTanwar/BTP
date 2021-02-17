@@ -6,11 +6,11 @@ export async function transferLand(
     subDistrict: string,
     district: string,
     state: string,
-    currentKhataNo: Number,
+    currentKhataNo: number,
     currentOwnerName: string,
-    newKhataNo: Number,
+    newKhataNo: number,
     newOwnerName: string,
-    price: Number,
+    price: number,
     date: Date = new Date(),
 ) {
     await submitTransaction('transferLand', [
