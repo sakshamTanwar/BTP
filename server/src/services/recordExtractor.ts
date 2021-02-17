@@ -1,13 +1,13 @@
 import { ILandRecord, ILandTransfer } from '../interfaces/blockchainInterfaces';
 import { queryAllVillageRecords } from '../blockchain/queryVillageRecords';
 import { IResolvedCoordInfo } from '../interfaces/coordResolverInterfaces';
-import { queryOwnershipHistory } from '../blockchain/queryOwnershipHistory' 
+import {AppError} from "../utils/error"
 import { isPointInPolygon } from 'geolib'
 
 export class LandRecordExtractor{
-
+    
     static async extractLandRecordFromBL(coordInfo: IResolvedCoordInfo){
-        
+
         let records: Array<ILandRecord> = await queryAllVillageRecords(
             coordInfo.village,
             coordInfo.subDistrict,
@@ -26,7 +26,7 @@ export class LandRecordExtractor{
         }
 
         if(!landRecord){
-             throw new Error("Corresponding land entry not found.");
+             throw new AppError(404, "record_not_found", "Corresponding land entry doesnot exists.");
         }
         
         return landRecord;

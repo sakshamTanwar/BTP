@@ -8,7 +8,6 @@ import landrecordRouter from "./routes/landrecord"
 import bodyParser from "body-parser"
 import multer from "multer"
 import cors from "cors"
-import { IRequest, IResponse } from "./interfaces/httpinterfaces";
 import path from "path"
 import https from "https"
 import fs from "fs"
