@@ -36,14 +36,14 @@ export function validateNumbers() {
 
 export function getIPointArray(
     promptAns: { [key: string]: any },
-    pointCnt: Number,
+    pointCnt: number,
 ) {
     let pts: Array<IPoint> = [];
 
     for (let i = 0; i < pointCnt; i++) {
         pts.push({
             lat: promptAns['lat' + i.toString()],
-            long: promptAns['long' + i.toString()],
+            lon: promptAns['long' + i.toString()],
         });
     }
 

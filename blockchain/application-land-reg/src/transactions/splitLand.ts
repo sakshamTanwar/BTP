@@ -9,10 +9,10 @@ export async function splitLand(
     state: string,
     newKhasraNoA: string,
     newPolygonPointsA: Array<IPoint>,
-    areaA: Number,
+    areaA: number,
     newKhasraNoB: string,
     newPolygonPointsB: Array<IPoint>,
-    areaB: Number,
+    areaB: number,
 ) {
     await submitTransaction('splitLand', [
         khasraNo,

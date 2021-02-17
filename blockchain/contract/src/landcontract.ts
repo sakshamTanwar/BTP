@@ -121,10 +121,10 @@ export class LandContract extends Contract {
         state: string,
         newKhasraNoA: string,
         newPolygonPointsA: string,
-        areaA: Number,
+        areaA: string,
         newKhasraNoB: string,
         newPolygonPointsB: string,
-        areaB: Number,
+        areaB: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -150,7 +150,7 @@ export class LandContract extends Contract {
             district,
             state,
             ptsA,
-            areaA,
+            Number(areaA),
             land.getOwner(),
             landKey,
         );
@@ -163,7 +163,7 @@ export class LandContract extends Contract {
             district,
             state,
             ptsB,
-            areaB,
+            Number(areaB),
             land.getOwner(),
             landKey,
         );

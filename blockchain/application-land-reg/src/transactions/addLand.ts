@@ -8,8 +8,8 @@ export async function addLand(
     district: string,
     state: string,
     polygonPoints: Array<IPoint>,
-    area: Number,
-    khataNo: Number,
+    area: number,
+    khataNo: number,
     ownerName: string,
 ) {
     let pts = {
