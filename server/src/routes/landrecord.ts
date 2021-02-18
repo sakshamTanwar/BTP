@@ -8,33 +8,34 @@ import { enrollUser } from '../blockchain/enrollUser';
 
 var router = express.Router();
 
-
-router.get( "/", async (req, res, next) => {
+router.get('/', async (req, res, next) => {
     //Takes lat and lon as query params
 
-    if(!req.isAuthenticated()) return res.redirect("../login");
     let { lat, lon } = req.query;
-    if(!lat || !lon) return res.sendFile(path.join(__dirname,'..','views','landrecord.html'));
+    if (!lat || !lon)
+        return res.sendFile(
+            path.join(__dirname, '..', 'views', 'landrecord.html'),
+        );
     console.log(`Lat=${lat} and lon=${lon}`);
-    try{
+    try {
         let resolvedInfo = await resolveCoords(lat, lon);
-        let record = await LandRecordExtractor.extractLandRecordFromBL(resolvedInfo);
+        let record = await LandRecordExtractor.extractLandRecordFromBL(
+            resolvedInfo,
+        );
         res.json({
-            success:true,
+            success: true,
             data: {
                 khasra: record.khasraNo,
                 village: record.village,
                 subDistrict: record.subDistrict,
                 district: record.district,
-                state: record.state
-            }
+                state: record.state,
+            },
         });
-    }
-    catch(err){
+    } catch (err) {
         next(err);
     }
 });
-
 
 router.get('/enrolluser', (_, res) => {
     enrollUser().then(() => {
@@ -42,6 +43,24 @@ router.get('/enrolluser', (_, res) => {
     });
 });
 
+router.get('/resolve', async (req, res) => {
+    let { lat, lon } = req.query;
+
+    if (!lat || !lon) {
+        return res.sendFile(
+            path.join(__dirname, '..', 'views', 'landrecord.html'),
+        );
+    }
+
+    let resolvedInfo = await resolveCoords(lat, lon);
+
+    res.json({
+        success: true,
+        data: {
+            resolvedInfo,
+        },
+    });
+});
 
 router.get('/generate', (req, res, next) => {
     let { khasra, village, subDistrict, district, state } = req.query;
@@ -71,6 +90,5 @@ router.get('/generate', (req, res, next) => {
             next(err);
         });
 });
-
 
 export default router;
