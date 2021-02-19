@@ -58,15 +58,43 @@ const landRecords = [
         khataNo: 12,
         ownerName: 'Jane Doe',
     },
+    {
+        khasraNo: '11',
+        village: 'tuljapur',
+        subDistrict: 'aurangabad',
+        district: 'aurangabad',
+        state: 'maharashtra',
+        polygonPoints: [
+            {
+                lat: 19.965634,
+                lon: 75.375017,
+            },
+            {
+                lat: 19.965715,
+                lon: 75.376122,
+            },
+            {
+                lat: 19.964565,
+                lon: 75.37624,
+            },
+            {
+                lat: 19.964545,
+                lon: 75.374845,
+            },
+        ],
+        area: 1200,
+        khataNo: 12,
+        ownerName: 'Jane Doe',
+    },
 ];
 
 const landTransfers = [
     {
-        khasraNo: '12',
-        village: 'landiali',
-        subDistrict: 'ambala',
-        district: 'ambala',
-        state: 'haryana',
+        khasraNo: '11',
+        village: 'tuljapur',
+        subDistrict: 'aurangabad',
+        district: 'aurangabad',
+        state: 'maharashtra',
         currentKhataNo: 12,
         currentOwnerName: 'Jane Doe',
         newKhataNo: 13,
@@ -74,11 +102,11 @@ const landTransfers = [
         price: 200,
     },
     {
-        khasraNo: '12',
-        village: 'landiali',
-        subDistrict: 'ambala',
-        district: 'ambala',
-        state: 'haryana',
+        khasraNo: '11',
+        village: 'tuljapur',
+        subDistrict: 'aurangabad',
+        district: 'aurangabad',
+        state: 'maharashtra',
         currentKhataNo: 13,
         currentOwnerName: 'Jane Doe 2',
         newKhataNo: 14,
@@ -86,11 +114,11 @@ const landTransfers = [
         price: 300,
     },
     {
-        khasraNo: '12',
-        village: 'landiali',
-        subDistrict: 'ambala',
-        district: 'ambala',
-        state: 'haryana',
+        khasraNo: '11',
+        village: 'tuljapur',
+        subDistrict: 'aurangabad',
+        district: 'aurangabad',
+        state: 'maharashtra',
         currentKhataNo: 14,
         currentOwnerName: 'Jane Doe 3',
         newKhataNo: 15,
@@ -98,11 +126,11 @@ const landTransfers = [
         price: 200,
     },
     {
-        khasraNo: '12',
-        village: 'landiali',
-        subDistrict: 'ambala',
-        district: 'ambala',
-        state: 'haryana',
+        khasraNo: '11',
+        village: 'tuljapur',
+        subDistrict: 'aurangabad',
+        district: 'aurangabad',
+        state: 'maharashtra',
         currentKhataNo: 15,
         currentOwnerName: 'Jane Doe 4',
         newKhataNo: 16,
@@ -112,7 +140,7 @@ const landTransfers = [
 ];
 
 async function main() {
-    for(let i = 0; i<landRecords.length; i++) {
+    for (let i = 0; i < landRecords.length; i++) {
         const landRecord = landRecords[i];
         await addLand(
             landRecord.khasraNo,
@@ -125,12 +153,11 @@ async function main() {
             landRecord.khataNo,
             landRecord.ownerName,
         );
-
     }
 
-    for(let i = 0; i<landTransfers.length; i++) {
+    for (let i = 0; i < landTransfers.length; i++) {
         const landTransfer = landTransfers[i];
-        
+
         await transferLand(
             landTransfer.khasraNo,
             landTransfer.village,
