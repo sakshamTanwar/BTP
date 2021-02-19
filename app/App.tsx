@@ -1,5 +1,6 @@
 import 'react-native-gesture-handler'
 
+import { LocationComponent, LoginComponent, PaymentComponent, SignupComponent } from './src'
 import React, { useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
@@ -7,11 +8,11 @@ import { NavigationContainer } from '@react-navigation/native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { StatusBar } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { LocationComponent, LoginComponent, SignupComponent } from './src'
 
 type Routes = {
 	Login: undefined
 	Location: undefined
+	Payment: undefined
 	Signup: undefined
 }
 
@@ -36,6 +37,7 @@ const App = () => {
 					<Stack.Screen name="Login" component={LoginComponent} />
 					<Stack.Screen name="Signup" component={SignupComponent} />
 					<Stack.Screen name="Location" component={LocationComponent} />
+					<Stack.Screen name="Payment" component={PaymentComponent} />
 				</Stack.Navigator>
 			</SafeAreaProvider>
 		</NavigationContainer>

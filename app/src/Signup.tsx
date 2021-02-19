@@ -108,7 +108,7 @@ const Signup = () => {
 						validationSchema={SignUpSchema}
 						onSubmit={(values) => {
 							setIsLoggingIn(true)
-							fetch('http://3.131.13.54:8080/signup', {
+							fetch('http://3.20.66.6:8080/signup', {
 								method: 'POST',
 								headers: {
 									'Content-Type': 'application/x-www-form-urlencoded',

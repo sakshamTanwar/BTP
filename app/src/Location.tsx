@@ -1,9 +1,22 @@
-import { Alert, Dimensions, Linking, PermissionsAndroid, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import {
+	ActivityIndicator,
+	Alert,
+	Dimensions,
+	Linking,
+	PermissionsAndroid,
+	Platform,
+	StyleSheet,
+	Text,
+	ToastAndroid,
+	View,
+} from 'react-native'
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import { useNavigation } from '@react-navigation/native'
 
 const { width, height } = Dimensions.get('window')
 
@@ -87,12 +100,15 @@ const hasLocationPermission = async () => {
 
 const LocationComponent = () => {
 	const [location, setLocation] = useState<LatLng>()
+	const [currentLocation, setCurrentLocation] = useState<LatLng>()
 	const [region, onRegionChange] = useState({
 		latitude: 0,
 		longitude: 0,
 		latitudeDelta: 0,
 		longitudeDelta: 0,
 	})
+	const [pressed, setPressed] = useState(false)
+	const navigation = useNavigation()
 
 	const getLocation = async () => {
 		const hasPermission = await hasLocationPermission()
@@ -103,15 +119,15 @@ const LocationComponent = () => {
 
 		Geolocation.getCurrentPosition(
 			(position) => {
-				setLocation({
+				setCurrentLocation({
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude,
 				})
 				onRegionChange({
 					latitude: position.coords.latitude,
 					longitude: position.coords.longitude,
-					latitudeDelta: 0.005,
-					longitudeDelta: 0.005,
+					latitudeDelta: 0.001,
+					longitudeDelta: 0.001,
 				})
 			},
 			(error) => {
@@ -135,24 +151,54 @@ const LocationComponent = () => {
 
 	useEffect(() => {
 		getLocation()
-	})
+	}, [])
 
-	if (!location) {
-		return null
+	if (!currentLocation) {
+		return <ActivityIndicator color="black" />
+	}
+
+	const onButtonClick = () => {
+		setPressed(true)
+		const finalLocation: LatLng = location ? location : currentLocation
+		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`)
+			.then((res) => res.json())
+			.then((data) => {
+				// console.log(data)
+				if (data.success) {
+					const landData = {
+						...data.data,
+						location: finalLocation,
+					}
+					// AsyncStorage.setItem('landData', JSON.stringify(landData))
+					navigation.navigate('Payment', { ...landData })
+				} else {
+					if (Platform.OS === 'ios') {
+						Alert.alert(JSON.stringify(data))
+					} else {
+						ToastAndroid.show(JSON.stringify(data), ToastAndroid.LONG)
+					}
+					setPressed(false)
+				}
+			})
+			.catch((err) => {
+				if (Platform.OS === 'ios') {
+					Alert.alert(JSON.stringify(err))
+				} else {
+					ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+				}
+				setPressed(false)
+			})
 	}
 
 	return (
 		<View style={styles.mainContainer}>
 			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE}>
 				<Marker
-					// draggable
-					coordinate={location}
-					// onDragEnd={(e) => {
-					// 	setLocation(e.nativeEvent.coordinate)
-					// 	setLocation(location)
-					// 	console.log('cor', e.nativeEvent.coordinate)
-					// 	console.log('l', location)
-					// }}
+					draggable
+					coordinate={location ? location : currentLocation}
+					onDragEnd={(e) => {
+						setLocation(e.nativeEvent.coordinate)
+					}}
 				/>
 			</MapView>
 			<View
@@ -161,8 +207,10 @@ const LocationComponent = () => {
 					top: height * 0.875,
 					left: width * 0.05,
 				}}>
-				<TouchableWithoutFeedback style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]} onPress={() => true}>
-					<Text style={[styles.label, { color: '#fff' }]}>Submit</Text>
+				<TouchableWithoutFeedback
+					style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]}
+					onPress={pressed ? () => true : onButtonClick}>
+					{pressed ? <ActivityIndicator color="white" /> : <Text style={[styles.label, { color: '#fff' }]}>Submit</Text>}
 				</TouchableWithoutFeedback>
 			</View>
 		</View>
