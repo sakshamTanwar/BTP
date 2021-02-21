@@ -40,7 +40,6 @@ export default function(passport: PassportStatic) {
         secretOrKey: JWT_SECRET
     },
 	(jwtPayload, done)=>{
-		console.log(jwtPayload);
 		User.findOne({
 		    email : jwtPayload.email
 		}).then(user => {

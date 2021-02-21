@@ -7,11 +7,12 @@ import {validateSignup} from "../validators/signup"
 import {AppError} from "../utils/error"
 import {IRequest, IResponse, INext} from "../interfaces/httpinterfaces"
 import {createJwt} from "../utils/Jwt"
+import { EmailHandler } from '../services/emailHandler'
 
 const router = express.Router();
 
 router.get( "/", (req: IRequest, res: IResponse) => {
-    res.send("/landrecord");
+    res.redirect("/landrecord");
 });
 
 
@@ -77,24 +78,6 @@ router.post("/signup", async (req: IRequest, res: IResponse, next: INext) => {
     
 }); 
 
-
-// router.post("/logout", (req: IRequest, res: IResponse, next: INext)=>{
-//     if(req.isAuthenticated()){
-//         req.logout();
-//         req.session.destroy((err) => {
-//             if (err) {
-//                 return next(err);
-//             }
-    
-//             req.user = null;
-//             return res.json({success: true, message: "Logged out successfully"});
-//         });
-//     }
-//     else{
-//         return next(new AppError(400, "req_inv", "Request is invalid: No login session found."));
-//     }
-    
-// });
 
 
 export default router;

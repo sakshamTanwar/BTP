@@ -6,8 +6,11 @@ import { PDFGenerator } from '../services/pdfGenerator';
 import { queryOwnershipHistory } from '../blockchain/queryOwnershipHistory';
 import { enrollUser } from '../blockchain/enrollUser';
 import passport from "passport"
-var router = express.Router();
+import { EmailHandler } from "../services/emailHandler"
+import {IRequest, IResponse, INext} from "../interfaces/httpinterfaces"
 
+
+var router = express.Router();
 
 router.get('/', async (req, res, next) => {
     //Takes lat and lon as query params
@@ -66,7 +69,8 @@ router.get('/resolve', async (req, res) => {
 });
 
 
-router.get('/generate', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+router.get('/generate', passport.authenticate('jwt', { session: false }), (req: IRequest, res: IResponse, next: INext) => {
+
     let { khasra, village, subDistrict, district, state } = req.query;
 
     if (!khasra || !village || !subDistrict || !district || !state) {
@@ -84,11 +88,17 @@ router.get('/generate', passport.authenticate('jwt', { session: false }), (req, 
     )
         .then(records => {
             let nKhasra = (khasra as string).replace(/\//g, '_');
+            let pdfPath = path.join(__dirname,'..','..','temp',`${nKhasra}_${village}.pdf`);
             PDFGenerator.generatePDF(
                 records,
-                path.join(process.cwd(), `${nKhasra}_${village}.pdf`),
+                pdfPath
             );
-            res.send('PDF is generated');
+            console.log("PDF Generated");
+            return pdfPath;
+        })
+        .then(pdfPath=>{
+            EmailHandler.mailPdf(req.user.email, 'landRecord.pdf', pdfPath);
+            res.send('PDF emailed successfully');
         })
         .catch(err => {
             next(err);

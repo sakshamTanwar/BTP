@@ -7,7 +7,7 @@ export class EmailHandler{
     private static user: string = 'email@gmail.com';
     private static pass: string = 'password';
     
-    static async mailPdf(toUser: string, pdfName: string){
+    static async mailPdf(toUser: string, fileName: string, pdfPath: string){
         
         var transporter = nodemailer.createTransport({
             service: 'gmail',
@@ -23,8 +23,8 @@ export class EmailHandler{
             subject: 'Requested Land Record',
             text: 'Please find attached the requested land record.',
             attachments: [{
-                filename: 'file.pdf',
-                path: path.join(__dirname,'..','..','temp', pdfName),
+                filename: fileName,
+                path: pdfPath,
                 contentType: 'application/pdf'
             }]
         }
