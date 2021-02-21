@@ -5,6 +5,7 @@ import { LandRecordExtractor } from '../services/recordExtractor';
 import { PDFGenerator } from '../services/pdfGenerator';
 import { queryOwnershipHistory } from '../blockchain/queryOwnershipHistory';
 import { enrollUser } from '../blockchain/enrollUser';
+import { sendReport } from '../services/email';
 
 var router = express.Router();
 
@@ -63,9 +64,9 @@ router.get('/resolve', async (req, res) => {
 });
 
 router.get('/generate', (req, res, next) => {
-    let { khasra, village, subDistrict, district, state } = req.query;
+    let { khasra, village, subDistrict, district, state, email } = req.query;
 
-    if (!khasra || !village || !subDistrict || !district || !state) {
+    if (!khasra || !village || !subDistrict || !district || !state || !email) {
         return res.sendFile(
             path.join(__dirname, '..', 'views', 'landrecord.html'),
         );
@@ -78,12 +79,14 @@ router.get('/generate', (req, res, next) => {
         district as string,
         state as string,
     )
-        .then(records => {
+        .then(async records => {
             let nKhasra = (khasra as string).replace(/\//g, '_');
-            PDFGenerator.generatePDF(
-                records,
-                path.join(process.cwd(), `${nKhasra}_${village}.pdf`),
+            const recordFile = path.join(
+                process.cwd(),
+                `${nKhasra}_${village}.pdf`,
             );
+            PDFGenerator.generatePDF(records, recordFile);
+            await sendReport(recordFile, email as string);
             res.send('PDF is generated');
         })
         .catch(err => {
