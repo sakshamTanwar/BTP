@@ -86,7 +86,7 @@ router.get('/generate', passport.authenticate('jwt', { session: false }), (req: 
         district as string,
         state as string,
     )
-        .then(records => {
+        .then(async records => {
             let nKhasra = (khasra as string).replace(/\//g, '_');
             let pdfPath = path.join(__dirname,'..','..','temp',`${nKhasra}_${village}.pdf`);
             PDFGenerator.generatePDF(
@@ -98,7 +98,7 @@ router.get('/generate', passport.authenticate('jwt', { session: false }), (req: 
         })
         .then(pdfPath=>{
             EmailHandler.mailPdf(req.user.email, 'landRecord.pdf', pdfPath);
-            res.send('PDF emailed successfully');
+
         })
         .catch(err => {
             next(err);
