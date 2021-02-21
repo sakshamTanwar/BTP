@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction } from "express";
 import {DbConnection} from './setup/db';
-import session from "express-session"
+// import session from "express-session"
 import passport from "passport"
 import passportInit from "./setup/passport" 
 import indexRouter from "./routes/index"
@@ -29,9 +29,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(upload.none());
 app.use(cors());
-app.use(session({secret: "SESSION_KEY"})); // Randomize it later
+// app.use(session({secret: "SESSION_KEY"})); // Randomize it later
 app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.session());
 
 //Set Routes
 app.use('/', indexRouter);

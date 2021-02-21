@@ -3,24 +3,19 @@ import bcrypt from "bcrypt"
 import passportLocal from "passport-local"
 import passport, { PassportStatic } from "passport";
 import { NativeError } from "mongoose";
-
+import {Strategy as JWTStrategy, ExtractJwt} from "passport-jwt"
+import {JWT_SECRET} from "../utils/Jwt"
 
 let LocalStrategy = passportLocal.Strategy;
 
+
 export default function(passport: PassportStatic) {
-	passport.serializeUser(function(user: IUser, done) {
-		done(null, user.id)
-	});
 
-	passport.deserializeUser(function(id, done) {
-		User.findById(id, (err: NativeError, user:IUser) => {
-			done(err, user);
-		})
-	});
-
+	
 	passport.use(new LocalStrategy({
 		usernameField: 'email', 
 		passwordField: 'password',
+		session: false
 	},
 	(email, password, done)=>{
 		email = email.toLowerCase();
@@ -37,6 +32,24 @@ export default function(passport: PassportStatic) {
 		}).catch(err => {
 			done(err, false);
 		})
-	}))
+	}));
+
+
+	passport.use(new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        secretOrKey: JWT_SECRET
+    },
+	(jwtPayload, done)=>{
+		console.log(jwtPayload);
+		User.findOne({
+		    email : jwtPayload.email
+		}).then(user => {
+			if (user) return done(null, user);
+			else return done(null, false);
+		}).catch(err => {
+			done(err, false);
+		})
+	}));
+
 }
 

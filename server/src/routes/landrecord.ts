@@ -5,8 +5,9 @@ import { LandRecordExtractor } from '../services/recordExtractor';
 import { PDFGenerator } from '../services/pdfGenerator';
 import { queryOwnershipHistory } from '../blockchain/queryOwnershipHistory';
 import { enrollUser } from '../blockchain/enrollUser';
-
+import passport from "passport"
 var router = express.Router();
+
 
 router.get('/', async (req, res, next) => {
     //Takes lat and lon as query params
@@ -37,18 +38,20 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+
 router.get('/enrolluser', (_, res) => {
     enrollUser().then(() => {
         res.send('Blockchain user enrolled');
     });
 });
 
+
 router.get('/resolve', async (req, res) => {
     let { lat, lon } = req.query;
 
     if (!lat || !lon) {
         return res.sendFile(
-            path.join(__dirname, '..', 'views', 'landrecord.html'),
+            path.join(__dirname, '..', 'views', 'landrecordresolve.html'),
         );
     }
 
@@ -62,7 +65,8 @@ router.get('/resolve', async (req, res) => {
     });
 });
 
-router.get('/generate', (req, res, next) => {
+
+router.get('/generate', passport.authenticate('jwt', { session: false }), (req, res, next) => {
     let { khasra, village, subDistrict, district, state } = req.query;
 
     if (!khasra || !village || !subDistrict || !district || !state) {
@@ -90,5 +94,6 @@ router.get('/generate', (req, res, next) => {
             next(err);
         });
 });
+
 
 export default router;
