@@ -5,6 +5,7 @@ import { Alert, Dimensions, Platform, StyleSheet, Text, ToastAndroid, View } fro
 import React, { useRef, useState } from 'react'
 import { TextInput, TouchableOpacity, TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import { Formik } from 'formik'
 import Icon from 'react-native-vector-icons/Feather'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
@@ -118,8 +119,11 @@ const Signup = () => {
 									.join('&'),
 							})
 								.then((res) => res.json())
-								.then((data) => {
+								.then(async (data) => {
 									if (data.success) {
+										await AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+										await AsyncStorage.setItem('userEmail', values.email)
+										await AsyncStorage.setItem('userJWT', data.token)
 										navigation.navigate('Location')
 										setIsLoggingIn(false)
 									} else {

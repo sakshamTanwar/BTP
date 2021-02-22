@@ -13,10 +13,10 @@ import {
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
 
-import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
+import Loading from './Loading'
 
 const { width, height } = Dimensions.get('window')
 
@@ -154,7 +154,7 @@ const LocationComponent = () => {
 	}, [])
 
 	if (!currentLocation) {
-		return <ActivityIndicator color="black" />
+		return <Loading />
 	}
 
 	const onButtonClick = () => {
@@ -163,13 +163,18 @@ const LocationComponent = () => {
 		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`)
 			.then((res) => res.json())
 			.then((data) => {
-				// console.log(data)
 				if (data.success) {
+					data.data.points = data.data.points.map((point: { lat: number; lon: number }) => {
+						return {
+							latitude: point.lat,
+							longitude: point.lon,
+						}
+					})
 					const landData = {
 						...data.data,
 						location: finalLocation,
 					}
-					// AsyncStorage.setItem('landData', JSON.stringify(landData))
+					setPressed(false)
 					navigation.navigate('Payment', { ...landData })
 				} else {
 					if (Platform.OS === 'ios') {

@@ -115,7 +115,9 @@ const Login = () => {
 								.then((res) => res.json())
 								.then(async (data) => {
 									if (data.success) {
-										AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+										await AsyncStorage.setItem('isLoggedIn', JSON.stringify(true))
+										await AsyncStorage.setItem('userEmail', values.email)
+										await AsyncStorage.setItem('userJWT', data.token)
 										navigation.navigate('Location')
 										setIsLoggingIn(false)
 									} else {
