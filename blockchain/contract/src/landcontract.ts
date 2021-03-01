@@ -75,6 +75,8 @@ export class LandContract extends Contract {
         newOwnerName: string,
         price: string,
         transferDateTime: string,
+        certificate: string,
+        otherDocs: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -104,12 +106,15 @@ export class LandContract extends Contract {
         };
 
         land.setOwner(newOwner);
+        let othDocs: Array<string> = JSON.parse(otherDocs);
         let landTransfer: LandTransfer = LandTransfer.createInstance(
             land.getKey(),
             Number(price),
             Number(transferDateTime),
             currentOwner,
             newOwner,
+            certificate,
+            othDocs,
         );
 
         await ctx.landList.updateLand(land);
