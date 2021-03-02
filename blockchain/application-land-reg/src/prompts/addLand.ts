@@ -6,6 +6,7 @@ import {
     validateNumbers,
     getIPointArray,
     getPointQuestions,
+    getFileInput,
 } from './utils';
 
 export async function promptAddLand() {
@@ -66,6 +67,8 @@ export async function promptAddLand() {
 
     let ptsAnswers = await inquirer.prompt(quesPolyPtsAr);
     let pts: Array<IPoint> = getIPointArray(ptsAnswers, results.numPts);
+
+    let files = await getFileInput('otherDocs');
 
     await addLand(
         results.khasraNo,

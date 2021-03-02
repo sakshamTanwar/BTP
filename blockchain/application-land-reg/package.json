@@ -25,6 +25,7 @@
     "fabric-network": "^2.2.5",
     "fs": "0.0.1-security",
     "inquirer": "^7.3.3",
+    "inquirer-fuzzy-path": "^2.3.0",
     "js-yaml": "^4.0.0",
     "path": "^0.12.7"
   }

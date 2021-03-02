@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { transferLand } from '../transactions/transferLand';
-import { validateEmpty, validateNumbers } from './utils';
+import { validateEmpty, validateNumbers, getFileInput } from './utils';
 
 export async function promptTransferLand() {
     const quesList = [
@@ -60,6 +60,7 @@ export async function promptTransferLand() {
     ];
 
     let results = await inquirer.prompt(quesList);
+    let files = await getFileInput('otherDocs');
 
     await transferLand(
         results.khasraNo,

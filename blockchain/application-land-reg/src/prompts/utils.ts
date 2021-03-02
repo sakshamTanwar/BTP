@@ -1,4 +1,7 @@
 import { IPoint } from '../../../contract/src/land';
+import inquirer from 'inquirer';
+
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'));
 
 export function validateEmpty() {
     return {
@@ -71,4 +74,39 @@ export function getPointQuestions(pointCnt: Number) {
     }
 
     return result;
+}
+
+function getFilePrompt(name: string, msg: string) {
+    return {
+        type: 'fuzzypath',
+        name: name,
+        excludePath: (nodePath: string) => nodePath.startsWith('node_modules'),
+        excludeFilter: (nodePath: string) => nodePath == '.',
+        itemType: 'file',
+        rootPath: './',
+        message: msg,
+        suggestOnly: false,
+        depthLimit: 5,
+    };
+}
+
+export async function getFileInput(name: string) {
+    let n = await inquirer.prompt([
+        {
+            type: 'text',
+            name: 'numFiles',
+            message: 'Enter number of Files',
+            ...validateNumbers(),
+        },
+    ]);
+    n = n.numFiles;
+    let ques = [];
+    for (let i = 0; i < n; i++) {
+        let prompt = getFilePrompt(name, `Enter path to file ${i.toString()}`);
+        ques.push(prompt);
+    }
+
+    let results = await inquirer.prompt(ques);
+
+    return results;
 }
