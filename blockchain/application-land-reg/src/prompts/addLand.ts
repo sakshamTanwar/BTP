@@ -87,7 +87,7 @@ export async function promptAddLand() {
     let otherDocs: Array<string> = [];
 
     for (const filePath of files) {
-        let result = uploadFile(filePath);
+        let result = await uploadFile(filePath);
         otherDocs.push((result as { [key: string]: any }).cid.toString());
     }
 
