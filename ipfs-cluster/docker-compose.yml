@@ -31,10 +31,14 @@ services:
   ipfs0:
     container_name: ipfs0
     image: ipfs/go-ipfs:release
+    environment:
+      LIBP2P_FORCE_PNET: 1
+      IPFS_SWARM_KEY: ${SWARM_KEY}
     ports:
-      - 5001:5001
+        - 127.0.0.1:5001:5001
     volumes:
       - ./data/ipfs0:/data/ipfs
+      - ./init.sh:/usr/local/bin/start_ipfs
 
   cluster0:
     container_name: cluster0
@@ -49,7 +53,7 @@ services:
       CLUSTER_RESTAPI_HTTPLISTENMULTIADDRESS: /ip4/0.0.0.0/tcp/9094 # Expose API
       CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
     ports:
-      - 9094:9094
+        - 127.0.0.1:9094:9094
           # The cluster swarm port would need  to be exposed if this container
           # was to connect to cluster peers on other hosts.
           # But this is just a testing cluster.
@@ -63,10 +67,12 @@ services:
   ipfs1:
     container_name: ipfs1
     image: ipfs/go-ipfs:release
-    ports:
-      - 6001:5001
+    environment:
+      LIBP2P_FORCE_PNET: 1
+      IPFS_SWARM_KEY: ${SWARM_KEY}
     volumes:
       - ./data/ipfs1:/data/ipfs
+      - ./init.sh:/usr/local/bin/start_ipfs
 
   cluster1:
     container_name: cluster1
@@ -88,8 +94,12 @@ services:
   ipfs2:
     container_name: ipfs2
     image: ipfs/go-ipfs:release
+    environment:
+      LIBP2P_FORCE_PNET: 1
+      IPFS_SWARM_KEY: ${SWARM_KEY}
     volumes:
       - ./data/ipfs2:/data/ipfs
+      - ./init.sh:/usr/local/bin/start_ipfs
 
   cluster2:
     container_name: cluster2
@@ -104,3 +114,4 @@ services:
       CLUSTER_MONITORPINGINTERVAL: 2s # Speed up peer discovery
     volumes:
       - ./data/cluster2:/data/ipfs-cluster
+      - ./init.sh:/usr/local/bin/start_ipfs
