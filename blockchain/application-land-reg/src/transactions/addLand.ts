@@ -11,6 +11,8 @@ export async function addLand(
     area: number,
     khataNo: number,
     ownerName: string,
+    certificate: string,
+    otherDocs: Array<string>,
 ) {
     let pts = {
         points: polygonPoints,
@@ -25,5 +27,7 @@ export async function addLand(
         area.toString(),
         khataNo.toString(),
         ownerName,
+        certificate,
+        JSON.stringify(otherDocs),
     ]);
 }

@@ -76,7 +76,7 @@ export function getPointQuestions(pointCnt: Number) {
     return result;
 }
 
-function getFilePrompt(name: string, msg: string) {
+export function getFilePrompt(name: string, msg: string) {
     return {
         type: 'fuzzypath',
         name: name,
@@ -95,18 +95,27 @@ export async function getFileInput(name: string) {
         {
             type: 'text',
             name: 'numFiles',
-            message: 'Enter number of Files',
+            message: 'Enter number of additional files',
             ...validateNumbers(),
         },
     ]);
     n = n.numFiles;
     let ques = [];
-    for (let i = 0; i < n; i++) {
-        let prompt = getFilePrompt(name, `Enter path to file ${i.toString()}`);
+    for (let i = 1; i <= n; i++) {
+        let prompt = getFilePrompt(
+            name + i.toString(),
+            `Enter path to file ${i.toString()}`,
+        );
         ques.push(prompt);
     }
 
-    let results = await inquirer.prompt(ques);
+    let promptAns = await inquirer.prompt(ques);
+
+    let results: Array<string> = [];
+
+    for (let i = 1; i <= n; i++) {
+        results.push(promptAns[name + i.toString()]);
+    }
 
     return results;
 }
