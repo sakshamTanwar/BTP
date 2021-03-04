@@ -64,7 +64,9 @@ export async function promptTransferLand() {
     // TODO generate certificate
     let certificate = ' ';
 
-    const otherDocs = await promptAndUploadFiles();
+    const otherDocs = await promptAndUploadFiles(
+        'Enter number of additional files',
+    );
 
     await transferLand(
         results.khasraNo,

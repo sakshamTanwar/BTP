@@ -10,9 +10,13 @@ export async function splitLand(
     newKhasraNoA: string,
     newPolygonPointsA: Array<IPoint>,
     areaA: number,
+    certificateA: string,
+    otherDocsA: Array<string>,
     newKhasraNoB: string,
     newPolygonPointsB: Array<IPoint>,
     areaB: number,
+    certificateB: string,
+    otherDocsB: Array<string>,
 ) {
     await submitTransaction('splitLand', [
         khasraNo,
@@ -23,8 +27,12 @@ export async function splitLand(
         newKhasraNoA,
         JSON.stringify(newPolygonPointsA),
         areaA.toString(),
+        certificateA,
+        JSON.stringify(otherDocsA),
         newKhasraNoB,
         JSON.stringify(newPolygonPointsB),
         areaB.toString(),
+        certificateB,
+        JSON.stringify(otherDocsB),
     ]);
 }

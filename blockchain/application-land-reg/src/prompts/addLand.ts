@@ -71,7 +71,9 @@ export async function promptAddLand() {
     // TODO Generate certificate and upload file to IPFS
     const certificate = ' ';
 
-    const otherDocs = await promptAndUploadFiles();
+    const otherDocs = await promptAndUploadFiles(
+        'Enter number of additional files',
+    );
 
     await addLand(
         results.khasraNo,

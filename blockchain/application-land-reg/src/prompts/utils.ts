@@ -92,12 +92,12 @@ function getFilePrompt(name: string, msg: string) {
     };
 }
 
-async function getFileInput(name: string) {
+async function getFileInput(name: string, msg: string) {
     let n = await inquirer.prompt([
         {
             type: 'text',
             name: 'numFiles',
-            message: 'Enter number of additional files',
+            message: msg,
             ...validateNumbers(),
         },
     ]);
@@ -122,8 +122,8 @@ async function getFileInput(name: string) {
     return results;
 }
 
-export async function promptAndUploadFiles() {
-    let files = await getFileInput('otherDocs');
+export async function promptAndUploadFiles(promptMsg: string) {
+    let files = await getFileInput('otherDocs', promptMsg);
 
     if (
         !files.every(filePath => {
