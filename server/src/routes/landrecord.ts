@@ -34,6 +34,7 @@ router.get('/', async (req, res, next) => {
                 subDistrict: record.subDistrict,
                 district: record.district,
                 state: record.state,
+                points: record.polygonPoints
             },
         });
     } catch (err) {
@@ -98,7 +99,10 @@ router.get('/generate', passport.authenticate('jwt', { session: false }), (req: 
         })
         .then(pdfPath=>{
             EmailHandler.mailPdf(req.user.email, 'landRecord.pdf', pdfPath);
-
+            res.json({
+                success: true,
+                message: "Land record emailed succesfully."
+            })
         })
         .catch(err => {
             next(err);
