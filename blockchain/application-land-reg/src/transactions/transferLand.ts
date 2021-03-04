@@ -11,7 +11,9 @@ export async function transferLand(
     newKhataNo: number,
     newOwnerName: string,
     price: number,
-    date: Date = new Date(),
+    date: Date,
+    certificate: string,
+    otherDocs: Array<string>,
 ) {
     await submitTransaction('transferLand', [
         khasraNo,
@@ -25,5 +27,7 @@ export async function transferLand(
         newOwnerName,
         price.toString(),
         date.getTime().toString(),
+        certificate,
+        JSON.stringify(otherDocs),
     ]);
 }

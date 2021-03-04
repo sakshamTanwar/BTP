@@ -6,11 +6,8 @@ import {
     validateNumbers,
     getIPointArray,
     getPointQuestions,
-    getFileInput,
+    promptAndUploadFiles,
 } from './utils';
-import { uploadFile } from '../ipfs/uploadFile';
-import fs from 'fs';
-const { CID } = require('ipfs-http-client');
 
 export async function promptAddLand() {
     const quesListAddLand = [
@@ -74,22 +71,7 @@ export async function promptAddLand() {
     // TODO Generate certificate and upload file to IPFS
     const certificate = ' ';
 
-    let files = await getFileInput('otherDocs');
-
-    if (
-        !files.every(filePath => {
-            return fs.existsSync(filePath);
-        })
-    ) {
-        throw Error('One or more added file(s) do not exist');
-    }
-
-    let otherDocs: Array<string> = [];
-
-    for (const filePath of files) {
-        let result = await uploadFile(filePath);
-        otherDocs.push((result as { [key: string]: any }).cid.toString());
-    }
+    const otherDocs = await promptAndUploadFiles();
 
     await addLand(
         results.khasraNo,

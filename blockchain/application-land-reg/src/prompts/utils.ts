@@ -1,5 +1,7 @@
 import { IPoint } from '../../../contract/src/land';
 import inquirer from 'inquirer';
+import fs from 'fs';
+import { uploadFile } from '../ipfs/uploadFile';
 
 inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'));
 
@@ -76,7 +78,7 @@ export function getPointQuestions(pointCnt: Number) {
     return result;
 }
 
-export function getFilePrompt(name: string, msg: string) {
+function getFilePrompt(name: string, msg: string) {
     return {
         type: 'fuzzypath',
         name: name,
@@ -90,7 +92,7 @@ export function getFilePrompt(name: string, msg: string) {
     };
 }
 
-export async function getFileInput(name: string) {
+async function getFileInput(name: string) {
     let n = await inquirer.prompt([
         {
             type: 'text',
@@ -118,4 +120,25 @@ export async function getFileInput(name: string) {
     }
 
     return results;
+}
+
+export async function promptAndUploadFiles() {
+    let files = await getFileInput('otherDocs');
+
+    if (
+        !files.every(filePath => {
+            return fs.existsSync(filePath);
+        })
+    ) {
+        throw Error('One or more added file(s) do not exist');
+    }
+
+    let otherDocs: Array<string> = [];
+
+    for (const filePath of files) {
+        let result = await uploadFile(filePath);
+        otherDocs.push((result as { [key: string]: any }).cid.toString());
+    }
+
+    return otherDocs;
 }

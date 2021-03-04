@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { transferLand } from '../transactions/transferLand';
-import { validateEmpty, validateNumbers, getFileInput } from './utils';
+import { validateEmpty, validateNumbers, promptAndUploadFiles } from './utils';
 
 export async function promptTransferLand() {
     const quesList = [
@@ -60,7 +60,11 @@ export async function promptTransferLand() {
     ];
 
     let results = await inquirer.prompt(quesList);
-    let files = await getFileInput('otherDocs');
+
+    // TODO generate certificate
+    let certificate = ' ';
+
+    const otherDocs = await promptAndUploadFiles();
 
     await transferLand(
         results.khasraNo,
@@ -74,5 +78,7 @@ export async function promptTransferLand() {
         results.newOwner,
         results.price,
         new Date(),
+        certificate,
+        otherDocs,
     );
 }
