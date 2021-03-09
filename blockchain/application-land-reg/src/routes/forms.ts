@@ -6,6 +6,7 @@ import addLandController from '../controllers/addLand';
 import transferLandController from '../controllers/transferLand';
 import splitLandController from '../controllers/splitLand';
 import queryVillageController from '../controllers/queryVillage';
+import queryHistoryController from '../controllers/queryHistory';
 
 const router = express.Router();
 const upload = multer({ dest: path.join(process.cwd(), 'uploads') });
@@ -52,7 +53,23 @@ router.post(
     bodyParser.urlencoded(),
     async (req, res, next) => {
         try {
-            let records = queryVillageController(req);
+            let records = await queryVillageController(req);
+            return res.json({
+                success: true,
+                data: records,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+);
+
+router.post(
+    '/queryHistory',
+    bodyParser.urlencoded(),
+    async (req, res, next) => {
+        try {
+            let records = await queryHistoryController(req);
             return res.json({
                 success: true,
                 data: records,
