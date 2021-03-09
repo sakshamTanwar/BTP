@@ -1,9 +1,11 @@
 import express from 'express';
 import multer, { Field } from 'multer';
+import bodyParser from 'body-parser';
 import path from 'path';
 import addLandController from '../controllers/addLand';
 import transferLandController from '../controllers/transferLand';
 import splitLandController from '../controllers/splitLand';
+import queryVillageController from '../controllers/queryVillage';
 
 const router = express.Router();
 const upload = multer({ dest: path.join(process.cwd(), 'uploads') });
@@ -38,6 +40,22 @@ router.post(
             await splitLandController(req);
             return res.json({
                 success: true,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+);
+
+router.post(
+    '/queryVillage',
+    bodyParser.urlencoded(),
+    async (req, res, next) => {
+        try {
+            let records = queryVillageController(req);
+            return res.json({
+                success: true,
+                data: records,
             });
         } catch (err) {
             next(err);
