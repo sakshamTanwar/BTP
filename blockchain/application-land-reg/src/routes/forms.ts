@@ -50,7 +50,7 @@ router.post(
 
 router.post(
     '/queryVillage',
-    bodyParser.urlencoded(),
+    bodyParser.urlencoded({ extended: true }),
     async (req, res, next) => {
         try {
             let records = await queryVillageController(req);
@@ -66,7 +66,7 @@ router.post(
 
 router.post(
     '/queryHistory',
-    bodyParser.urlencoded(),
+    bodyParser.urlencoded({ extended: true }),
     async (req, res, next) => {
         try {
             let records = await queryHistoryController(req);
