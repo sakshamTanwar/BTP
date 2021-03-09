@@ -6,6 +6,7 @@ import {
     validateNumbers,
     getIPointArray,
     getPointQuestions,
+    promptAndUploadFiles,
 } from './utils';
 
 export async function promptAddLand() {
@@ -67,6 +68,13 @@ export async function promptAddLand() {
     let ptsAnswers = await inquirer.prompt(quesPolyPtsAr);
     let pts: Array<IPoint> = getIPointArray(ptsAnswers, results.numPts);
 
+    // TODO Generate certificate and upload file to IPFS
+    const certificate = ' ';
+
+    const otherDocs = await promptAndUploadFiles(
+        'Enter number of additional files',
+    );
+
     await addLand(
         results.khasraNo,
         results.village,
@@ -77,5 +85,7 @@ export async function promptAddLand() {
         results.area,
         results.khatatNo,
         results.owner,
+        certificate,
+        otherDocs,
     );
 }

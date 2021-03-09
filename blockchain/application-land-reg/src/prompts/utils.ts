@@ -1,4 +1,9 @@
 import { IPoint } from '../../../contract/src/land';
+import inquirer from 'inquirer';
+import fs from 'fs';
+import { uploadFile } from '../ipfs/uploadFile';
+
+inquirer.registerPrompt('fuzzypath', require('inquirer-fuzzy-path'));
 
 export function validateEmpty() {
     return {
@@ -71,4 +76,69 @@ export function getPointQuestions(pointCnt: Number) {
     }
 
     return result;
+}
+
+function getFilePrompt(name: string, msg: string) {
+    return {
+        type: 'fuzzypath',
+        name: name,
+        excludePath: (nodePath: string) => nodePath.startsWith('node_modules'),
+        excludeFilter: (nodePath: string) => nodePath == '.',
+        itemType: 'file',
+        rootPath: './',
+        message: msg,
+        suggestOnly: false,
+        depthLimit: 5,
+    };
+}
+
+async function getFileInput(name: string, msg: string) {
+    let n = await inquirer.prompt([
+        {
+            type: 'text',
+            name: 'numFiles',
+            message: msg,
+            ...validateNumbers(),
+        },
+    ]);
+    n = n.numFiles;
+    let ques = [];
+    for (let i = 1; i <= n; i++) {
+        let prompt = getFilePrompt(
+            name + i.toString(),
+            `Enter path to file ${i.toString()}`,
+        );
+        ques.push(prompt);
+    }
+
+    let promptAns = await inquirer.prompt(ques);
+
+    let results: Array<string> = [];
+
+    for (let i = 1; i <= n; i++) {
+        results.push(promptAns[name + i.toString()]);
+    }
+
+    return results;
+}
+
+export async function promptAndUploadFiles(promptMsg: string) {
+    let files = await getFileInput('otherDocs', promptMsg);
+
+    if (
+        !files.every(filePath => {
+            return fs.existsSync(filePath);
+        })
+    ) {
+        throw Error('One or more added file(s) do not exist');
+    }
+
+    let otherDocs: Array<string> = [];
+
+    for (const filePath of files) {
+        let result = await uploadFile(filePath);
+        otherDocs.push((result as { [key: string]: any }).cid.toString());
+    }
+
+    return otherDocs;
 }

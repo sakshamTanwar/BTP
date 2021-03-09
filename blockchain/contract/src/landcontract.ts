@@ -37,8 +37,11 @@ export class LandContract extends Contract {
         area: string,
         khataNo: string,
         ownerName: string,
+        certificate: string,
+        otherDocs: string,
     ) {
         let owner: IOwner = { khataNo: Number(khataNo), name: ownerName };
+        let othDocs: Array<string> = JSON.parse(otherDocs);
         let pts = JSON.parse(polygonPoints);
         pts = pts.points;
         let land: Land = Land.createInstance(
@@ -50,6 +53,8 @@ export class LandContract extends Contract {
             pts,
             Number(area),
             owner,
+            certificate,
+            othDocs,
         );
 
         await ctx.landList.addLand(land);
@@ -70,6 +75,8 @@ export class LandContract extends Contract {
         newOwnerName: string,
         price: string,
         transferDateTime: string,
+        certificate: string,
+        otherDocs: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -99,12 +106,15 @@ export class LandContract extends Contract {
         };
 
         land.setOwner(newOwner);
+        let othDocs: Array<string> = JSON.parse(otherDocs);
         let landTransfer: LandTransfer = LandTransfer.createInstance(
             land.getKey(),
             Number(price),
             Number(transferDateTime),
             currentOwner,
             newOwner,
+            certificate,
+            othDocs,
         );
 
         await ctx.landList.updateLand(land);
@@ -122,9 +132,13 @@ export class LandContract extends Contract {
         newKhasraNoA: string,
         newPolygonPointsA: string,
         areaA: string,
+        certificateA: string,
+        otherDocsA: string,
         newKhasraNoB: string,
         newPolygonPointsB: string,
         areaB: string,
+        certificateB: string,
+        otherDocsB: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -143,6 +157,7 @@ export class LandContract extends Contract {
         land.setExpired();
 
         let ptsA = JSON.parse(newPolygonPointsA);
+        let othDocsA: Array<string> = JSON.parse(otherDocsA);
         let landA: Land = Land.createInstance(
             newKhasraNoA,
             village,
@@ -152,10 +167,13 @@ export class LandContract extends Contract {
             ptsA,
             Number(areaA),
             land.getOwner(),
+            certificateA,
+            othDocsA,
             landKey,
         );
 
         let ptsB = JSON.parse(newPolygonPointsB);
+        let othDocsB: Array<string> = JSON.parse(otherDocsB);
         let landB: Land = Land.createInstance(
             newKhasraNoB,
             village,
@@ -165,6 +183,8 @@ export class LandContract extends Contract {
             ptsB,
             Number(areaB),
             land.getOwner(),
+            certificateB,
+            othDocsB,
             landKey,
         );
 

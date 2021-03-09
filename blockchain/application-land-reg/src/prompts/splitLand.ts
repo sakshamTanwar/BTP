@@ -5,6 +5,7 @@ import {
     validateNumbers,
     getPointQuestions,
     getIPointArray,
+    promptAndUploadFiles,
 } from './utils';
 
 export async function promptSplitLand() {
@@ -72,11 +73,19 @@ export async function promptSplitLand() {
     let ptsQuesA = getPointQuestions(results.numPtsA);
     let ptsA = await inquirer.prompt(ptsQuesA);
     ptsA = getIPointArray(ptsA, results.numPtsA);
+    let certificateA = ' '; // TODO
+    const otherDocsA = await promptAndUploadFiles(
+        'Enter number of additional files for 1st land',
+    );
 
     console.log('Enter points for 2st land');
     let ptsQuesB = getPointQuestions(results.numPtsB);
     let ptsB = await inquirer.prompt(ptsQuesB);
     ptsB = getIPointArray(ptsB, results.numPtsB);
+    let certificateB = ' '; //TODO
+    const otherDocsB = await promptAndUploadFiles(
+        'Enter number of additional files for 2nd land',
+    );
 
     await splitLand(
         results.khasraNo,
@@ -87,8 +96,12 @@ export async function promptSplitLand() {
         results.newKhasraNoA,
         ptsA,
         results.newAreaA,
+        certificateA,
+        otherDocsA,
         results.newKhasraNoB,
         ptsB,
         results.newAreaB,
+        certificateB,
+        otherDocsB,
     );
 }

@@ -15,6 +15,8 @@ export interface ILand {
     polygonPoints: Array<IPoint>;
     area: number;
     owner: IOwner;
+    certificate: string;
+    otherDocs: Array<string>;
     parentLandKey: string;
     expired: Boolean;
 }
@@ -28,6 +30,8 @@ export class Land extends State {
     private polygonPoints: Array<IPoint>;
     private area: number;
     private owner: IOwner;
+    private certificate: string;
+    private otherDocs: Array<string>;
     private parentLandKey: string | null;
     private expired: Boolean;
 
@@ -118,6 +122,8 @@ export class Land extends State {
         polygonPoints: Array<IPoint>,
         area: number,
         owner: IOwner,
+        certificate: string,
+        otherDocs: Array<string>,
         parentLandKey: string | null = null,
         expired: Boolean = false,
     ) {
@@ -130,6 +136,8 @@ export class Land extends State {
             polygonPoints,
             area,
             owner,
+            certificate,
+            otherDocs,
             parentLandKey,
             expired,
         });

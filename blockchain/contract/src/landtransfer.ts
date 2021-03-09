@@ -7,6 +7,8 @@ export interface ILandTransfer {
     timestamp: Number;
     prevOwner: IOwner;
     newOwner: IOwner;
+    certificate: string;
+    otherDocs: Array<string>;
 }
 
 export class LandTransfer extends State {
@@ -15,6 +17,8 @@ export class LandTransfer extends State {
     private timestamp: Number;
     private prevOwner: IOwner;
     private newOwner: IOwner;
+    private certificate: string;
+    private otherDocs: Array<string>;
 
     constructor(obj: ILandTransfer) {
         super(LandTransfer.getClass(), [obj.landKey, obj.timestamp.toString()]);
@@ -47,6 +51,8 @@ export class LandTransfer extends State {
         timestamp: Number,
         prevOwner: IOwner,
         newOwner: IOwner,
+        certificate: string,
+        otherDocs: Array<string>,
     ) {
         return new LandTransfer({
             landKey,
@@ -54,6 +60,8 @@ export class LandTransfer extends State {
             timestamp,
             prevOwner,
             newOwner,
+            certificate,
+            otherDocs,
         });
     }
 }
