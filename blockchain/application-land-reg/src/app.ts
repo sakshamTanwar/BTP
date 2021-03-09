@@ -1,7 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
-
+import formRouter from './routes/forms';
 const app = express();
 const port = process.env.port || 8080;
+
+app.use('/form', formRouter);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let statusCode = err.statusCode || 500;
