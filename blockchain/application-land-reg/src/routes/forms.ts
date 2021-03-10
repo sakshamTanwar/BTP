@@ -11,7 +11,19 @@ import queryHistoryController from '../controllers/queryHistory';
 const router = express.Router();
 const upload = multer({ dest: path.join(process.cwd(), 'uploads') });
 
-router.post('/add', upload.array('otherDocs'), async (req, res, next) => {
+router.get('/add', (req, res, next) => {
+      res.render('add.ejs');
+});
+
+router.get('/transfer', (req, res, next) => {
+    res.render('transfer.ejs');
+});
+
+router.get('/split', (req, res, next) => {
+    res.render('split.ejs');
+});
+
+router.post('/add', upload.fields([{ name: 'otherDocs' }]), async (req, res, next) => {
     try {
         await addLandController(req);
         return res.json({
@@ -22,7 +34,7 @@ router.post('/add', upload.array('otherDocs'), async (req, res, next) => {
     }
 });
 
-router.post('/transfer', upload.array('otherDocs'), async (req, res, next) => {
+router.post('/transfer', upload.fields([{ name: 'otherDocs' }]), async (req, res, next) => {
     try {
         await transferLandController(req);
         return res.json({
