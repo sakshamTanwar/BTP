@@ -23,6 +23,15 @@ router.get('/split', (req, res, next) => {
     res.render('split.ejs');
 });
 
+router.get('/queryVillage', (req, res, next) => {
+    res.render('queryVillage.ejs');
+});
+
+router.get('/queryHistory', (req, res, next) => {
+    res.render('queryHistory.ejs');
+});
+
+
 router.post('/add', upload.fields([{ name: 'otherDocs' }]), async (req, res, next) => {
     try {
         await addLandController(req);
@@ -66,10 +75,8 @@ router.post(
     async (req, res, next) => {
         try {
             let records = await queryVillageController(req);
-            return res.json({
-                success: true,
-                data: records,
-            });
+            return res.render('showVillageRecords.ejs', {data: records});
+
         } catch (err) {
             next(err);
         }
@@ -82,10 +89,7 @@ router.post(
     async (req, res, next) => {
         try {
             let records = await queryHistoryController(req);
-            return res.json({
-                success: true,
-                data: records,
-            });
+            return res.render('showHistory.ejs', {data: records});
         } catch (err) {
             next(err);
         }
