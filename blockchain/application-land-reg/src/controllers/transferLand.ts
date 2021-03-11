@@ -32,7 +32,8 @@ async function transferLandController(req: Request) {
     ) {
         throw new Error('Invalid Data');
     }
-
+    
+    date = new Date(date);
     const certificate = ' ';
 
     const otherDocs = [];
