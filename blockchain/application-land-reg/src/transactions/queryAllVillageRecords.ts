@@ -6,7 +6,7 @@ export async function queryAllVillageRecords(
     district: string,
     state: string,
 ) {
-    await submitTransaction('getAllRecordsInVillage', [
+    return await submitTransaction('getAllRecordsInVillage', [
         village,
         subDistrict,
         district,

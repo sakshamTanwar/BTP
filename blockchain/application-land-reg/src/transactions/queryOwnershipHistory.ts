@@ -7,7 +7,7 @@ export async function queryOwnershipHistory(
     district: string,
     state: string,
 ) {
-    await submitTransaction('getOwnershipHistory', [
+    return await submitTransaction('getOwnershipHistory', [
         khasraNo,
         village,
         subDistrict,
