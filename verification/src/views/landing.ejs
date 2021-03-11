@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+        <title>Verify Certificate</title>
+    </head>
+    <body>
+        <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+            <div class="container" >
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card rounded-0 shadow">
+                            <div class="card-body">
+                                <h3>Download Certificate</h3>
+                                <form action="/" method="POST">
+                                    <div class="form-group">
+                                        <label for="hash">IPFS Location Hash: </label>
+                                        <input required type="text" name="hash" class="form-control" id="hash" placeholder="Enter Hash">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="/jquery/jquery.min.js"></script>
+                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+            </div>
+    </body>
+</html>
