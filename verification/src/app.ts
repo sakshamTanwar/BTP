@@ -1,7 +1,7 @@
+import path from 'path'
 import express, { NextFunction, Request, Response } from 'express'
 
 import { LandingRouter } from './routes'
-import path from 'path'
 
 const app = express()
 const port = process.env.port || 3030
@@ -15,9 +15,9 @@ app.use('/jquery', express.static(path.join(__dirname, '../node_modules/jquery/d
 app.use('/', LandingRouter)
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-	let statusCode = err.statusCode || 500
-	let errorCode = err.error || 'server_err'
-	let message = err.message || 'Internal Server Error'
+	const statusCode = err.statusCode || 500
+	const errorCode = err.error || 'server_err'
+	const message = err.message || 'Internal Server Error'
 	res.status(statusCode).send({
 		success: false,
 		error: {
