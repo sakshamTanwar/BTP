@@ -19,34 +19,34 @@
                                 <form action="/form/split" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>
-                                        <input type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number">
+                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number">
                                     </div>
                                     <div class="form-group">
                                         <label for="village">Village:</label>
-                                        <input type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village">
+                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village">
                                         <!-- <small id="" class="form-text text-muted"></small> -->
                                     </div>
                                     <div class="form-group">
                                         <label for="subDistrict">Sub-District: </label>
-                                        <input type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District">
+                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District">
                                     </div>
                                     <div class="form-group">
                                         <label for="district">District: </label>
-                                        <input type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District">
+                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District">
                                     </div>
                                     <div class="form-group">
                                         <label for="state">State: </label>
-                                        <input type="text" name="state" class="form-control" id="state" placeholder="Enter state">
+                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state">
                                     </div>
 
                                     <!-- Details for Land A -->
                                     <div class="form-group">
                                         <label for="newKhasraNoA">New Khasra Number A: </label>
-                                        <input type="text" name="newKhasraNoA" class="form-control" id="newKhasraNoA" placeholder="Enter New Khasra Number A">
+                                        <input required type="text" name="newKhasraNoA" class="form-control" id="newKhasraNoA" placeholder="Enter New Khasra Number A">
                                     </div>
                                     <div class="form-group">
                                         <label for="numPtsA">Number of Points in Land A:</label>
-                                        <input type="text" name="numPtsA" class="form-control" id="numPtsA" placeholder="Enter number of points in Land A" oninput="addPointFields(this.value, 'pointsA', 'Alat', 'Alon')">
+                                        <input required type="text" name="numPtsA" class="form-control" id="numPtsA" placeholder="Enter number of points in Land A" oninput="addPointFields(this.value, 'pointsA', 'Alat', 'Alon')">
                                     </div>
                                     <div class="form-group" id="pointsA" >
                                          <!-- Add fields for lat lon points dynamically -->
@@ -54,18 +54,18 @@
                                     
                                     <div class="form-group">
                                         <label for="areaA">Land Area A:</label>
-                                        <input type="text" name="areaA" class="form-control" id="areaA" placeholder="Enter Land Area A">
+                                        <input required type="text" name="areaA" class="form-control" id="areaA" placeholder="Enter Land Area A">
                                     </div>
                                     
 
                                     <!-- Details for Land B -->
                                     <div class="form-group">
                                         <label for="newKhasraNoB">New Khasra Number B: </label>
-                                        <input type="text" name="newKhasraNoB" class="form-control" id="newKhasraNoB" placeholder="Enter New Khasra Number B">
+                                        <input required type="text" name="newKhasraNoB" class="form-control" id="newKhasraNoB" placeholder="Enter New Khasra Number B">
                                     </div>
                                     <div class="form-group">
                                         <label for="numPtsB">Number of Points in Land B:</label>
-                                        <input type="text" name="numPtsB" class="form-control" id="numPtsB" placeholder="Enter number of points in Land B" oninput="addPointFields(this.value, 'pointsB', 'Blat', 'Blon')">
+                                        <input required type="text" name="numPtsB" class="form-control" id="numPtsB" placeholder="Enter number of points in Land B" oninput="addPointFields(this.value, 'pointsB', 'Blat', 'Blon')">
                                     </div>
                                     <div class="form-group" id="pointsB" >
                                          <!-- Add fields for lat lon points dynamically -->
@@ -73,21 +73,21 @@
                                     
                                     <div class="form-group">
                                         <label for="areaB">Land Area B:</label>
-                                        <input type="text" name="areaB" class="form-control" id="areaB" placeholder="Enter Land Area B">
+                                        <input required type="text" name="areaB" class="form-control" id="areaB" placeholder="Enter Land Area B">
                                     </div>
                                     
 
                                     <!-- <div class="form-group">
                                         <label for="certificate">Certificate:</label>
-                                        <input type="file" name="certificate" class="form-control" id="certificate">
+                                        <input required type="file" name="certificate" class="form-control" id="certificate">
                                     </div> -->
                                     <div class="form-group">
                                         <label for="otherDocsA">Other Docs A:</label>
-                                        <input type="file" name="otherDocsA" class="form-control" id="otherDocsA" multiple>
+                                        <input required type="file" name="otherDocsA" class="form-control" id="otherDocsA" multiple>
                                     </div>
                                     <div class="form-group">
                                         <label for="otherDocsB">Other Docs B:</label>
-                                        <input type="file" name="otherDocsB" class="form-control" id="otherDocsB" multiple>
+                                        <input required type="file" name="otherDocsB" class="form-control" id="otherDocsB" multiple>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
@@ -123,6 +123,7 @@
                           latInput.id = lat + i;
                           latInput.className = "form-control col-sm-4"
                           latInput.placeholder = "Enter Latitude";
+                          latInput.required = true;
                           rowDiv.appendChild(latInput);
                           
                           var lonInput = document.createElement("input");
@@ -131,6 +132,7 @@
                           lonInput.id = lon + i;
                           lonInput.className = "form-control ml-2 col-sm-4"
                           lonInput.placeholder = "Enter Longitude";
+                          lonInput.required = true;
                           rowDiv.appendChild(lonInput);
 
                           fieldSet.appendChild(rowDiv);
