@@ -6,7 +6,8 @@
 	"scripts": {
 		"start": "yarn copy && tsc-watch --onSuccess \"node ./dist/app.js\"",
 		"copy": "copyfiles src/views/*.ejs dist/views -f",
-		"build": "tsc && yarn copy"
+		"build": "tsc && yarn copy",
+		"lint": "eslint . --ext .js,.jsx,.ts,.tsx"
 	},
 	"dependencies": {
 		"bootstrap": "^4.6.0",
