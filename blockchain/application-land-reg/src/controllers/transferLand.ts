@@ -32,7 +32,7 @@ async function transferLandController(req: Request) {
     ) {
         throw new Error('Invalid Data');
     }
-    
+
     date = new Date(date);
     const certificate = ' ';
 
@@ -54,7 +54,7 @@ async function transferLandController(req: Request) {
         currentKhataNo,
         currentOwnerName,
         newKhataNo,
-        newKhataNo,
+        newOwnerName,
         price,
         date,
         certificate,
