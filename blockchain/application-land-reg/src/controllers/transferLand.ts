@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { transferLand } from '../transactions/transferLand';
-import { uploadFile } from '../ipfs/uploadFile';
+import { transferLand } from '../services/transactions/transferLand';
+import { uploadFile } from '../services/ipfs/uploadFile';
 
 async function transferLandController(req: Request) {
     let {

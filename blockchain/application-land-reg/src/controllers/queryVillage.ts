@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { queryAllVillageRecords } from '../transactions/queryAllVillageRecords';
+import { queryAllVillageRecords } from '../services/transactions/queryAllVillageRecords';
 
 async function queryVillageController(req: Request) {
     let { village, subDistrict, district, state } = req.body;

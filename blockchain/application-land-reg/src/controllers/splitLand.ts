@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { splitLand } from '../transactions/splitLand';
-import { uploadFile } from '../ipfs/uploadFile';
+import { splitLand } from '../services/transactions/splitLand';
+import { uploadFile } from '../services/ipfs/uploadFile';
 
 async function uploadFiles(files: Express.Multer.File[]) {
     const cids = [];

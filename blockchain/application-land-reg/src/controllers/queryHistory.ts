@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { queryOwnershipHistory } from '../transactions/queryOwnershipHistory';
+import { queryOwnershipHistory } from '../services/transactions/queryOwnershipHistory';
 
 async function queryHistoryController(req: Request) {
     let { khasraNo, village, subDistrict, district, state } = req.body;
