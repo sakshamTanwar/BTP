@@ -1,6 +1,9 @@
+import path from 'path';
 import { Request } from 'express';
 import { addLand } from '../services/transactions/addLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
+import genCertAddLand from '../services/certificates/addLandCertificate';
+import { ILand } from '../../../contract/src/land';
 
 async function addLandController(req: Request) {
     let {
@@ -42,7 +45,28 @@ async function addLandController(req: Request) {
         });
     }
 
-    const certificate = ' ';
+    const savePath = path.join(
+        process.cwd(),
+        'temp',
+        `addLand${new Date().getTime()}.pdf`,
+    );
+    await genCertAddLand(
+        {
+            khasraNo,
+            village,
+            subDistrict,
+            district,
+            state,
+            area,
+            owner: {
+                khataNo,
+                name: ownerName,
+            },
+        } as ILand,
+        process.env.CERT,
+        savePath,
+    );
+    const certificate = (await uploadFile(savePath)).cid.toString();
 
     const otherDocs = [];
 
