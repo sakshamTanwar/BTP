@@ -1,5 +1,4 @@
 import PdfPrinter from 'pdfmake';
-import { ILandTransfer } from '../../../../contract/src/landtransfer';
 import { PathLike } from 'fs';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import fs from 'fs';
@@ -15,7 +14,7 @@ const fonts = {
 };
 
 export default async function generateCertificate(
-    landTransfer: ILandTransfer,
+    landTransfer: any,
     p12Cert: PathLike,
     savePath: PathLike,
 ) {
@@ -23,7 +22,7 @@ export default async function generateCertificate(
     signPDF(savePath, p12Cert);
 }
 
-function generatePDF(landTransfer: ILandTransfer, savePath: PathLike) {
+function generatePDF(landTransfer: any, savePath: PathLike) {
     let docDefinition: TDocumentDefinitions = getDocDefinition(landTransfer);
 
     const pdfDoc = new PdfPrinter(fonts).createPdfKitDocument(docDefinition);
@@ -36,14 +35,7 @@ function generatePDF(landTransfer: ILandTransfer, savePath: PathLike) {
     });
 }
 
-function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
-    const [
-        state,
-        district,
-        subDistrict,
-        village,
-        khasraNo,
-    ] = landTransfer.landKey.split(':');
+function getDocDefinition(landTransfer: any): TDocumentDefinitions {
     return {
         content: [
             {
@@ -57,7 +49,7 @@ function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
                         text: 'Khasra No: ',
                         bold: true,
                     },
-                    khasraNo,
+                    landTransfer.khasraNo,
                 ],
             },
             {
@@ -66,7 +58,7 @@ function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
                         text: 'Village: ',
                         bold: true,
                     },
-                    village,
+                    landTransfer.village,
                 ],
             },
             {
@@ -75,7 +67,7 @@ function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
                         text: 'Sub-District: ',
                         bold: true,
                     },
-                    subDistrict,
+                    landTransfer.subDistrict,
                 ],
             },
             {
@@ -84,7 +76,7 @@ function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
                         text: 'District: ',
                         bold: true,
                     },
-                    district,
+                    landTransfer.district,
                 ],
             },
             {
@@ -93,7 +85,7 @@ function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
                         text: 'State: ',
                         bold: true,
                     },
-                    state,
+                    landTransfer.state,
                 ],
             },
             {
