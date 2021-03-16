@@ -1,7 +1,8 @@
 import fs, { PathLike } from 'fs';
-
-const signer = require('node-signpdf');
-const plainAddPlaceholder = require('node-signpdf/helpers/plainAddPlaceHolder');
+// @ts-ignore
+import { plainAddPlaceholder } from '../../../../../node_modules/node-signpdf/dist/helpers';
+// @ts-ignore
+import signer from 'node-signpdf';
 
 export default function signPDF(pdfPath: PathLike, p12cert: PathLike) {
     const p12Buffer = fs.readFileSync(p12cert);

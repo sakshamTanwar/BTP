@@ -19,13 +19,23 @@ export default async function generateCertificate(
     p12Cert: PathLike,
     savePath: PathLike,
 ) {
+    await generatePDF(land, savePath);
+    const buf = fs.readFileSync(savePath);
+    //console.log(buf.toString());
+    signPDF(savePath, p12Cert);
+}
+
+function generatePDF(land: ILand, savePath: PathLike) {
     let docDefinition: TDocumentDefinitions = getDocDefinition(land);
 
     const pdfDoc = new PdfPrinter(fonts).createPdfKitDocument(docDefinition);
-    pdfDoc.pipe(fs.createWriteStream(savePath));
+    const writeStream = fs.createWriteStream(savePath);
+    pdfDoc.pipe(writeStream);
     pdfDoc.end();
-
-    signPDF(savePath, p12Cert);
+    return new Promise<void>((resolve, reject) => {
+        writeStream.on('finish', resolve);
+        writeStream.on('error', reject);
+    });
 }
 
 function getDocDefinition(land: ILand): TDocumentDefinitions {
