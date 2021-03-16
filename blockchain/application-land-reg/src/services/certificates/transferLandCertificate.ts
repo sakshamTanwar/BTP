@@ -1,5 +1,5 @@
 import PdfPrinter from 'pdfmake';
-import { ILand } from '../../../../contract/src/land';
+import { ILandTransfer } from '../../../../contract/src/landtransfer';
 import { PathLike } from 'fs';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import fs from 'fs';
@@ -15,16 +15,16 @@ const fonts = {
 };
 
 export default async function generateCertificate(
-    land: ILand,
+    landTransfer: ILandTransfer,
     p12Cert: PathLike,
     savePath: PathLike,
 ) {
-    await generatePDF(land, savePath);
+    await generatePDF(landTransfer, savePath);
     signPDF(savePath, p12Cert);
 }
 
-function generatePDF(land: ILand, savePath: PathLike) {
-    let docDefinition: TDocumentDefinitions = getDocDefinition(land);
+function generatePDF(landTransfer: ILandTransfer, savePath: PathLike) {
+    let docDefinition: TDocumentDefinitions = getDocDefinition(landTransfer);
 
     const pdfDoc = new PdfPrinter(fonts).createPdfKitDocument(docDefinition);
     const writeStream = fs.createWriteStream(savePath);
@@ -36,11 +36,18 @@ function generatePDF(land: ILand, savePath: PathLike) {
     });
 }
 
-function getDocDefinition(land: ILand): TDocumentDefinitions {
+function getDocDefinition(landTransfer: ILandTransfer): TDocumentDefinitions {
+    const [
+        state,
+        district,
+        subDistrict,
+        village,
+        khasraNo,
+    ] = landTransfer.landKey.split(':');
     return {
         content: [
             {
-                text: 'Land Record',
+                text: 'Land Transfer Record',
                 fontSize: 15,
                 alignment: 'center',
             },
@@ -50,7 +57,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'Khasra No: ',
                         bold: true,
                     },
-                    land.khasraNo,
+                    khasraNo,
                 ],
             },
             {
@@ -59,7 +66,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'Village: ',
                         bold: true,
                     },
-                    land.village,
+                    village,
                 ],
             },
             {
@@ -68,7 +75,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'Sub-District: ',
                         bold: true,
                     },
-                    land.subDistrict,
+                    subDistrict,
                 ],
             },
             {
@@ -77,7 +84,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'District: ',
                         bold: true,
                     },
-                    land.district,
+                    district,
                 ],
             },
             {
@@ -86,34 +93,63 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'State: ',
                         bold: true,
                     },
-                    land.state,
+                    state,
                 ],
             },
             {
                 text: [
                     {
-                        text: 'Area: ',
+                        text: 'Transfer Date: ',
                         bold: true,
                     },
-                    `${land.area.toString()} sq m`,
+                    `${new Date(
+                        landTransfer.timestamp as number,
+                    ).toDateString()}`,
                 ],
             },
             {
                 text: [
                     {
-                        text: 'Khata No: ',
+                        text: 'Seller Khata No: ',
                         bold: true,
                     },
-                    `${land.owner.khataNo.toString()}`,
+                    `${landTransfer.prevOwner.khataNo.toString()}`,
                 ],
             },
             {
                 text: [
                     {
-                        text: 'Owner Name: ',
+                        text: 'Seller Name: ',
                         bold: true,
                     },
-                    land.owner.name,
+                    landTransfer.prevOwner.name,
+                ],
+            },
+            {
+                text: [
+                    {
+                        text: 'Buyer Khata No: ',
+                        bold: true,
+                    },
+                    `${landTransfer.newOwner.khataNo.toString()}`,
+                ],
+            },
+            {
+                text: [
+                    {
+                        text: 'Buyer Name: ',
+                        bold: true,
+                    },
+                    landTransfer.newOwner.name,
+                ],
+            },
+            {
+                text: [
+                    {
+                        text: 'Price: ',
+                        bold: true,
+                    },
+                    `${landTransfer.price.toString()}`,
                 ],
             },
         ],
