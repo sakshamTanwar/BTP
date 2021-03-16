@@ -254,4 +254,33 @@ export class LandContract extends Contract {
         console.log(results);
         return JSON.stringify(results);
     }
+
+    async getLandByCertificate(
+        ctx: LandContext, 
+        certificate: string
+    ) {
+		
+
+        let query = new QueryUtils(ctx, LANDLIST);
+        let results = await query.getRecordByQueryObject({
+            certificate: certificate
+        });
+        console.log(results);
+        return JSON.stringify(results);
+    }
+    
+    async getTransactionByCertificate(
+        ctx: LandContext, 
+        certificate: string
+    ) {
+		
+
+        let query = new QueryUtils(ctx, TRANSFERLIST);
+        let results = await query.getRecordByQueryObject({
+            certificate: certificate
+        });
+        console.log(results);
+        return JSON.stringify(results);
+    }
 }
+

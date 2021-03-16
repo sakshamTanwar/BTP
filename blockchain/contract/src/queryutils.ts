@@ -43,6 +43,15 @@ export class QueryUtils {
         return results;
     }
 
+    async getRecordByQueryObject(queryObject: Object) {
+        let queryString = {
+            selector: queryObject
+        };
+        const resultsIterator = await this.ctx.stub.getQueryResult(JSON.stringify(queryString));
+        let results = await this.getAllResults(resultsIterator);
+        return results;
+    }
+
     async getAllResults(
         iterator:
             | Iterators.CommonIterator<Iterators.KeyModification>
