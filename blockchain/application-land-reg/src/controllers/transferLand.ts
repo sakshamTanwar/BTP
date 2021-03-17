@@ -17,6 +17,7 @@ async function transferLandController(req: Request) {
         newOwnerName,
         price,
         date,
+        dateTime,
     } = req.body;
 
     if (
@@ -30,10 +31,13 @@ async function transferLandController(req: Request) {
         !newKhataNo ||
         !newOwnerName ||
         !price ||
-        !date
+        !date ||
+        !dateTime
     ) {
         throw new Error('Invalid Data');
     }
+
+    date = new Date(parseInt(dateTime));
 
     const savePath = path.join(
         process.cwd(),
@@ -48,7 +52,7 @@ async function transferLandController(req: Request) {
             district,
             state,
             prevOwner: {
-                kahtaNo: currentKhataNo,
+                khataNo: currentKhataNo,
                 name: currentOwnerName,
             },
             newOwner: {
@@ -56,6 +60,7 @@ async function transferLandController(req: Request) {
                 name: newOwnerName,
             },
             price,
+            timestamp: date,
         },
         process.env.CERT,
         savePath,
