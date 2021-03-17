@@ -19,28 +19,28 @@
                                 <form action="/form/add" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>
-                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number">
+                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number" pattern="[0-9]+(\/[0-9]+)*">
                                     </div>
                                     <div class="form-group">
                                         <label for="village">Village:</label>
-                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village">
+                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village" pattern="[a-zA-Z][a-zA-Z ]*">
                                         <!-- <small id="" class="form-text text-muted"></small> -->
                                     </div>
                                     <div class="form-group">
                                         <label for="subDistrict">Sub-District: </label>
-                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District">
+                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District" pattern="[a-zA-Z][a-zA-Z ]*">
                                     </div>
                                     <div class="form-group">
                                         <label for="district">District: </label>
-                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District">
+                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District" pattern="[a-zA-Z][a-zA-Z ]*">
                                     </div>
                                     <div class="form-group">
                                         <label for="state">State: </label>
-                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state">
+                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state" pattern="[a-zA-Z][a-zA-Z ]*">
                                     </div>
                                     <div class="form-group">
                                         <label for="numPts">Number of Points:</label>
-                                        <input required type="text" name="numPts" class="form-control" id="numPts" placeholder="Enter number of points" oninput="addPointFields()">
+                                        <input required type="number" name="numPts" class="form-control" id="numPts" placeholder="Enter number of points" oninput="addPointFields()" min="3">
                                     </div>
                                     <div class="form-group" id="points" >
                                          <!-- Add fields for lat lon points dynamically -->
@@ -48,15 +48,15 @@
                                     
                                     <div class="form-group">
                                         <label for="area">Land Area:</label>
-                                        <input required type="text" name="area" class="form-control" id="area" placeholder="Enter land area">
+                                        <input required type="number" min="0.000001" step="0.000001" name="area" class="form-control" id="area" placeholder="Enter land area">
                                     </div>
                                     <div class="form-group">
                                         <label for="khataNo">Khata Number:</label>
-                                        <input required type="text" name="khataNo" class="form-control" id="khataNo" placeholder="Enter Khata number of owner">
+                                        <input required type="number" name="khataNo" class="form-control" id="khataNo" placeholder="Enter Khata number of owner">
                                     </div>
                                     <div class="form-group">
                                         <label for="ownerName">Owner Name:</label>
-                                        <input required type="text" name="ownerName" class="form-control" id="ownerName" placeholder="Enter owner name">
+                                        <input required type="text" name="ownerName" class="form-control" id="ownerName" placeholder="Enter owner name" pattern="[a-zA-Z][a-zA-Z ]*">
                                     </div>
                                     <!-- <div class="form-group">
                                         <label for="certificate">Certificate:</label>
@@ -64,7 +64,7 @@
                                     </div> -->
                                     <div class="form-group">
                                         <label for="otherDocs">Other Docs:</label>
-                                        <input required type="file" name="otherDocs" class="form-control" id="otherDocs" multiple>
+                                        <input type="file" name="otherDocs" class="form-control" id="otherDocs" multiple>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Submit</button>
                                 </form>
@@ -92,7 +92,7 @@
                           
                           var legend = document.createElement("legend");
                           legend.className = "col-form-label col-sm-2";
-                          legend.innerHTML = "Point-"+i;
+                          legend.innerHTML = "Point "+(i + 1).toString();
                           rowDiv.appendChild(legend);
                           
                           var latInput = document.createElement("input");
