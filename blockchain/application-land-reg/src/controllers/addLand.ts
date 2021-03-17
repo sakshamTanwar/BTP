@@ -5,6 +5,41 @@ import { uploadFile } from '../services/ipfs/uploadFile';
 import genCertAddLand from '../services/certificates/addLandCertificate';
 import { ILand } from '../../../contract/src/land';
 
+function isDataValid(
+    khasraNo: any,
+    village: any,
+    subDistrict: any,
+    district: any,
+    state: any,
+    numPts: any,
+    area: any,
+    khataNo: any,
+    ownerName: any,
+) {
+    const khasraRe = new RegExp('^[0-9]+(/[0-9]+)*$');
+    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
+
+    if (
+        !khasraRe.test(khasraNo) ||
+        !nameRe.test(village) ||
+        !nameRe.test(subDistrict) ||
+        !nameRe.test(district) ||
+        !nameRe.test(state) ||
+        !nameRe.test(ownerName)
+    )
+        return false;
+
+    numPts = parseInt(numPts);
+    area = parseInt(area);
+    khataNo = parseInt(khataNo);
+
+    if (isNaN(numPts) || isNaN(area) || isNaN(khataNo)) return false;
+
+    if (numPts < 3 || area <= 0 || khataNo <= 0) return false;
+
+    return true;
+}
+
 async function addLandController(req: Request) {
     let {
         khasraNo,
@@ -19,15 +54,17 @@ async function addLandController(req: Request) {
     } = req.body;
 
     if (
-        !khasraNo ||
-        !village ||
-        !subDistrict ||
-        !district ||
-        !state ||
-        !numPts ||
-        !area ||
-        !khataNo ||
-        !ownerName
+        !isDataValid(
+            khasraNo,
+            village,
+            subDistrict,
+            district,
+            state,
+            numPts,
+            area,
+            khataNo,
+            ownerName,
+        )
     ) {
         throw new Error('Invalid Data');
     }
@@ -69,12 +106,15 @@ async function addLandController(req: Request) {
     const certificate = (await uploadFile(savePath)).cid.toString();
 
     const otherDocs = [];
+    if (req.files && Object.keys(req.files).length > 0) {
+        const files = req.files as {
+            [fieldname: string]: Express.Multer.File[];
+        };
 
-    const files = req.files as { [fieldname: string]: Express.Multer.File[] };
-
-    for (const file of files['otherDocs']) {
-        const ipfsRes = await uploadFile(file.path);
-        otherDocs.push(ipfsRes.cid.toString());
+        for (const file of files['otherDocs']) {
+            const ipfsRes = await uploadFile(file.path);
+            otherDocs.push(ipfsRes.cid.toString());
+        }
     }
 
     await addLand(

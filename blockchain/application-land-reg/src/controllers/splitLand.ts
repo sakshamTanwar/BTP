@@ -2,9 +2,64 @@ import { Request } from 'express';
 import { splitLand } from '../services/transactions/splitLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
 
-async function uploadFiles(files: Express.Multer.File[]) {
-    const cids = [];
+function isDataValid(
+    khasraNo: any,
+    village: any,
+    subDistrict: any,
+    district: any,
+    state: any,
+    newKhasraNoA: any,
+    numPtsA: any,
+    areaA: any,
+    newKhasraNoB: any,
+    numPtsB: any,
+    areaB: any,
+) {
+    const khasraRe = new RegExp('^[0-9]+(/[0-9]+)*$');
+    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
 
+    if (
+        !khasraRe.test(khasraNo) ||
+        !nameRe.test(village) ||
+        !nameRe.test(subDistrict) ||
+        !nameRe.test(district) ||
+        !nameRe.test(state)
+    )
+        return false;
+
+    newKhasraNoA = parseInt(newKhasraNoA);
+    numPtsA = parseInt(numPtsA);
+    areaA = parseInt(areaA);
+    newKhasraNoB = parseInt(newKhasraNoB);
+    numPtsB = parseInt(numPtsB);
+    areaB = parseInt(areaB);
+
+    if (
+        isNaN(newKhasraNoA) ||
+        isNaN(numPtsA) ||
+        isNaN(areaA) ||
+        isNaN(newKhasraNoB) ||
+        isNaN(numPtsB) ||
+        isNaN(areaB)
+    )
+        return false;
+
+    if (
+        newKhasraNoA <= 0 ||
+        numPtsA < 3 ||
+        areaA <= 0 ||
+        newKhasraNoB <= 0 ||
+        numPtsB < 3 ||
+        areaB <= 0
+    )
+        return false;
+
+    return true;
+}
+
+async function uploadFiles(files: Express.Multer.File[]) {
+    const cids: string[] = [];
+    if (!files) return cids;
     for (const file of files) {
         const ipfsRes = await uploadFile(file.path);
         cids.push(ipfsRes.cid.toString());
@@ -46,17 +101,19 @@ async function splitLandController(req: Request) {
     } = req.body;
 
     if (
-        !khasraNo ||
-        !village ||
-        !subDistrict ||
-        !district ||
-        !state ||
-        !newKhasraNoA ||
-        !numPtsA ||
-        !areaA ||
-        !newKhasraNoB ||
-        !numPtsB ||
-        !areaB
+        !isDataValid(
+            khasraNo,
+            village,
+            subDistrict,
+            district,
+            state,
+            newKhasraNoA,
+            numPtsA,
+            areaA,
+            newKhasraNoB,
+            numPtsB,
+            areaB,
+        )
     ) {
         throw new Error('Invalid Data');
     }
