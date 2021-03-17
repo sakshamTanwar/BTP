@@ -3,6 +3,12 @@ import path from 'path';
 import formRouter from './routes/forms';
 import indexRouter from './routes/index';
 
+if (!process.env.CERT) {
+    throw Error(
+        'Provide CERT environment variable with path to P12 Certificate to sign PDFs',
+    );
+}
+
 const app = express();
 const port = process.env.port || 8080;
 
@@ -25,11 +31,13 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let statusCode = err.statusCode || 500;
     let errorCode = err.error || 'server_err';
     let message = err.message || 'Internal Server Error';
+    let stacktrace = err.stack || ' ';
     res.status(statusCode).send({
         success: false,
         error: {
             code: errorCode,
             message: message,
+            stacktrace: stacktrace,
         },
     });
 });
