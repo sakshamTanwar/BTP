@@ -16,6 +16,11 @@
                         <div class="card rounded-0 shadow">
                             <div class="card-body">
                                 <h3>Split Land</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
                                 <form action="/form/split" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>
@@ -114,7 +119,7 @@
                           
                           var legend = document.createElement("legend");
                           legend.className = "col-form-label col-sm-2";
-                          legend.innerHTML = "Point-"+i;
+                          legend.innerHTML = "Point "+(i+1).toString();
                           rowDiv.appendChild(legend);
                           
                           var latInput = document.createElement("input");

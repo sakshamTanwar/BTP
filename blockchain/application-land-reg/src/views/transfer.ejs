@@ -16,6 +16,11 @@
                         <div class="card rounded-0 shadow">
                             <div class="card-body">
                                 <h3>Transfer Land</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
                                 <form action="/form/transfer" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>

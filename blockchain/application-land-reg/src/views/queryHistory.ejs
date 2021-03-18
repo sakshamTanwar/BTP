@@ -16,6 +16,11 @@
                         <div class="card rounded-0 shadow">
                             <div class="card-body">
                                 <h3>Query Ownership History</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
                                 <form action="/form/queryHistory" method="POST">
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>

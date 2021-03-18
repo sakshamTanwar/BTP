@@ -37,11 +37,12 @@ router.post(
     async (req, res, next) => {
         try {
             await addLandController(req);
-            return res.json({
-                success: true,
+            res.render('home.ejs', {
+                alert: true,
+                title: 'Land Registration Department',
             });
         } catch (err) {
-            next(err);
+            res.render('add.ejs', { errorMsg: err.message });
         }
     },
 );
@@ -52,11 +53,12 @@ router.post(
     async (req, res, next) => {
         try {
             await transferLandController(req);
-            return res.json({
-                success: true,
+            return res.render('home.ejs', {
+                alert: true,
+                title: 'Land Registration Department',
             });
         } catch (err) {
-            next(err);
+            res.render('add.ejs', { errorMsg: err.message });
         }
     },
 );
@@ -67,11 +69,12 @@ router.post(
     async (req, res, next) => {
         try {
             await splitLandController(req);
-            return res.json({
-                success: true,
+            return res.render('home.ejs', {
+                alert: true,
+                title: 'Land Registration Department',
             });
         } catch (err) {
-            next(err);
+            res.render('add.ejs', { errorMsg: err.message });
         }
     },
 );
@@ -84,7 +87,7 @@ router.post(
             let records = await queryVillageController(req);
             return res.render('showVillageRecords.ejs', { data: records });
         } catch (err) {
-            next(err);
+            res.render('add.ejs', { errorMsg: err.message });
         }
     },
 );
@@ -97,7 +100,7 @@ router.post(
             let records = await queryHistoryController(req);
             return res.render('showHistory.ejs', { data: records });
         } catch (err) {
-            next(err);
+            res.render('add.ejs', { errorMsg: err.message });
         }
     },
 );
