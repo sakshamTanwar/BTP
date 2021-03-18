@@ -12,7 +12,7 @@ const router = express.Router();
 const upload = multer({ dest: path.join(process.cwd(), 'uploads') });
 
 router.get('/add', (req, res, next) => {
-      res.render('add.ejs');
+    res.render('add.ejs');
 });
 
 router.get('/transfer', (req, res, next) => {
@@ -31,28 +31,35 @@ router.get('/queryHistory', (req, res, next) => {
     res.render('queryHistory.ejs');
 });
 
+router.post(
+    '/add',
+    upload.fields([{ name: 'otherDocs' }]),
+    async (req, res, next) => {
+        try {
+            await addLandController(req);
+            return res.json({
+                success: true,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+);
 
-router.post('/add', upload.fields([{ name: 'otherDocs' }]), async (req, res, next) => {
-    try {
-        await addLandController(req);
-        return res.json({
-            success: true,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
-
-router.post('/transfer', upload.fields([{ name: 'otherDocs' }]), async (req, res, next) => {
-    try {
-        await transferLandController(req);
-        return res.json({
-            success: true,
-        });
-    } catch (err) {
-        next(err);
-    }
-});
+router.post(
+    '/transfer',
+    upload.fields([{ name: 'otherDocs' }]),
+    async (req, res, next) => {
+        try {
+            await transferLandController(req);
+            return res.json({
+                success: true,
+            });
+        } catch (err) {
+            next(err);
+        }
+    },
+);
 
 router.post(
     '/split',
@@ -75,8 +82,7 @@ router.post(
     async (req, res, next) => {
         try {
             let records = await queryVillageController(req);
-            return res.render('showVillageRecords.ejs', {data: records});
-
+            return res.render('showVillageRecords.ejs', { data: records });
         } catch (err) {
             next(err);
         }
@@ -89,7 +95,7 @@ router.post(
     async (req, res, next) => {
         try {
             let records = await queryHistoryController(req);
-            return res.render('showHistory.ejs', {data: records});
+            return res.render('showHistory.ejs', { data: records });
         } catch (err) {
             next(err);
         }

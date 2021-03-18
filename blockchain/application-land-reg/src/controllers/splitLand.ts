@@ -1,6 +1,9 @@
 import { Request } from 'express';
 import { splitLand } from '../services/transactions/splitLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
+import { queryLand } from '../services/transactions/queryLand';
+import path from 'path';
+import genCertAddLand from '../services/certificates/addLandCertificate';
 
 function isDataValid(
     khasraNo: any,
@@ -68,6 +71,29 @@ async function uploadFiles(files: Express.Multer.File[]) {
     return cids;
 }
 
+async function generateAndUploadCertificates(
+    landA: any,
+    landB: any,
+): Promise<[string, string]> {
+    const savePathA = path.join(
+        process.cwd(),
+        'temp',
+        `addLandA${new Date().getTime()}.pdf`,
+    );
+    await genCertAddLand(landA, process.env.CERT, savePathA);
+    const certificateA = (await uploadFile(savePathA)).cid.toString();
+
+    const savePathB = path.join(
+        process.cwd(),
+        'temp',
+        `addLandB${new Date().getTime()}.pdf`,
+    );
+    await genCertAddLand(landB, process.env.CERT, savePathB);
+    const certificateB = (await uploadFile(savePathB)).cid.toString();
+
+    return [certificateA, certificateB];
+}
+
 function getPoints(req: Request, prefix: string, numPts: number) {
     let pts = [];
 
@@ -121,8 +147,34 @@ async function splitLandController(req: Request) {
     const ptsA = getPoints(req, 'A', numPtsA);
     const ptsB = getPoints(req, 'B', numPtsB);
 
-    const certificateA = ' ';
-    const certificateB = ' ';
+    const land = await queryLand(
+        khasraNo,
+        village,
+        subDistrict,
+        district,
+        state,
+    );
+
+    const [certificateA, certificateB] = await generateAndUploadCertificates(
+        {
+            khasraNo: newKhasraNoA,
+            village,
+            subDistrict,
+            district,
+            state,
+            area: areaA,
+            owner: land.owner,
+        },
+        {
+            khasraNo: newKhasraNoB,
+            village,
+            subDistrict,
+            district,
+            state,
+            area: areaB,
+            owner: land.owner,
+        },
+    );
 
     const files = req.files as { [fieldname: string]: Express.Multer.File[] };
 
