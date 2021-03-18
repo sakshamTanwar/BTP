@@ -128,6 +128,10 @@ async function transferLandController(req: Request) {
         throw Error(`Land is not owned by ${currentOwnerName}`);
     }
 
+    if (land.expired) {
+        throw Error('Land record is expired');
+    }
+
     land.owner.khataNo = newKhataNo;
     land.owner.name = newOwnerName;
 
