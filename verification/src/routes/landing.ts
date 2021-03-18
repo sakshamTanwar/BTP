@@ -38,21 +38,19 @@ router.post(`/`, async (req, res, next) => {
 
 		const node = IpfsHttpClient()
 		const chunks: Uint8Array[] = []
-		let a = node.cat(new CID(hash));
-		console.log(typeof(a));
+
 		for await (const chunk of node.cat(new CID(hash))) {
-			console.log(typeof(chunk), chunk);
 			chunks.push(chunk)
 		}
+	
         let pdfBuffer = Buffer.concat(chunks); 
         let signedPdfBuffer = signPDF(pdfBuffer, path.join(__dirname,'..','..','certificate.p12'));
 
-		// readStream.end(uint8ArrayConcat(chunks))
-		// console.log(uint8ArrayConcat(chunks));
 		readStream.end(signedPdfBuffer)
 		console.log(signedPdfBuffer);
 		res.set('Content-Type', 'application/pdf')
 		readStream.pipe(res)
+		
 	} catch (err) {
 		next(err)
 	}
