@@ -13,6 +13,7 @@ export async function transferLand(
     price: number,
     date: Date,
     certificate: string,
+    landRecordCertificate: string,
     otherDocs: Array<string>,
 ) {
     await submitTransaction('transferLand', [
@@ -28,6 +29,7 @@ export async function transferLand(
         price.toString(),
         date.getTime().toString(),
         certificate,
+        landRecordCertificate,
         JSON.stringify(otherDocs),
     ]);
 }

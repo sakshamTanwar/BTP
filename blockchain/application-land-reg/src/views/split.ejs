@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+        <title>Split Land</title>
+    </head>
+    <body >
+        <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+            <div class="container" >
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card rounded-0 shadow">
+                            <div class="card-body">
+                                <h3>Split Land</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
+                                <form action="/form/split" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group">
+                                        <label for="khasraNo">Khasra Number: </label>
+                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number" pattern="[0-9]+(\/[0-9]+)*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="village">Village:</label>
+                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village" pattern="[a-zA-Z][a-zA-Z ]*">
+                                        <!-- <small id="" class="form-text text-muted"></small> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="subDistrict">Sub-District: </label>
+                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="district">District: </label>
+                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State: </label>
+                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+
+                                    <!-- Details for Land A -->
+                                    <div class="form-group">
+                                        <label for="newKhasraNoA">New Khasra Number A: </label>
+                                        <input required type="text" name="newKhasraNoA" class="form-control" id="newKhasraNoA" placeholder="Enter New Khasra Number A" pattern="[0-9]+(\/[0-9]+)*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="numPtsA">Number of Points in Land A:</label>
+                                        <input required type="number" min="3" name="numPtsA" class="form-control" id="numPtsA" placeholder="Enter number of points in Land A" oninput="addPointFields(this.value, 'pointsA', 'Alat', 'Alon')">
+                                    </div>
+                                    <div class="form-group" id="pointsA" >
+                                         <!-- Add fields for lat lon points dynamically -->
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="areaA">Land Area A:</label>
+                                        <input required type="number" min="0.000001" step="0.000001" name="areaA" class="form-control" id="areaA" placeholder="Enter Land Area A">
+                                    </div>
+                                    
+
+                                    <!-- Details for Land B -->
+                                    <div class="form-group">
+                                        <label for="newKhasraNoB">New Khasra Number B: </label>
+                                        <input required type="text" name="newKhasraNoB" class="form-control" id="newKhasraNoB" placeholder="Enter New Khasra Number B" pattern="[0-9]+(\/[0-9]+)*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="numPtsB">Number of Points in Land B:</label>
+                                        <input required type="number" min="3" name="numPtsB" class="form-control" id="numPtsB" placeholder="Enter number of points in Land B" oninput="addPointFields(this.value, 'pointsB', 'Blat', 'Blon')">
+                                    </div>
+                                    <div class="form-group" id="pointsB" >
+                                         <!-- Add fields for lat lon points dynamically -->
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="areaB">Land Area B:</label>
+                                        <input required type="number" name="areaB" min="0.000001" step="0.000001" class="form-control" id="areaB" placeholder="Enter Land Area B">
+                                    </div>
+                                    
+
+                                    <!-- <div class="form-group">
+                                        <label for="certificate">Certificate:</label>
+                                        <input required type="file" name="certificate" class="form-control" id="certificate">
+                                    </div> -->
+                                    <div class="form-group">
+                                        <label for="otherDocsA">Other Docs A:</label>
+                                        <input type="file" name="otherDocsA" class="form-control" id="otherDocsA" multiple>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="otherDocsB">Other Docs B:</label>
+                                        <input type="file" name="otherDocsB" class="form-control" id="otherDocsB" multiple>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="/jquery/jquery.min.js"></script>
+                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+               
+                <script>
+                    function addPointFields(numPts, containerID, lat, lon) {
+                      var container = document.getElementById(containerID);
+                      while (container.hasChildNodes()) {
+                          container.removeChild(container.lastChild);
+                      }
+                      for(let i=0; i<numPts; i++){
+                          var fieldSet = document.createElement("fieldset");
+                          fieldSet.className = "form-group";
+                          
+                          var rowDiv = document.createElement("div");
+                          rowDiv.className = "row";
+                          
+                          var legend = document.createElement("legend");
+                          legend.className = "col-form-label col-sm-2";
+                          legend.innerHTML = "Point "+(i+1).toString();
+                          rowDiv.appendChild(legend);
+                          
+                          var latInput = document.createElement("input");
+                          latInput.type = "text";
+                          latInput.name = lat + i;
+                          latInput.id = lat + i;
+                          latInput.className = "form-control col-sm-4"
+                          latInput.placeholder = "Enter Latitude";
+                          latInput.required = true;
+                          rowDiv.appendChild(latInput);
+                          
+                          var lonInput = document.createElement("input");
+                          lonInput.type = "text";
+                          lonInput.name = lon + i;
+                          lonInput.id = lon + i;
+                          lonInput.className = "form-control ml-2 col-sm-4"
+                          lonInput.placeholder = "Enter Longitude";
+                          lonInput.required = true;
+                          rowDiv.appendChild(lonInput);
+
+                          fieldSet.appendChild(rowDiv);
+                          container.appendChild(fieldSet);
+                      }
+
+                    }
+                </script>
+            
+            </div>
+    </body>
+</html>
