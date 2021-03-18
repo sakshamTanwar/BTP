@@ -3,6 +3,8 @@ import { Request } from 'express';
 import { transferLand } from '../services/transactions/transferLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
 import genCertTrLand from '../services/certificates/transferLandCertificate';
+import genCertLand from '../services/certificates/addLandCertificate';
+import { queryLand } from '../services/transactions/queryLand';
 
 function isDataValid(
     khasraNo: any,
@@ -49,6 +51,32 @@ function isDataValid(
     return true;
 }
 
+async function generateAndUploadCertificates(
+    landTransfer: any,
+    land: any,
+): Promise<[string, string]> {
+    const trSavePath = path.join(
+        process.cwd(),
+        'temp',
+        `trLand${new Date().getTime()}.pdf`,
+    );
+
+    await genCertTrLand(landTransfer, process.env.CERT, trSavePath);
+
+    const landSavePath = path.join(
+        process.cwd(),
+        'temp',
+        `land${new Date().getTime()}.pdf`,
+    );
+
+    await genCertLand(land, process.env.CERT, landSavePath);
+
+    const landCertificate = (await uploadFile(landSavePath)).cid.toString();
+    const transferCertificate = (await uploadFile(trSavePath)).cid.toString();
+
+    return [landCertificate, transferCertificate];
+}
+
 async function transferLandController(req: Request) {
     let {
         khasraNo,
@@ -85,12 +113,40 @@ async function transferLandController(req: Request) {
 
     date = new Date(parseInt(dateTime));
 
-    const savePath = path.join(
-        process.cwd(),
-        'temp',
-        `trLand${new Date().getTime()}.pdf`,
+    const land = await queryLand(
+        khasraNo,
+        village,
+        subDistrict,
+        district,
+        state,
     );
-    await genCertTrLand(
+
+    if (
+        land.owner.khataNo != currentKhataNo ||
+        land.owner.name != currentOwnerName
+    ) {
+        throw Error(`Land is not owned by ${currentOwnerName}`);
+    }
+
+    land.owner.khataNo = newKhataNo;
+    land.owner.name = newOwnerName;
+
+    const otherDocs = [];
+    if (req.files && Object.keys(req.files).length > 0) {
+        const files = req.files as {
+            [fieldname: string]: Express.Multer.File[];
+        };
+
+        for (const file of files['otherDocs']) {
+            const ipfsRes = await uploadFile(file.path);
+            otherDocs.push(ipfsRes.cid.toString());
+        }
+    }
+
+    const [
+        landCertificate,
+        transferCertificate,
+    ] = await generateAndUploadCertificates(
         {
             khasraNo,
             village,
@@ -108,23 +164,8 @@ async function transferLandController(req: Request) {
             price,
             timestamp: date,
         },
-        process.env.CERT,
-        savePath,
+        land,
     );
-
-    const certificate = (await uploadFile(savePath)).cid.toString();
-
-    const otherDocs = [];
-    if (req.files && Object.keys(req.files).length > 0) {
-        const files = req.files as {
-            [fieldname: string]: Express.Multer.File[];
-        };
-
-        for (const file of files['otherDocs']) {
-            const ipfsRes = await uploadFile(file.path);
-            otherDocs.push(ipfsRes.cid.toString());
-        }
-    }
 
     await transferLand(
         khasraNo,
@@ -138,7 +179,8 @@ async function transferLandController(req: Request) {
         newOwnerName,
         price,
         date,
-        certificate,
+        transferCertificate,
+        landCertificate,
         otherDocs,
     );
 }
