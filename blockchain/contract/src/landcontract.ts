@@ -255,4 +255,25 @@ export class LandContract extends Contract {
         console.log(results);
         return JSON.stringify(results);
     }
+
+    async getLandRecord(
+        ctx: LandContext,
+        khasraNo: string,
+        village: string,
+        subDistrict: string,
+        district: string,
+        state: string,
+    ) {
+        let landKey = Land.makeKey([
+            state,
+            district,
+            subDistrict,
+            village,
+            khasraNo,
+        ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        return JSON.stringify(land);
+    }
 }
