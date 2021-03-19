@@ -3,6 +3,10 @@ import express, { NextFunction, Request, Response } from 'express'
 
 import { LandingRouter } from './routes'
 
+if (!process.env.CERT) {
+	throw Error('Provide CERT environment variable with path to P12 Certificate to sign PDFs')
+}
+
 const app = express()
 const port = process.env.port || 3030
 

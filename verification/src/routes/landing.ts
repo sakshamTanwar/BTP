@@ -43,7 +43,7 @@ router.post(`/`, async (req, res, next) => {
 		}
 
 		let pdfBuffer = Buffer.concat(chunks)
-		let signedPdfBuffer = signPDF(pdfBuffer, path.join(__dirname, '..', '..', 'certificate.p12'))
+		let signedPdfBuffer = signPDF(pdfBuffer, process.env.CERT)
 		const readStream = new stream.PassThrough()
 		readStream.end(signedPdfBuffer)
 		console.log(signedPdfBuffer)
