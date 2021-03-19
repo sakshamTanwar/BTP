@@ -23,6 +23,7 @@ export class PDFGenerator {
         row.push('₹ ' + transaction.price.toString());
         row.push(transaction.prevOwner.name);
         row.push(transaction.newOwner.name);
+        row.push(transaction.certificate);
         return row;
     }
 
@@ -37,7 +38,14 @@ export class PDFGenerator {
         };
 
         const headers: any = [
-            ['Khasra Number', 'Date', 'Price', 'Seller', 'Buyer'],
+            [
+                'Khasra Number',
+                'Date',
+                'Price',
+                'Seller',
+                'Buyer',
+                'Verification Code',
+            ],
         ];
 
         let landRecord: ILandRecord = history[0].land;
@@ -81,7 +89,7 @@ export class PDFGenerator {
                             ],
                             [
                                 {
-                                    text: `Current Owner :- ${landRecord.owner.name}`,
+                                    text: `Verification Code :- ${landRecord.certificate}`,
                                     colSpan: 3,
                                 },
                             ],
@@ -97,7 +105,7 @@ export class PDFGenerator {
                     layout: 'headerLineOnly',
                     table: {
                         headerRows: 1,
-                        widths: ['*', '*', '*', '*', '*'],
+                        widths: ['*', '*', '*', '*', '*', '*'],
                         body: headers.concat(
                             transactions.map(this.getTableRowFromTxn),
                         ),
