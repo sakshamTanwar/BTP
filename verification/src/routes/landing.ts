@@ -50,7 +50,7 @@ router.post(`/`, async (req, res, next) => {
 		res.set('Content-Type', 'application/pdf')
 		readStream.pipe(res)
 	} catch (err) {
-		next(err)
+		res.render('landing.ejs', { errorMsg: err.message })
 	}
 })
 

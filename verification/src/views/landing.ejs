@@ -16,6 +16,11 @@
                         <div class="card rounded-0 shadow">
                             <div class="card-body">
                                 <h3>Download Certificate</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
                                 <form action="/" method="POST">
                                     <div class="form-group">
                                         <label for="hash">IPFS Location Hash: </label>
