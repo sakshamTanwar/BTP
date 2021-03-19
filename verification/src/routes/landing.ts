@@ -25,12 +25,12 @@ router.get(`/`, (_, res) => {
 
 router.post(`/`, async (req, res, next) => {
 	try {
-		const { hash } = req.body
-		if (!hash) {
-			throw new Error('Invalid Hash')
+		const { hash, hashType } = req.body
+		if (!hash || !hashType) {
+			throw new Error('Invalid Data')
 		}
 
-		let certRecord = await verifyCertificate(hash, 'LAND')
+		let certRecord = await verifyCertificate(hash, hashType)
 		if (certRecord.length == 0) {
 			throw new Error('Invalid Hash')
 		}
