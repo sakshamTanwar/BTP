@@ -2,9 +2,11 @@ import path from 'path';
 import { Request } from 'express';
 import { transferLand } from '../services/transactions/transferLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
+import deleteFile from '../services/ipfs/deleteFile';
 import genCertTrLand from '../services/certificates/transferLandCertificate';
 import genCertLand from '../services/certificates/addLandCertificate';
 import { queryLand } from '../services/transactions/queryLand';
+import fs from 'fs';
 
 function isDataValid(
     khasraNo: any,
@@ -71,8 +73,10 @@ async function generateAndUploadCertificates(
 
     await genCertLand(land, process.env.CERT, landSavePath);
 
-    const landCertificate = (await uploadFile(landSavePath)).cid.toString();
-    const transferCertificate = (await uploadFile(trSavePath)).cid.toString();
+    const landCertificate = await uploadFile(landSavePath);
+    const transferCertificate = await uploadFile(trSavePath);
+    fs.unlinkSync(landSavePath);
+    fs.unlinkSync(trSavePath);
 
     return [landCertificate, transferCertificate];
 }
@@ -143,7 +147,7 @@ async function transferLandController(req: Request) {
 
         for (const file of files['otherDocs']) {
             const ipfsRes = await uploadFile(file.path);
-            otherDocs.push(ipfsRes.cid.toString());
+            otherDocs.push(ipfsRes);
         }
     }
 
@@ -187,6 +191,8 @@ async function transferLandController(req: Request) {
         landCertificate,
         otherDocs,
     );
+
+    await deleteFile(land.certificate);
 }
 
 export default transferLandController;

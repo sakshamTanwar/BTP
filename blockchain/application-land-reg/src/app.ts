@@ -9,6 +9,12 @@ if (!process.env.CERT) {
     );
 }
 
+if (!process.env.IPFS_CLUSTER) {
+    throw Error(
+        'Provide IPFS_CLUSTER environment variable with link to IPFS cluster node',
+    );
+}
+
 const app = express();
 const port = process.env.port || 8080;
 

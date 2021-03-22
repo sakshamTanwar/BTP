@@ -40,11 +40,25 @@ export class LandContract extends Contract {
         certificate: string,
         otherDocs: string,
     ) {
+        let landKey = Land.makeKey([
+            state,
+            district,
+            subDistrict,
+            village,
+            khasraNo,
+        ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        if (land) {
+            throw Error('Land already exists');
+        }
+
         let owner: IOwner = { khataNo: Number(khataNo), name: ownerName };
         let othDocs: Array<string> = JSON.parse(otherDocs);
         let pts = JSON.parse(polygonPoints);
         pts = pts.points;
-        let land: Land = Land.createInstance(
+        land = Land.createInstance(
             khasraNo,
             village,
             subDistrict,
@@ -246,12 +260,21 @@ export class LandContract extends Contract {
         state: string,
     ) {
         let query = new QueryUtils(ctx, LANDLIST);
-        let results = await query.getAllRecordsByPartialKey([
-            state,
-            district,
-            subDistrict,
-            village,
-        ]);
+        let results;
+        if (!village || village.length === 0) {
+            results = await query.getAllRecordsByPartialKey([
+                state,
+                district,
+                subDistrict,
+            ]);
+        } else {
+            results = await query.getAllRecordsByPartialKey([
+                state,
+                district,
+                subDistrict,
+                village,
+            ]);
+        }
         console.log(results);
         return JSON.stringify(results);
     }
@@ -276,33 +299,22 @@ export class LandContract extends Contract {
 
         return JSON.stringify(land);
     }
-  
-    async getLandByCertificate(
-        ctx: LandContext, 
-        certificate: string
-    ) {
-		
 
+    async getLandByCertificate(ctx: LandContext, certificate: string) {
         let query = new QueryUtils(ctx, LANDLIST);
         let results = await query.getRecordByQueryObject({
-            certificate: certificate
+            certificate: certificate,
         });
         console.log(results);
         return JSON.stringify(results);
     }
-    
-    async getTransactionByCertificate(
-        ctx: LandContext, 
-        certificate: string
-    ) {
-		
 
+    async getTransactionByCertificate(ctx: LandContext, certificate: string) {
         let query = new QueryUtils(ctx, TRANSFERLIST);
         let results = await query.getRecordByQueryObject({
-            certificate: certificate
+            certificate: certificate,
         });
         console.log(results);
         return JSON.stringify(results);
     }
 }
-

@@ -8,23 +8,70 @@ import fs, { PathLike } from 'fs';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
 export class PDFGenerator {
+    private static getSubTableForTxn(transaction: ILandTransfer) {
+        let txnTimeStamp = new Date(transaction.timestamp as number);
+        return {
+            layout: 'noBorders',
+            table: {
+                headerRows: 0,
+                widths: ['*', '*', '*', '*'],
+                body: [
+                    [
+                        this.getTextWithBoldHeading(
+                            'Khasra No :- ',
+                            transaction.landKey.slice(
+                                transaction.landKey.lastIndexOf(':') + 1,
+                            ),
+                        ),
+                        this.getTextWithBoldHeading(
+                            'Date :- ',
+                            `${txnTimeStamp.getDate()}/${txnTimeStamp.getMonth() +
+                                1}/${txnTimeStamp.getFullYear()}`,
+                        ),
+                        this.getTextWithBoldHeading(
+                            'Seller :- ',
+                            transaction.prevOwner.name,
+                        ),
+                        this.getTextWithBoldHeading(
+                            'Buyer :- ',
+                            transaction.newOwner.name,
+                        ),
+                    ],
+                    [
+                        {
+                            text: this.getTextWithBoldHeading(
+                                'Verification Code :- ',
+                                transaction.certificate,
+                            ),
+                            colSpan: 4,
+                        },
+                    ],
+                ],
+            },
+        };
+    }
+
     private static getTableRowFromTxn(
         transaction: ILandTransfer,
-    ): Array<String> {
+        index: number,
+    ): Array<any> {
         let row = [];
-        let txnTimeStamp = new Date(transaction.timestamp as number);
-        row.push(
-            transaction.landKey.slice(transaction.landKey.lastIndexOf(':') + 1),
-        );
-        row.push(
-            `${txnTimeStamp.getDate()}/${txnTimeStamp.getMonth() +
-                1}/${txnTimeStamp.getFullYear()}`,
-        );
-        row.push('₹ ' + transaction.price.toString());
-        row.push(transaction.prevOwner.name);
-        row.push(transaction.newOwner.name);
-        row.push(transaction.certificate);
+        row.push(index.toString());
+        const subTable = this.getSubTableForTxn(transaction);
+        row.push(subTable);
         return row;
+    }
+
+    private static getTextWithBoldHeading(heading: string, text: string) {
+        return [
+            {
+                text: heading,
+                bold: true,
+            },
+            {
+                text: text,
+            },
+        ];
     }
 
     static generatePDF(history: Array<IOwnershipHistory>, saveFile: PathLike) {
@@ -37,14 +84,10 @@ export class PDFGenerator {
             },
         };
 
-        const headers: any = [
+        const rows: any = [
             [
-                'Khasra Number',
-                'Date',
-                'Price',
-                'Seller',
-                'Buyer',
-                'Verification Code',
+                { text: 'S. No.', bold: true },
+                { text: 'Transaction Details', bold: true },
             ],
         ];
 
@@ -57,6 +100,10 @@ export class PDFGenerator {
             });
             transactions.push(...record.transferHistory);
         });
+
+        for (let i = 0; i < transactions.length; i++) {
+            rows.push(this.getTableRowFromTxn(transactions[i], i + 1));
+        }
 
         const docDefinition: TDocumentDefinitions = {
             content: [
@@ -78,18 +125,39 @@ export class PDFGenerator {
                         widths: ['*', '*', '*'],
                         body: [
                             [
-                                `Khasra No :- ${landRecord.khasraNo}`,
-                                `Village :- ${landRecord.village}`,
-                                `Sub-District :- ${landRecord.subDistrict}`,
+                                this.getTextWithBoldHeading(
+                                    'Khasra No :- ',
+                                    landRecord.khasraNo,
+                                ),
+                                this.getTextWithBoldHeading(
+                                    'Village :- ',
+                                    landRecord.village,
+                                ),
+                                this.getTextWithBoldHeading(
+                                    'Sub-District :- ',
+                                    landRecord.subDistrict,
+                                ),
                             ],
                             [
-                                `District :- ${landRecord.district}`,
-                                `State :- ${landRecord.state}`,
-                                `Area :- ${landRecord.area} sq m`,
+                                this.getTextWithBoldHeading(
+                                    'District :-',
+                                    landRecord.district,
+                                ),
+                                this.getTextWithBoldHeading(
+                                    'State :- ',
+                                    landRecord.state,
+                                ),
+                                this.getTextWithBoldHeading(
+                                    'Area :- ',
+                                    `${landRecord.area} sq m`,
+                                ),
                             ],
                             [
                                 {
-                                    text: `Verification Code :- ${landRecord.certificate}`,
+                                    text: this.getTextWithBoldHeading(
+                                        'Verification Code :- ',
+                                        landRecord.certificate,
+                                    ),
                                     colSpan: 3,
                                 },
                             ],
@@ -102,13 +170,10 @@ export class PDFGenerator {
                     fontSize: 15,
                 },
                 {
-                    layout: 'headerLineOnly',
                     table: {
                         headerRows: 1,
-                        widths: ['*', '*', '*', '*', '*', '*'],
-                        body: headers.concat(
-                            transactions.map(this.getTableRowFromTxn),
-                        ),
+                        widths: [45, '*'],
+                        body: rows,
                     },
                 },
             ],

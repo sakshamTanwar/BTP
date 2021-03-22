@@ -4,6 +4,7 @@ import { addLand } from '../services/transactions/addLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
 import genCertAddLand from '../services/certificates/addLandCertificate';
 import { ILand } from '../../../contract/src/land';
+import fs from 'fs';
 
 function isDataValid(
     khasraNo: any,
@@ -103,7 +104,8 @@ async function addLandController(req: Request) {
         process.env.CERT,
         savePath,
     );
-    const certificate = (await uploadFile(savePath)).cid.toString();
+    const certificate = await uploadFile(savePath);
+    fs.unlinkSync(savePath);
 
     const otherDocs = [];
     if (req.files && Object.keys(req.files).length > 0) {
@@ -113,7 +115,7 @@ async function addLandController(req: Request) {
 
         for (const file of files['otherDocs']) {
             const ipfsRes = await uploadFile(file.path);
-            otherDocs.push(ipfsRes.cid.toString());
+            otherDocs.push(ipfsRes);
         }
     }
 
