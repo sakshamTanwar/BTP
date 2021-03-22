@@ -23,6 +23,27 @@
                                 <% } %>
                                 <form action="/" method="POST">
                                     <div class="form-group">
+                                        <label for="khasraNo">Khasra Number: </label>
+                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number" pattern="[0-9]+(\/[0-9]+)*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="village">Village:</label>
+                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village" pattern="[a-zA-Z][a-zA-Z ]*">
+                                        <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="subDistrict">Sub-District: </label>
+                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="district">District: </label>
+                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State: </label>
+                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="hash">IPFS Location Hash: </label>
                                         <input required type="text" name="hash" class="form-control" id="hash" placeholder="Enter Hash">
                                     </div>
