@@ -49,9 +49,10 @@ export async function submitTransaction(txnName: string, args: Array<string>) {
         console.log('Transaction Response :-');
 
         console.log(JSON.stringify(JSON.parse(response.toString()), null, 4));
+
+        return JSON.parse(response.toString());
     } catch (error) {
-        console.log(`Error processing transaction. ${error}`);
-        console.log(error.stack);
+        throw error;
     } finally {
         console.log('Disconnection from gateway');
         gateway.disconnect();

@@ -76,6 +76,7 @@ export class LandContract extends Contract {
         price: string,
         transferDateTime: string,
         certificate: string,
+        landRecordCertificate: string,
         otherDocs: string,
     ) {
         let landKey = Land.makeKey([
@@ -105,7 +106,7 @@ export class LandContract extends Contract {
             name: newOwnerName,
         };
 
-        land.setOwner(newOwner);
+        land.setOwner(newOwner, landRecordCertificate);
         let othDocs: Array<string> = JSON.parse(otherDocs);
         let landTransfer: LandTransfer = LandTransfer.createInstance(
             land.getKey(),
@@ -255,6 +256,27 @@ export class LandContract extends Contract {
         return JSON.stringify(results);
     }
 
+    async getLandRecord(
+        ctx: LandContext,
+        khasraNo: string,
+        village: string,
+        subDistrict: string,
+        district: string,
+        state: string,
+    ) {
+        let landKey = Land.makeKey([
+            state,
+            district,
+            subDistrict,
+            village,
+            khasraNo,
+        ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        return JSON.stringify(land);
+    }
+  
     async getLandByCertificate(
         ctx: LandContext, 
         certificate: string

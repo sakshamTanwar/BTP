@@ -9,7 +9,6 @@ const IpfsHttpClient = require('ipfs-http-client')
 const { CID } = IpfsHttpClient
 
 const stream = require('stream')
-const readStream = new stream.PassThrough()
 
 const router = express.Router()
 
@@ -26,32 +25,26 @@ router.get(`/`, (_, res) => {
 
 router.post(`/`, async (req, res, next) => {
 	try {
-		const { hash } = req.body
-		if(!hash){
-			throw new Error("Invalid Hash");
-		}
-		
-		let certRecord = await verifyCertificate(hash, 'LAND');
-		if(certRecord.length==0){
-			throw new Error("Invalid Hash");
-		}
 
-		const node = IpfsHttpClient()
+		await verifyCertificate(req)
+        
+		const { hash } = req.body;	
+		const node = IpfsHttpClient()		
 		const chunks: Uint8Array[] = []
 
 		for await (const chunk of node.cat(new CID(hash))) {
 			chunks.push(chunk)
 		}
-	
-		let pdfBuffer = Buffer.concat(chunks); 
-		let signedPdfBuffer = signPDF(pdfBuffer, path.join(__dirname,'..','..','certificate.p12'));
 
+		let pdfBuffer = Buffer.concat(chunks)
+		let signedPdfBuffer = signPDF(pdfBuffer, process.env.CERT)
+		const readStream = new stream.PassThrough()
 		readStream.end(signedPdfBuffer)
 		res.set('Content-Type', 'application/pdf')
 		readStream.pipe(res)
 		
 	} catch (err) {
-		next(err)
+		res.render('landing.ejs', { errorMsg: err.message })
 	}
 })
 

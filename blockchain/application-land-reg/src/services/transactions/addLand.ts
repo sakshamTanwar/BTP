@@ -1,5 +1,5 @@
 import { submitTransaction } from './submitTransaction';
-import { IPoint } from '../../../contract/src/land';
+import { IPoint } from '../../../../contract/src/land';
 
 export async function addLand(
     khasraNo: string,
