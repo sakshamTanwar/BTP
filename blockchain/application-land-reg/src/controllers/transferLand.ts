@@ -6,6 +6,7 @@ import deleteFile from '../services/ipfs/deleteFile';
 import genCertTrLand from '../services/certificates/transferLandCertificate';
 import genCertLand from '../services/certificates/addLandCertificate';
 import { queryLand } from '../services/transactions/queryLand';
+import fs from 'fs';
 
 function isDataValid(
     khasraNo: any,
@@ -74,6 +75,8 @@ async function generateAndUploadCertificates(
 
     const landCertificate = await uploadFile(landSavePath);
     const transferCertificate = await uploadFile(trSavePath);
+    fs.unlinkSync(landSavePath);
+    fs.unlinkSync(trSavePath);
 
     return [landCertificate, transferCertificate];
 }

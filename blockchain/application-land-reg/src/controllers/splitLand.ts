@@ -4,6 +4,7 @@ import { uploadFile } from '../services/ipfs/uploadFile';
 import { queryLand } from '../services/transactions/queryLand';
 import path from 'path';
 import genCertAddLand from '../services/certificates/addLandCertificate';
+import fs from 'fs';
 
 function isDataValid(
     khasraNo: any,
@@ -82,6 +83,7 @@ async function generateAndUploadCertificates(
     );
     await genCertAddLand(landA, process.env.CERT, savePathA);
     const certificateA = await uploadFile(savePathA);
+    fs.unlinkSync(savePathA);
 
     const savePathB = path.join(
         process.cwd(),
@@ -90,6 +92,7 @@ async function generateAndUploadCertificates(
     );
     await genCertAddLand(landB, process.env.CERT, savePathB);
     const certificateB = await uploadFile(savePathB);
+    fs.unlinkSync(savePathB);
 
     return [certificateA, certificateB];
 }
