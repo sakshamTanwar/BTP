@@ -31,6 +31,11 @@ app.use(
     '/jquery',
     express.static(path.join(__dirname, '../../../node_modules/jquery/dist')),
 );
+app.use(
+    '/static',
+    express.static(path.join(__dirname, './static/')),
+);
+
 app.use('/', indexRouter);
 app.use('/form', formRouter);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
