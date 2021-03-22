@@ -40,11 +40,25 @@ export class LandContract extends Contract {
         certificate: string,
         otherDocs: string,
     ) {
+        let landKey = Land.makeKey([
+            state,
+            district,
+            subDistrict,
+            village,
+            khasraNo,
+        ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        if (land) {
+            throw Error('Land already exists');
+        }
+
         let owner: IOwner = { khataNo: Number(khataNo), name: ownerName };
         let othDocs: Array<string> = JSON.parse(otherDocs);
         let pts = JSON.parse(polygonPoints);
         pts = pts.points;
-        let land: Land = Land.createInstance(
+        land = Land.createInstance(
             khasraNo,
             village,
             subDistrict,
