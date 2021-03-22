@@ -2,6 +2,7 @@ import path from 'path';
 import { Request } from 'express';
 import { transferLand } from '../services/transactions/transferLand';
 import { uploadFile } from '../services/ipfs/uploadFile';
+import deleteFile from '../services/ipfs/deleteFile';
 import genCertTrLand from '../services/certificates/transferLandCertificate';
 import genCertLand from '../services/certificates/addLandCertificate';
 import { queryLand } from '../services/transactions/queryLand';
@@ -187,6 +188,8 @@ async function transferLandController(req: Request) {
         landCertificate,
         otherDocs,
     );
+
+    await deleteFile(land.certificate);
 }
 
 export default transferLandController;
