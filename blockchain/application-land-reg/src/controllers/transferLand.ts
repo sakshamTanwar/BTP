@@ -71,8 +71,8 @@ async function generateAndUploadCertificates(
 
     await genCertLand(land, process.env.CERT, landSavePath);
 
-    const landCertificate = (await uploadFile(landSavePath)).cid.toString();
-    const transferCertificate = (await uploadFile(trSavePath)).cid.toString();
+    const landCertificate = await uploadFile(landSavePath);
+    const transferCertificate = await uploadFile(trSavePath);
 
     return [landCertificate, transferCertificate];
 }
@@ -143,7 +143,7 @@ async function transferLandController(req: Request) {
 
         for (const file of files['otherDocs']) {
             const ipfsRes = await uploadFile(file.path);
-            otherDocs.push(ipfsRes.cid.toString());
+            otherDocs.push(ipfsRes);
         }
     }
 

@@ -103,7 +103,7 @@ async function addLandController(req: Request) {
         process.env.CERT,
         savePath,
     );
-    const certificate = (await uploadFile(savePath)).cid.toString();
+    const certificate = await uploadFile(savePath);
 
     const otherDocs = [];
     if (req.files && Object.keys(req.files).length > 0) {
@@ -113,7 +113,7 @@ async function addLandController(req: Request) {
 
         for (const file of files['otherDocs']) {
             const ipfsRes = await uploadFile(file.path);
-            otherDocs.push(ipfsRes.cid.toString());
+            otherDocs.push(ipfsRes);
         }
     }
 

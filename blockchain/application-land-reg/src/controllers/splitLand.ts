@@ -65,7 +65,7 @@ async function uploadFiles(files: Express.Multer.File[]) {
     if (!files) return cids;
     for (const file of files) {
         const ipfsRes = await uploadFile(file.path);
-        cids.push(ipfsRes.cid.toString());
+        cids.push(ipfsRes);
     }
 
     return cids;
@@ -81,7 +81,7 @@ async function generateAndUploadCertificates(
         `addLandA${new Date().getTime()}.pdf`,
     );
     await genCertAddLand(landA, process.env.CERT, savePathA);
-    const certificateA = (await uploadFile(savePathA)).cid.toString();
+    const certificateA = await uploadFile(savePathA);
 
     const savePathB = path.join(
         process.cwd(),
@@ -89,7 +89,7 @@ async function generateAndUploadCertificates(
         `addLandB${new Date().getTime()}.pdf`,
     );
     await genCertAddLand(landB, process.env.CERT, savePathB);
-    const certificateB = (await uploadFile(savePathB)).cid.toString();
+    const certificateB = await uploadFile(savePathB);
 
     return [certificateA, certificateB];
 }
