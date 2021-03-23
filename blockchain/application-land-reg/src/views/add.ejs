@@ -30,15 +30,21 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="district">District: </label>
-                                        <select required name="district" class="form-control" id="district"></select>
+                                        <select required name="district" class="form-control" id="district">
+                                            <option value="" selected hidden>Select District</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="subDistrict">Sub-District: </label>
-                                        <select required name="subDistrict" class="form-control" id="subDistrict"></select>
+                                        <select required name="subDistrict" class="form-control" id="subDistrict">
+                                            <option value="" selected hidden>Select Sub-District</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="village">Village:</label>
-                                        <select required name="village" class="form-control" id="village"></select>
+                                        <select required name="village" class="form-control" id="village">
+                                            <option value="" selected hidden>Select Village</option>
+                                        </select>
                                     </div>
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>
@@ -82,9 +88,6 @@
                 <script src="/jquery/jquery.min.js"></script>
                 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
                 <script>
-                    $("#district").hide()
-                    $("#subDistrict").hide()
-                    $("#village").hide()
                     $(function() {
                         $.getJSON('/static/states.json', function(data) {
                             $.each(data, function(i, state) {
@@ -99,79 +102,67 @@
                 </script>
 
                 <script>
-                    var stateData, districtData
-                    $('#state').on('change', function() {
-                        var stateName = this.value
-                        $.getJSON(`/static/${stateName}.json`, function(data) {
-                            stateData = data
-                            $("#subDistrict").hide()
-                            $("#village").hide()
-                            $("#district").show()
-                            $('#district').children().remove()
-                            $('#district').append(
+                    $(function() {
+                        var stateData, districtData
+                        function resetSelect(selector, title) {
+                            $(selector).children().remove()
+                            $(selector).append(
                                 $("<option></option>")
                                     .attr("value", '')
                                     .attr('hidden', true)
                                     .attr('selected', true)
-                                    .text('Select District')
-                            )
-                            $.each(data.districts, function(i, district) {
-                                $("#district").append(
-                                    $("<option></option>")
-                                        .attr("value", district.district)
-                                        .text(district.district)
+                                    .text(title)
                                 )
+                        }
+                        $('#state').on('change', function() {
+                            var stateName = this.value
+                            $.getJSON(`/static/${stateName}.json`, function(data) {
+                                stateData = data
+                                resetSelect('#district', 'Select District')
+                                resetSelect('#subDistrict', 'Select Sub-District')
+                                resetSelect('#village', 'Select Village')
+                                $.each(data.districts, function(i, district) {
+                                    $("#district").append(
+                                        $("<option></option>")
+                                            .attr("value", district.district)
+                                            .text(district.district)
+                                    )
+                                })
                             })
                         })
-                    })
 
-                    $('#district').on('change', function() {
-                        var districtName = this.value
-                        $("#village").hide()
-                        $("#subDistrict").show()
-                        $("#subDistrict").children().remove()
-                        $('#subDistrict').append(
-                            $("<option></option>")
-                                .attr("value", '')
-                                .attr('hidden', true)
-                                .attr('selected', true)
-                                .text('Select Sub-District')
-                        )
-                        $.each(stateData.districts, function(i, district) {
-                            if(districtName === district.district) {
-                                districtData = district
-                                $.each(district.subDistricts, function(i, subDistrict) {
-                                    $("#subDistrict").append(
-                                        $("<option></option>")
-                                            .attr("value", subDistrict.subDistrict)
-                                            .text(subDistrict.subDistrict)
-                                    )
-                                })
-                            }
+                        $('#district').on('change', function() {
+                            var districtName = this.value
+                            resetSelect('#subDistrict', 'Select Sub-District')
+                            resetSelect('#village', 'Select Village')
+                            $.each(stateData.districts, function(i, district) {
+                                if(districtName === district.district) {
+                                    districtData = district
+                                    $.each(district.subDistricts, function(i, subDistrict) {
+                                        $("#subDistrict").append(
+                                            $("<option></option>")
+                                                .attr("value", subDistrict.subDistrict)
+                                                .text(subDistrict.subDistrict)
+                                        )
+                                    })
+                                }
+                            })
                         })
-                    })
 
-                    $('#subDistrict').on('change', function() {
-                        var subDistrictName = this.value
-                        $("#village").show()
-                        $("#village").children().remove()
-                        $('#village').append(
-                            $("<option></option>")
-                                .attr("value", '')
-                                .attr('hidden', true)
-                                .attr('selected', true)
-                                .text('Select Village')
-                        )
-                        $.each(districtData.subDistricts, function(i, subDistrict) {
-                            if(subDistrictName === subDistrict.subDistrict) {
-                                $.each(subDistrict.villages, function(i, village) {
-                                    $("#village").append(
-                                        $("<option></option>")
-                                            .attr("value", village)
-                                            .text(village)
-                                    )
-                                })
-                            }
+                        $('#subDistrict').on('change', function() {
+                            var subDistrictName = this.value
+                            resetSelect('#village', 'Select Village')
+                            $.each(districtData.subDistricts, function(i, subDistrict) {
+                                if(subDistrictName === subDistrict.subDistrict) {
+                                    $.each(subDistrict.villages, function(i, village) {
+                                        $("#village").append(
+                                            $("<option></option>")
+                                                .attr("value", village)
+                                                .text(village)
+                                        )
+                                    })
+                                }
+                            })
                         })
                     })
                 </script>
