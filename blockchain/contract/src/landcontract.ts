@@ -231,6 +231,10 @@ export class LandContract extends Contract {
 
         let land: Land = await ctx.landList.getLand(landKey);
 
+        if (!land) {
+            throw Error('Land does not exist');
+        }
+
         while (true) {
             let result = await queryLandTransfer.getAssetHistory(
                 land.getKhasraNo(),
