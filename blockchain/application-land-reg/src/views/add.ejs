@@ -24,7 +24,9 @@
                                 <form action="/form/add" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="state">State: </label>
-                                        <select required name="state" class="form-control" id="state"></select> 
+                                        <select required name="state" class="form-control" id="state">
+                                            <option value="" selected hidden>Select State</option>
+                                        </select> 
                                     </div>
                                     <div class="form-group">
                                         <label for="district">District: </label>
@@ -32,11 +34,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="subDistrict">Sub-District: </label>
-                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                        <select required name="subDistrict" class="form-control" id="subDistrict"></select>
                                     </div>
                                     <div class="form-group">
                                         <label for="village">Village:</label>
-                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village" pattern="[a-zA-Z][a-zA-Z ]*">
+                                        <select required name="village" class="form-control" id="village"></select>
                                     </div>
                                     <div class="form-group">
                                         <label for="khasraNo">Khasra Number: </label>
@@ -80,20 +82,16 @@
                 <script src="/jquery/jquery.min.js"></script>
                 <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
                 <script>
+                    $("#district").hide()
+                    $("#subDistrict").hide()
+                    $("#village").hide()
                     $(function() {
-                        $.getJSON('/static/districts.json', function(data) {
-                            $.each(data.states, function(i, state) {
+                        $.getJSON('/static/states.json', function(data) {
+                            $.each(data, function(i, state) {
                                 $("#state").append(
                                     $("<option></option>")
-                                        .attr("value", state.state)
-                                        .text(state.state)
-                                )
-                            })
-                            $.each(data.states[0].districts, function(i, data) {
-                                $("#district").append(
-                                    $("<option></option>")
-                                        .attr("value", data)
-                                        .text(data)
+                                        .attr("value", state)
+                                        .text(state)
                                 )
                             })
                         })
@@ -101,25 +99,83 @@
                 </script>
 
                 <script>
+                    var stateData, districtData
                     $('#state').on('change', function() {
                         var stateName = this.value
-                        $.getJSON('/static/districts.json', function(data) {
-                            $.each(data.states, function(i, state) {
-                                if(state.state === stateName) {
-                                    $("#district").children().remove()
-                                    $.each(data.states[i].districts, function(i, data) {
-                                        $("#district").append(
-                                            $("<option></option>")
-                                                .attr("value", data)
-                                                .text(data)
-                                        )
-                                    })
-                                }
+                        $.getJSON(`/static/${stateName}.json`, function(data) {
+                            stateData = data
+                            $("#subDistrict").hide()
+                            $("#village").hide()
+                            $("#district").show()
+                            $('#district').children().remove()
+                            $('#district').append(
+                                $("<option></option>")
+                                    .attr("value", '')
+                                    .attr('hidden', true)
+                                    .attr('selected', true)
+                                    .text('Select District')
+                            )
+                            $.each(data.districts, function(i, district) {
+                                $("#district").append(
+                                    $("<option></option>")
+                                        .attr("value", district.district)
+                                        .text(district.district)
+                                )
                             })
                         })
                     })
+
+                    $('#district').on('change', function() {
+                        var districtName = this.value
+                        $("#village").hide()
+                        $("#subDistrict").show()
+                        $("#subDistrict").children().remove()
+                        $('#subDistrict').append(
+                            $("<option></option>")
+                                .attr("value", '')
+                                .attr('hidden', true)
+                                .attr('selected', true)
+                                .text('Select Sub-District')
+                        )
+                        $.each(stateData.districts, function(i, district) {
+                            if(districtName === district.district) {
+                                districtData = district
+                                $.each(district.subDistricts, function(i, subDistrict) {
+                                    $("#subDistrict").append(
+                                        $("<option></option>")
+                                            .attr("value", subDistrict.subDistrict)
+                                            .text(subDistrict.subDistrict)
+                                    )
+                                })
+                            }
+                        })
+                    })
+
+                    $('#subDistrict').on('change', function() {
+                        var subDistrictName = this.value
+                        $("#village").show()
+                        $("#village").children().remove()
+                        $('#village').append(
+                            $("<option></option>")
+                                .attr("value", '')
+                                .attr('hidden', true)
+                                .attr('selected', true)
+                                .text('Select Village')
+                        )
+                        $.each(districtData.subDistricts, function(i, subDistrict) {
+                            if(subDistrictName === subDistrict.subDistrict) {
+                                $.each(subDistrict.villages, function(i, village) {
+                                    $("#village").append(
+                                        $("<option></option>")
+                                            .attr("value", village)
+                                            .text(village)
+                                    )
+                                })
+                            }
+                        })
+                    })
                 </script>
-               
+
                 <script>
                     function addPointFields() {
                       var numPts = document.getElementById("numPts").value;
