@@ -25,17 +25,11 @@ router.get(`/`, (_, res) => {
 
 router.post(`/`, async (req, res, next) => {
 	try {
-		const { hash, hashType } = req.body
-		if (!hash || !hashType) {
-			throw new Error('Invalid Data')
-		}
 
-		let certRecord = await verifyCertificate(hash, hashType)
-		if (certRecord.length == 0) {
-			throw new Error('Invalid Hash')
-		}
-
-		const node = IpfsHttpClient()
+		await verifyCertificate(req)
+        
+		const { hash } = req.body;	
+		const node = IpfsHttpClient()		
 		const chunks: Uint8Array[] = []
 
 		for await (const chunk of node.cat(new CID(hash))) {
@@ -46,9 +40,9 @@ router.post(`/`, async (req, res, next) => {
 		let signedPdfBuffer = signPDF(pdfBuffer, process.env.CERT)
 		const readStream = new stream.PassThrough()
 		readStream.end(signedPdfBuffer)
-		console.log(signedPdfBuffer)
 		res.set('Content-Type', 'application/pdf')
 		readStream.pipe(res)
+		
 	} catch (err) {
 		res.render('landing.ejs', { errorMsg: err.message })
 	}
