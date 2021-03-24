@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/app.js",
   "scripts": {
-    "build": "tsc && copyfiles src/views/**/*.ejs src/static/**/* dist/application-land-reg/",
+    "build": "tsc && copyfiles src/views/*.ejs src/views/partials/*.ejs src/static/**/* dist/application-land-reg/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

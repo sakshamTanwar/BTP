@@ -1,152 +1,168 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-        <title>All Records in the Village</title>
-    </head>
-    <body>
-        <div class="d-flex bg-light" style="min-height: 100vh;">
-            <div class="container" >
-                <div class="d-flex justify-content-center">
-                    <div class="col-md-10">
-                        <div class="card rounded-0 shadow">
-                            <div class="card-body">
-                                <h3>All Records in the Village</h3><hr>
-                                <% data.forEach(result=>{ %>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Village: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.village %></p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-4">
-                                        <b>Sub-District: </b>
-                                      </div>
-                                      <div class="col-8">
-                                        <p><%=result.Record.subDistrict %></p>
-                                      </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-4">
-                                      <b>District: </b>
-                                    </div>
-                                    <div class="col-8">
-                                      <p><%=result.Record.district %></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                  <div class="col-4">
-                                    <b>State: </b>
-                                  </div>
-                                  <div class="col-8">
-                                    <p><%=result.Record.state %></p>
-                                  </div>
-                              </div>
-                              <div class="row">
-                                <div class="col-4">
-                                  <b>Khasra No: </b>
-                                </div>
-                                <div class="col-8">
-                                  <p><%=result.Record.khasraNo %></p>
-                                </div>
-                            </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Area: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.area %></p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Certificate ID: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.certificate%> </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Owner Khata No: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.owner.khataNo %></p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Owner Name: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.owner.name %></p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Parent Land Key: </b>
-                                        </div>
-                                        <div class="col-8">
-                                          <p><%=result.Record.parentLandKey||"NA"%></p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Polygon Points: </b>
-                                        </div>
-                                        <div class="col-3">
-                                           <div class="row"><b>Latitude</b></div>
-                                           <%result.Record.polygonPoints.forEach(point=>{%>
-                                               <div class="row">
-                                                   <p><%=point.lat%></p>
-                                               </div>
-                                           <%})%>
-                                        </div>
-                                        <div class="col-3">
-                                            <div class="row"><b>Longitude</b></div>
-                                            <%result.Record.polygonPoints.forEach(point=>{%>
-                                                <div class="row">
-                                                    <p><%=point.lon%></p>
-                                                </div>
-                                            <%})%>
-                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-4">
-                                          <b>Other Docs: </b>
-                                        </div>
-                                        <div class="col-8">
-                                           <%result.Record.otherDocs.forEach(doc=>{%>
-                                               <div class="row">
-                                                   <p><%=doc%></p>
-                                               </div>
-                                           <%})%>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-4">
-                                        <b>Expired:</b>
-                                      </div>
-                                      <div class="col-8">
-                                        <p><%=result.Record.expired %></p>
-                                      </div>
-                                  </div>
-                                    <hr>
-                                <% });%>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<%- include("partials/header.ejs", { title: "All Records in the Village" }) %>
 
-                <script src="/jquery/jquery.min.js"></script>
-                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-            </div>
-    </body>
-</html>
+	<div class="d-flex bg-light" style="min-height: 100vh;">
+		<div class="container">
+			<div class="d-flex justify-content-center">
+				<div class="col-md-10">
+					<div class="card rounded-0 shadow">
+						<div class="card-body">
+							<h3>All Records in the Village</h3>
+							<hr>
+							<% data.forEach(result=>{ %>
+								<div class="row">
+									<div class="col-4">
+										<b>Village: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.village %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Sub-District: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.subDistrict %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>District: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.district %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>State: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.state %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Khasra No: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.khasraNo %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Area: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.area %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Certificate ID: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.certificate%>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Owner Khata No: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.owner.khataNo %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Owner Name: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.owner.name %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Parent Land Key: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.parentLandKey||"NA"%>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Polygon Points: </b>
+									</div>
+									<div class="col-3">
+										<div class="row"><b>Latitude</b></div>
+										<%result.Record.polygonPoints.forEach(point=>{%>
+											<div class="row">
+												<p>
+													<%=point.lat%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+									<div class="col-3">
+										<div class="row"><b>Longitude</b></div>
+										<%result.Record.polygonPoints.forEach(point=>{%>
+											<div class="row">
+												<p>
+													<%=point.lon%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Other Docs: </b>
+									</div>
+									<div class="col-8">
+										<%result.Record.otherDocs.forEach(doc=>{%>
+											<div class="row">
+												<p>
+													<%=doc%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Expired:</b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result.Record.expired %>
+										</p>
+									</div>
+								</div>
+								<hr>
+								<% });%>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<%- include("partials/footer.ejs") %>

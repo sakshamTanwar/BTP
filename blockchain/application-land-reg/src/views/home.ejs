@@ -1,75 +1,40 @@
-<html>
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<%- include("partials/header.ejs", { title: "Land Registration Department" }) %>
 
-        <!-- Bootstrap CSS -->
-        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-
-        <title><%= title %></title>
-    </head>
-    <body>
-        <div
-            class="d-flex align-items-center bg-light"
-            style="min-height: 100vh;"
-        >
-            <div class="container">
-                <% if (typeof alert != 'undefined') { %>
+    <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+        <div class="container">
+            <% if (typeof alert !='undefined' ) { %>
                 <div class="row justify-content-center m-3">
                     <div class="alert alert-success">
                         Data submitted successfully!
                     </div>
                 </div>
                 <% } %>
-                <div class="row justify-content-center m-3">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onclick="location.href = '/form/add'"
-                    >
-                        Add Land Record
-                    </button>
-                </div>
-                <div class="row justify-content-center m-3">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onclick="location.href = '/form/transfer'"
-                    >
-                        Transfer Land Ownership
-                    </button>
-                </div>
-                <div class="row justify-content-center m-3">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onclick="location.href = '/form/split'"
-                    >
-                        Split Land
-                    </button>
-                </div>
-                <div class="row justify-content-center m-3">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onclick="location.href = '/form/queryVillage'"
-                    >
-                        Query All Land Records in a Village
-                    </button>
-                </div>
-                <div class="row justify-content-center m-3">
-                    <button
-                        type="button"
-                        class="btn btn-primary"
-                        onclick="location.href = '/form/queryHistory'"
-                    >
-                        Query Ownership History
-                    </button>
-                </div>
-            </div>
+                    <div class="row justify-content-center m-3">
+                        <button type="button" class="btn btn-primary" onclick="location.href = '/form/add'">
+                            Add Land Record
+                        </button>
+                    </div>
+                    <div class="row justify-content-center m-3">
+                        <button type="button" class="btn btn-primary" onclick="location.href = '/form/transfer'">
+                            Transfer Land Ownership
+                        </button>
+                    </div>
+                    <div class="row justify-content-center m-3">
+                        <button type="button" class="btn btn-primary" onclick="location.href = '/form/split'">
+                            Split Land
+                        </button>
+                    </div>
+                    <div class="row justify-content-center m-3">
+                        <button type="button" class="btn btn-primary" onclick="location.href = '/form/queryVillage'">
+                            Query All Land Records in a Village
+                        </button>
+                    </div>
+                    <div class="row justify-content-center m-3">
+                        <button type="button" class="btn btn-primary" onclick="location.href = '/form/queryHistory'">
+                            Query Ownership History
+                        </button>
+                    </div>
         </div>
-        <script src="/jquery/jquery.min.js"></script>
-        <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-    </body>
-</html>
+    </div>
+
+<%- include("partials/footer.ejs") %>
