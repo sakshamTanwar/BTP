@@ -89,8 +89,9 @@ export class Land extends State {
         return this.owner;
     }
 
-    setOwner(owner: IOwner) {
+    setOwner(owner: IOwner, certificate: string) {
         this.owner = owner;
+        this.certificate = certificate;
     }
 
     static fromBuffer(buffer: Buffer) {

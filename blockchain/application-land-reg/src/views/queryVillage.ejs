@@ -1,0 +1,20 @@
+<%- include("partials/header.ejs", { title: "Query Village" }) %>
+
+    <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+        <div class="container">
+            <div class="d-flex justify-content-center">
+                <div class="col-md-6">
+                    <div class="card rounded-0 shadow">
+                        <div class="card-body">
+                            <h3>Query Village</h3>
+                            <%- include("partials/error.ejs") %>
+                                <form action="/form/queryVillage" method="POST">
+                                    <%- include("partials/land.ejs", { showKhasra: false }) %>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<%- include("partials/footer.ejs") %>
