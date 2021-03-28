@@ -5,6 +5,7 @@ import passport from 'passport';
 import passportInit from './setup/passport';
 import indexRouter from './routes/index';
 import landrecordRouter from './routes/landrecord';
+import paymentRouter from './routes/payment';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 import cors from 'cors';
@@ -34,6 +35,7 @@ app.use(passport.initialize());
 //Set Routes
 app.use('/', indexRouter);
 app.use('/landrecord', landrecordRouter);
+app.use('/payment', paymentRouter);
 
 //Error Handler Middleware
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
