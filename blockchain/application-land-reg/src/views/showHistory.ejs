@@ -1,0 +1,256 @@
+<%- include("partials/header.ejs", { title: "Land Ownership History" }) %>
+
+	<div class="d-flex bg-light" style="min-height: 100vh;">
+		<div class="container">
+			<div class="d-flex justify-content-center">
+				<div class="col-md-10">
+					<div class="card rounded-0 shadow">
+						<div class="card-body">
+							<h3>Land Ownership History</h3>
+							<hr>
+							<hr>
+							<% data.forEach(result=>{ %>
+								<h5>Land Information</h5>
+								<hr>
+								<div class="row">
+									<div class="col-4">
+										<b>Village: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].village%>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Sub-District: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].subDistrict %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>District: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].district %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>State: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].state %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Khasra No: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].khasraNo %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Area: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].area %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Certificate ID: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].certificate%>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Owner Khata No: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].owner.khataNo %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Owner Name: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].owner.name %>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Parent Land Key: </b>
+									</div>
+									<div class="col-8">
+										<p>
+											<%=result[0].parentLandKey||"NA"%>
+										</p>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Polygon Points: </b>
+									</div>
+									<div class="col-3">
+										<div class="row"><b>Latitude</b></div>
+										<%result[0].polygonPoints.forEach(point=>{%>
+											<div class="row">
+												<p>
+													<%=point.lat%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+									<div class="col-3">
+										<div class="row"><b>Longitude</b></div>
+										<%result[0].polygonPoints.forEach(point=>{%>
+											<div class="row">
+												<p>
+													<%=point.lon%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-4">
+										<b>Other Docs: </b>
+									</div>
+									<div class="col-8">
+										<%result[0].otherDocs.forEach(doc=>{%>
+											<div class="row">
+												<p>
+													<%=doc%>
+												</p>
+											</div>
+											<%})%>
+									</div>
+								</div>
+								<hr>
+								<h5>Transaction History</h5>
+								<hr>
+								<% if(result[1]){ %>
+									<% result[1].forEach(history=>{ %>
+										<div class="row">
+											<div class="col-4">
+												<b>New Owner Khata No: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%= history.Record.newOwner.khataNo%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>New Owner Name: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%= history.Record.newOwner.name%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Prev Owner Khata No: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%= history.Record.prevOwner.khataNo%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Prev Owner Name: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%= history.Record.prevOwner.name%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Price: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%=history.Record.price%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Timestamp: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%=history.Record.timestamp%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Certificate ID: </b>
+											</div>
+											<div class="col-8">
+												<p>
+													<%=history.Record.certificate%>
+												</p>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-4">
+												<b>Other Docs: </b>
+											</div>
+											<div class="col-8">
+												<%history.Record.otherDocs.forEach(doc=>{%>
+													<div class="row">
+														<p>
+															<%=doc%>
+														</p>
+													</div>
+													<%})%>
+											</div>
+										</div>
+										<hr>
+										<% }) %>
+											<%}%>
+												<hr>
+												<hr>
+												<% });%>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<%- include("partials/footer.ejs") %>
+
+			

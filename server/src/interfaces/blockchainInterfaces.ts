@@ -14,22 +14,20 @@ export interface ILandRecord {
     subDistrict: string;
     district: string;
     state: string;
-    landID: string;
     polygonPoints: Array<IPoint>;
     area: Number;
     owner: IOwner;
     parentLandLastTxnID: string | null;
+    certificate: string;
 }
 
 export interface ILandTransfer {
-    txnID: string;
     price: Number;
     timestamp: Number;
     landKey: string;
     prevOwner: IOwner;
     newOwner: IOwner;
-    lastTxnID: string;
-    landRecordTxnID: string;
+    certificate: string;
 }
 
 export interface IOwnershipHistory {

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+        <title>Verify Certificate</title>
+    </head>
+    <body>
+        <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+            <div class="container" >
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card rounded-0 shadow">
+                            <div class="card-body">
+                                <h3>Download Certificate</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
+                                <form action="/" method="POST">
+                                    <div class="form-group">
+                                        <label for="khasraNo">Khasra Number: </label>
+                                        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number" pattern="[0-9]+(\/[0-9]+)*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="village">Village:</label>
+                                        <input required type="text" name="village" class="form-control" id="village" aria-describedby="emailHelp" placeholder="Enter Village" pattern="[a-zA-Z][a-zA-Z ]*">
+                                        <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="subDistrict">Sub-District: </label>
+                                        <input required type="text" name="subDistrict" class="form-control" id="subDistrict" aria-describedby="emailHelp" placeholder="Enter Sub-District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="district">District: </label>
+                                        <input required type="text" name="district" class="form-control" id="district" aria-describedby="emailHelp" placeholder="Enter District" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State: </label>
+                                        <input required type="text" name="state" class="form-control" id="state" placeholder="Enter state" pattern="[a-zA-Z][a-zA-Z ]*">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hash">IPFS Location Hash: </label>
+                                        <input required type="text" name="hash" class="form-control" id="hash" placeholder="Enter Hash">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="hashType">Select record type: </label>
+                                        <select required id="hashType" name="hashType" class="form-select">
+                                            <option selected value="LAND">Land Record</option>
+                                            <option value="TRANSACTION">Land Transfer Record</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="/jquery/jquery.min.js"></script>
+                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+            </div>
+    </body>
+</html>

@@ -37,11 +37,28 @@ export class LandContract extends Contract {
         area: string,
         khataNo: string,
         ownerName: string,
+        certificate: string,
+        otherDocs: string,
     ) {
+        let landKey = Land.makeKey([
+            state,
+            district,
+            subDistrict,
+            village,
+            khasraNo,
+        ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        if (land) {
+            throw Error('Land already exists');
+        }
+
         let owner: IOwner = { khataNo: Number(khataNo), name: ownerName };
+        let othDocs: Array<string> = JSON.parse(otherDocs);
         let pts = JSON.parse(polygonPoints);
         pts = pts.points;
-        let land: Land = Land.createInstance(
+        land = Land.createInstance(
             khasraNo,
             village,
             subDistrict,
@@ -50,6 +67,8 @@ export class LandContract extends Contract {
             pts,
             Number(area),
             owner,
+            certificate,
+            othDocs,
         );
 
         await ctx.landList.addLand(land);
@@ -70,6 +89,9 @@ export class LandContract extends Contract {
         newOwnerName: string,
         price: string,
         transferDateTime: string,
+        certificate: string,
+        landRecordCertificate: string,
+        otherDocs: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -98,13 +120,16 @@ export class LandContract extends Contract {
             name: newOwnerName,
         };
 
-        land.setOwner(newOwner);
+        land.setOwner(newOwner, landRecordCertificate);
+        let othDocs: Array<string> = JSON.parse(otherDocs);
         let landTransfer: LandTransfer = LandTransfer.createInstance(
             land.getKey(),
             Number(price),
             Number(transferDateTime),
             currentOwner,
             newOwner,
+            certificate,
+            othDocs,
         );
 
         await ctx.landList.updateLand(land);
@@ -122,9 +147,13 @@ export class LandContract extends Contract {
         newKhasraNoA: string,
         newPolygonPointsA: string,
         areaA: string,
+        certificateA: string,
+        otherDocsA: string,
         newKhasraNoB: string,
         newPolygonPointsB: string,
         areaB: string,
+        certificateB: string,
+        otherDocsB: string,
     ) {
         let landKey = Land.makeKey([
             state,
@@ -143,6 +172,7 @@ export class LandContract extends Contract {
         land.setExpired();
 
         let ptsA = JSON.parse(newPolygonPointsA);
+        let othDocsA: Array<string> = JSON.parse(otherDocsA);
         let landA: Land = Land.createInstance(
             newKhasraNoA,
             village,
@@ -152,10 +182,13 @@ export class LandContract extends Contract {
             ptsA,
             Number(areaA),
             land.getOwner(),
+            certificateA,
+            othDocsA,
             landKey,
         );
 
         let ptsB = JSON.parse(newPolygonPointsB);
+        let othDocsB: Array<string> = JSON.parse(otherDocsB);
         let landB: Land = Land.createInstance(
             newKhasraNoB,
             village,
@@ -165,6 +198,8 @@ export class LandContract extends Contract {
             ptsB,
             Number(areaB),
             land.getOwner(),
+            certificateB,
+            othDocsB,
             landKey,
         );
 
@@ -196,6 +231,10 @@ export class LandContract extends Contract {
 
         let land: Land = await ctx.landList.getLand(landKey);
 
+        if (!land) {
+            throw Error('Land does not exist');
+        }
+
         while (true) {
             let result = await queryLandTransfer.getAssetHistory(
                 land.getKhasraNo(),
@@ -225,12 +264,60 @@ export class LandContract extends Contract {
         state: string,
     ) {
         let query = new QueryUtils(ctx, LANDLIST);
-        let results = await query.getAllRecordsByPartialKey([
+        let results;
+        if (!village || village.length === 0) {
+            results = await query.getAllRecordsByPartialKey([
+                state,
+                district,
+                subDistrict,
+            ]);
+        } else {
+            results = await query.getAllRecordsByPartialKey([
+                state,
+                district,
+                subDistrict,
+                village,
+            ]);
+        }
+        console.log(results);
+        return JSON.stringify(results);
+    }
+
+    async getLandRecord(
+        ctx: LandContext,
+        khasraNo: string,
+        village: string,
+        subDistrict: string,
+        district: string,
+        state: string,
+    ) {
+        let landKey = Land.makeKey([
             state,
             district,
             subDistrict,
             village,
+            khasraNo,
         ]);
+
+        let land: Land = await ctx.landList.getLand(landKey);
+
+        return JSON.stringify(land);
+    }
+
+    async getLandByCertificate(ctx: LandContext, certificate: string) {
+        let query = new QueryUtils(ctx, LANDLIST);
+        let results = await query.getRecordByQueryObject({
+            certificate: certificate,
+        });
+        console.log(results);
+        return JSON.stringify(results);
+    }
+
+    async getTransactionByCertificate(ctx: LandContext, certificate: string) {
+        let query = new QueryUtils(ctx, TRANSFERLIST);
+        let results = await query.getRecordByQueryObject({
+            certificate: certificate,
+        });
         console.log(results);
         return JSON.stringify(results);
     }
