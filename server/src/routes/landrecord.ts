@@ -35,6 +35,7 @@ router.get(
                     subDistrict: record.subDistrict,
                     district: record.district,
                     state: record.state,
+                    points: record.polygonPoints
                 },
             });
         } catch (err) {
