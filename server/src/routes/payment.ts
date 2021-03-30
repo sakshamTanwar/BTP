@@ -114,6 +114,9 @@ router.get(
                 orderDetails.land_district,
                 orderDetails.land_state,
             );
+            res.json({
+                success: true,
+            });
         } catch (err) {
             next(err);
         }
