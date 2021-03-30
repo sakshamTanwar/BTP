@@ -30,6 +30,7 @@ router.get(
 
             res.json({
                 order_id: orderDetails.id,
+                amount: orderDetails.amount,
             });
         } catch (err) {
             next(err);
@@ -91,6 +92,7 @@ router.get(
             !razorpay_signature
         ) {
             res.status(400).send('Invalid Data');
+            return;
         }
 
         try {
@@ -100,11 +102,7 @@ router.get(
                 razorpay_payment_id as string,
                 razorpay_signature as string,
             );
-        } catch (err) {
-            next(err);
-        }
 
-        try {
             const orderDetails = await PaymentHandler.getOrderDetails(
                 order_id as string,
             );

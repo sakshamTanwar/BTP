@@ -10,7 +10,7 @@ export class PaymentHandler {
         key_secret: process.env.RZRPAY_KEY_SECRET,
     });
 
-    private static paymentAmount = 0;
+    private static paymentAmount = 100;
     private static currency = 'INR';
 
     public static async generateOrder(
@@ -52,7 +52,7 @@ export class PaymentHandler {
             crypto
                 .createHmac('sha256', process.env.RZRPAY_KEY_SECRET)
                 .update(order_id + '|' + razorpay_payment_id)
-                .digest('hex') !== razorpay_signature
+                .digest('hex') === razorpay_signature
         );
     }
 
