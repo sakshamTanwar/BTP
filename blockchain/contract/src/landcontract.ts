@@ -256,7 +256,7 @@ export class LandContract extends Contract {
         return JSON.stringify(results);
     }
 
-    async getAllRecordsInVillage(
+    async getRecords(
         ctx: LandContext,
         village: string,
         subDistrict: string,
@@ -265,7 +265,9 @@ export class LandContract extends Contract {
     ) {
         let query = new QueryUtils(ctx, LANDLIST);
         let results;
-        if (!village || village.length === 0) {
+        if (!subDistrict || subDistrict.length === 0) {
+            results = await query.getAllRecordsByPartialKey([state, district]);
+        } else if (!village || village.length === 0) {
             results = await query.getAllRecordsByPartialKey([
                 state,
                 district,

@@ -5,8 +5,8 @@ import path from 'path';
 import addLandController from '../controllers/addLand';
 import transferLandController from '../controllers/transferLand';
 import splitLandController from '../controllers/splitLand';
-import queryVillageController from '../controllers/queryVillage';
 import queryHistoryController from '../controllers/queryHistory';
+import queryRecordsController from '../controllers/queryRecords';
 
 const router = express.Router();
 const upload = multer({ dest: path.join(process.cwd(), 'uploads') });
@@ -23,8 +23,8 @@ router.get('/split', (req, res, next) => {
     res.render('split.ejs');
 });
 
-router.get('/queryVillage', (req, res, next) => {
-    res.render('queryVillage.ejs');
+router.get('/queryRecords', (req, res, next) => {
+    res.render('queryRecords.ejs');
 });
 
 router.get('/queryHistory', (req, res, next) => {
@@ -80,14 +80,14 @@ router.post(
 );
 
 router.post(
-    '/queryVillage',
+    '/queryRecords',
     bodyParser.urlencoded({ extended: true }),
     async (req, res, next) => {
         try {
-            let records = await queryVillageController(req);
-            return res.render('showVillageRecords.ejs', { data: records });
+            let records = await queryRecordsController(req);
+            return res.render('showRecords.ejs', { data: records });
         } catch (err) {
-            res.render('add.ejs', { errorMsg: err.message });
+            res.render('queryRecords.ejs', { errorMsg: err.message });
         }
     },
 );
@@ -100,7 +100,7 @@ router.post(
             let records = await queryHistoryController(req);
             return res.render('showHistory.ejs', { data: records });
         } catch (err) {
-            res.render('add.ejs', { errorMsg: err.message });
+            res.render('queryHistory.ejs', { errorMsg: err.message });
         }
     },
 );

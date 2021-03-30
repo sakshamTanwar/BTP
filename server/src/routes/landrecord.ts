@@ -8,6 +8,7 @@ import { enrollUser } from '../blockchain/enrollUser';
 import passport from 'passport';
 import { EmailHandler } from '../services/emailHandler';
 import { IRequest, IResponse, INext } from '../interfaces/httpinterfaces';
+import { IResolvedCoordInfo } from '../interfaces/coordResolverInterfaces';
 
 var router = express.Router();
 
@@ -22,8 +23,10 @@ router.get(
                 path.join(__dirname, '..', 'views', 'landrecord.html'),
             );
         console.log(`Lat=${lat} and lon=${lon}`);
+        let resolvedInfo = await resolveCoords(lat, lon);
+
+        //Check all village records
         try {
-            let resolvedInfo = await resolveCoords(lat, lon);
             let record = await LandRecordExtractor.extractLandRecordFromBL(
                 resolvedInfo,
             );
@@ -35,7 +38,59 @@ router.get(
                     subDistrict: record.subDistrict,
                     district: record.district,
                     state: record.state,
-                    points: record.polygonPoints
+                    points: record.polygonPoints,
+                },
+            });
+        } catch (err) {
+            console.log(
+                'Unable to find record in village, checking sub-district records',
+            );
+        }
+
+        //Check all subdistrict records
+        try {
+            let record = await LandRecordExtractor.extractLandRecordFromBL({
+                village: '',
+                subDistrict: resolvedInfo.subDistrict,
+                district: resolvedInfo.district,
+                state: resolvedInfo.state,
+            } as IResolvedCoordInfo);
+
+            res.json({
+                success: true,
+                data: {
+                    khasra: record.khasraNo,
+                    village: record.village,
+                    subDistrict: record.subDistrict,
+                    district: record.district,
+                    state: record.state,
+                    points: record.polygonPoints,
+                },
+            });
+        } catch (err) {
+            console.log(
+                'Unable to find record in sub-district, checking district records',
+            );
+        }
+
+        //Check all district records
+        try {
+            let record = await LandRecordExtractor.extractLandRecordFromBL({
+                village: '',
+                subDistrict: '',
+                district: resolvedInfo.district,
+                state: resolvedInfo.state,
+            } as IResolvedCoordInfo);
+
+            res.json({
+                success: true,
+                data: {
+                    khasra: record.khasraNo,
+                    village: record.village,
+                    subDistrict: record.subDistrict,
+                    district: record.district,
+                    state: record.state,
+                    points: record.polygonPoints,
                 },
             });
         } catch (err) {

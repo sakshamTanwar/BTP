@@ -1,4 +1,4 @@
-<%- include("partials/header.ejs", { title: "Query Ownership History" }) %>
+<%- include("partials/header.ejs", { title: "Query Records" }) %>
 
 <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
     <div class="container">
@@ -6,11 +6,11 @@
             <div class="col-md-6">
                 <div class="card rounded-0 shadow">
                     <div class="card-body">
-                        <h3>Query Ownership History</h3>
+                        <h3>Query Village</h3>
                         <%- include("partials/error.ejs") %>
-                        <form action="/form/queryHistory" method="POST">
-                            <%- include("partials/land.ejs", { showKhasra: true,
-                            allowEmpty: false }) %>
+                        <form action="/form/queryRecords" method="POST">
+                            <%- include("partials/land.ejs", { showKhasra:
+                            false, allowEmpty: true }) %>
                             <button type="submit" class="btn btn-primary">
                                 Submit
                             </button>
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
+
+        <%- include("partials/footer.ejs") %>
     </div>
 </div>
-
-<%- include("partials/footer.ejs") %>

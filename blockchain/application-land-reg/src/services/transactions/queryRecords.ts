@@ -1,12 +1,12 @@
 import { submitTransaction } from './submitTransaction';
 
-export async function queryAllVillageRecords(
+export async function queryRecords(
     village: string,
     subDistrict: string,
     district: string,
     state: string,
 ) {
-    return await submitTransaction('getAllRecordsInVillage', [
+    return await submitTransaction('getRecords', [
         village,
         subDistrict,
         district,
