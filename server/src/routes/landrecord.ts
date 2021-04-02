@@ -105,6 +105,7 @@ router.get('/enrolluser', (_, res) => {
     });
 });
 
+
 router.get('/resolve', async (req, res) => {
     let { lat, lon } = req.query;
 
@@ -124,45 +125,45 @@ router.get('/resolve', async (req, res) => {
     });
 });
 
-router.get(
-    '/generate',
-    passport.authenticate('jwt', { session: false }),
-    (req: IRequest, res: IResponse, next: INext) => {
-        let { khasra, village, subDistrict, district, state } = req.query;
 
-        if (!khasra || !village || !subDistrict || !district || !state) {
-            return res.sendFile(
-                path.join(__dirname, '..', 'views', 'landrecord.html'),
+router.get('/generate', passport.authenticate('jwt', { session: false }), (req: IRequest, res: IResponse, next: INext) => {
+
+    let { khasra, village, subDistrict, district, state } = req.query;
+
+    if (!khasra || !village || !subDistrict || !district || !state) {
+        return res.sendFile(
+            path.join(__dirname, '..', 'views', 'landrecord.html'),
+        );
+    }
+
+    queryOwnershipHistory(
+        khasra as string,
+        village as string,
+        subDistrict as string,
+        district as string,
+        state as string,
+    )
+        .then(async records => {
+            let nKhasra = (khasra as string).replace(/\//g, '_');
+            let pdfPath = path.join(__dirname,'..','..','temp',`${nKhasra}_${village}.pdf`);
+            PDFGenerator.generatePDF(
+                records,
+                pdfPath
             );
-        }
+            console.log("PDF Generated");
+            return pdfPath;
+        })
+        .then(async pdfPath=>{
+            await EmailHandler.mailPdf(req.user.email, 'landRecord.pdf', pdfPath);
+            res.json({
+                success: true,
+                message: "Land record emailed succesfully."
+            })
+        })
+        .catch(err => {
+            next(err);
+        });
+});
 
-        queryOwnershipHistory(
-            khasra as string,
-            village as string,
-            subDistrict as string,
-            district as string,
-            state as string,
-        )
-            .then(async records => {
-                let nKhasra = (khasra as string).replace(/\//g, '_');
-                let pdfPath = path.join(
-                    __dirname,
-                    '..',
-                    '..',
-                    'temp',
-                    `${nKhasra}_${village}.pdf`,
-                );
-                PDFGenerator.generatePDF(records, pdfPath);
-                console.log('PDF Generated');
-                return pdfPath;
-            })
-            .then(pdfPath => {
-                EmailHandler.mailPdf(req.user.email, 'landRecord.pdf', pdfPath);
-            })
-            .catch(err => {
-                next(err);
-            });
-    },
-);
 
 export default router;
