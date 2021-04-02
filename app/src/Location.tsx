@@ -15,9 +15,9 @@ import React, { useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
-import Loading from './Loading'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
+import Loading from './Loading'
 
 const { width, height } = Dimensions.get('window')
 

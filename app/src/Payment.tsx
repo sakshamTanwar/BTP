@@ -3,10 +3,10 @@ import MapView, { LatLng, PROVIDER_GOOGLE, Polygon } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
-import Loading from './Loading'
 import RazorpayCheckout from 'react-native-razorpay'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useRoute } from '@react-navigation/native'
+import Loading from './Loading'
 
 const { width, height } = Dimensions.get('window')
 
@@ -74,7 +74,12 @@ const Payment = () => {
 
 	const processCheckout = async () => {
 		fetch(
-			`http://3.20.66.6:8080/payment/initiate?khasraNo=${data.khasra}&village=${data.village}&subDistrict=${data.subDistrict}&district=${data.district}&state=${data.state}`,
+			`http://3.20.66.6:8080/payment/initiate?
+			khasraNo=${data.khasra}&
+			village=${data.village}&
+			subDistrict=${data.subDistrict}&
+			district=${data.district}&
+			state=${data.state}`,
 			{
 				headers: {
 					Authorization: `Bearer ${JWT}`,
@@ -84,6 +89,7 @@ const Payment = () => {
 			.then((res) => res.json())
 			.then((data) => {
 				setIsPressed(true)
+				/*eslint-disable */
 				const options = {
 					key: 'rzp_test_LxNLqxDW2AdrOo',
 					amount: data.amount,
@@ -103,7 +109,11 @@ const Payment = () => {
 							razorpay_signature: string
 						}) => {
 							fetch(
-								`http://3.20.66.6:8080/payment/verify?order_id=${data.order_id}&razorpay_payment_id=${razorpay_payment_id}&razorpay_order_id=${razorpay_order_id}&razorpay_signature=${razorpay_signature}`,
+								`http://3.20.66.6:8080/payment/verify?
+								order_id=${data.order_id}&
+								razorpay_payment_id=${razorpay_payment_id}&
+								razorpay_order_id=${razorpay_order_id}&
+								razorpay_signature=${razorpay_signature}`,
 								{
 									headers: {
 										Authorization: `Bearer ${JWT}`,
@@ -123,6 +133,7 @@ const Payment = () => {
 						setIsPressed(false)
 						setIsFailure(true)
 					})
+				/*eslint-enable */
 			})
 			.catch((err) => {
 				if (Platform.OS === 'ios') {
