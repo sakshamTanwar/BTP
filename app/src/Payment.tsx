@@ -74,7 +74,7 @@ const Payment = () => {
 
 	const processCheckout = async () => {
 		fetch(
-			`http://3.20.66.6:8080/payment/initiate?
+			`http://34.122.11.191:8090/payment/initiate?
 			khasraNo=${data.khasra}&
 			village=${data.village}&
 			subDistrict=${data.subDistrict}&
@@ -109,7 +109,7 @@ const Payment = () => {
 							razorpay_signature: string
 						}) => {
 							fetch(
-								`http://3.20.66.6:8080/payment/verify?
+								`http://34.122.11.191:8090/payment/verify?
 								order_id=${data.order_id}&
 								razorpay_payment_id=${razorpay_payment_id}&
 								razorpay_order_id=${razorpay_order_id}&

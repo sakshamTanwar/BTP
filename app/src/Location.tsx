@@ -24,7 +24,7 @@ const { width, height } = Dimensions.get('window')
 const styles = StyleSheet.create({
 	mainContainer: {
 		width,
-		height,
+		height: height - 20,
 	},
 	map: {
 		...StyleSheet.absoluteFillObject,
@@ -170,7 +170,7 @@ const LocationComponent = () => {
 	const onButtonClick = () => {
 		setPressed(true)
 		const finalLocation: LatLng = location ? location : currentLocation
-		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`, {
+		fetch(`http://34.122.11.191:8090/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`, {
 			headers: {
 				Authorization: `Bearer ${JWT}`,
 			},
@@ -178,10 +178,10 @@ const LocationComponent = () => {
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.success) {
-					data.data.points = data.data.points.map((point: { lat: number; lon: number }) => {
+					data.data.points = data.data.points.map((point: { lat: string; lon: string }) => {
 						return {
-							latitude: point.lat,
-							longitude: point.lon,
+							latitude: parseFloat(point.lat),
+							longitude: parseFloat(point.lon),
 						}
 					})
 					const landData = {
@@ -211,7 +211,7 @@ const LocationComponent = () => {
 
 	return (
 		<View style={styles.mainContainer}>
-			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE}>
+			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE} showsUserLocation showsMyLocationButton>
 				<Marker
 					draggable
 					coordinate={location ? location : currentLocation}
