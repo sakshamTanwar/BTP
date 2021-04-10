@@ -13,6 +13,7 @@ import {
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
@@ -99,6 +100,7 @@ const hasLocationPermission = async () => {
 }
 
 const LocationComponent = () => {
+	const [JWT, setJWT] = useState('')
 	const [location, setLocation] = useState<LatLng>()
 	const [currentLocation, setCurrentLocation] = useState<LatLng>()
 	const [region, onRegionChange] = useState({
@@ -109,6 +111,13 @@ const LocationComponent = () => {
 	})
 	const [pressed, setPressed] = useState(false)
 	const navigation = useNavigation()
+
+	const getJWT = async () => {
+		const jwt = await AsyncStorage.getItem('userJWT')
+		if (jwt) {
+			setJWT(jwt)
+		}
+	}
 
 	const getLocation = async () => {
 		const hasPermission = await hasLocationPermission()
@@ -150,6 +159,7 @@ const LocationComponent = () => {
 	}
 
 	useEffect(() => {
+		getJWT()
 		getLocation()
 	}, [])
 
@@ -160,7 +170,11 @@ const LocationComponent = () => {
 	const onButtonClick = () => {
 		setPressed(true)
 		const finalLocation: LatLng = location ? location : currentLocation
-		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`)
+		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`, {
+			headers: {
+				Authorization: `Bearer ${JWT}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.success) {

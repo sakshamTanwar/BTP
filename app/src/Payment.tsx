@@ -1,8 +1,9 @@
-import { ActivityIndicator, Alert, Dimensions, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
+import { Alert, Dimensions, Platform, StyleSheet, Text, ToastAndroid, View } from 'react-native'
 import MapView, { LatLng, PROVIDER_GOOGLE, Polygon } from 'react-native-maps'
 import React, { useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
+import RazorpayCheckout from 'react-native-razorpay'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useRoute } from '@react-navigation/native'
 import Loading from './Loading'
@@ -58,11 +59,9 @@ interface Data {
 
 const Payment = () => {
 	const [JWT, setJWT] = useState('')
-	const [isPressed, setIsPressed] = useState<boolean>(false)
-	const [isProccessed, setIsProccessed] = useState<boolean>(false)
-	const [isPaymentSuccess, setIsPaymentSuccess] = useState<boolean>(false)
 	const [isSuccess, setIsSuccess] = useState<boolean>(false)
-	const [checking, setIsChecking] = useState<boolean>(false)
+	const [isFailure, setIsFailure] = useState<boolean>(false)
+	const [isPressed, setIsPressed] = useState<boolean>(false)
 	const route = useRoute()
 	const data = route.params as Data
 
@@ -71,6 +70,80 @@ const Payment = () => {
 		if (jwt) {
 			setJWT(jwt)
 		}
+	}
+
+	const processCheckout = async () => {
+		fetch(
+			`http://3.20.66.6:8080/payment/initiate?
+			khasraNo=${data.khasra}&
+			village=${data.village}&
+			subDistrict=${data.subDistrict}&
+			district=${data.district}&
+			state=${data.state}`,
+			{
+				headers: {
+					Authorization: `Bearer ${JWT}`,
+				},
+			},
+		)
+			.then((res) => res.json())
+			.then((data) => {
+				setIsPressed(true)
+				/*eslint-disable */
+				const options = {
+					key: 'rzp_test_LxNLqxDW2AdrOo',
+					amount: data.amount,
+					name: 'LRSP',
+					currency: 'INR',
+					order_id: data.order_id,
+				}
+				RazorpayCheckout.open(options)
+					.then(
+						({
+							razorpay_payment_id,
+							razorpay_order_id,
+							razorpay_signature,
+						}: {
+							razorpay_payment_id: string
+							razorpay_order_id: string
+							razorpay_signature: string
+						}) => {
+							fetch(
+								`http://3.20.66.6:8080/payment/verify?
+								order_id=${data.order_id}&
+								razorpay_payment_id=${razorpay_payment_id}&
+								razorpay_order_id=${razorpay_order_id}&
+								razorpay_signature=${razorpay_signature}`,
+								{
+									headers: {
+										Authorization: `Bearer ${JWT}`,
+									},
+								},
+							)
+							setIsSuccess(true)
+							setIsPressed(false)
+						},
+					)
+					.catch((err) => {
+						if (Platform.OS === 'ios') {
+							Alert.alert(JSON.stringify(err))
+						} else {
+							ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+						}
+						setIsPressed(false)
+						setIsFailure(true)
+					})
+				/*eslint-enable */
+			})
+			.catch((err) => {
+				if (Platform.OS === 'ios') {
+					Alert.alert(JSON.stringify(err))
+				} else {
+					ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
+				}
+				setIsPressed(false)
+				setIsFailure(true)
+			})
 	}
 
 	useEffect(() => {
@@ -89,90 +162,10 @@ const Payment = () => {
 		)
 	}
 
-	if (isPressed && isProccessed) {
-		if (checking) {
-			setTimeout(() => {
-				setIsChecking(false)
-			}, 1000)
-		} else {
-			if (isPaymentSuccess) {
-				fetch(
-					'http://3.20.66.6:8080/landrecord/generate?' +
-						new URLSearchParams({
-							khasra: data.khasra,
-							village: data.village,
-							subDistrict: data.subDistrict,
-							district: data.district,
-							state: data.state,
-						}),
-					{
-						headers: {
-							Authorization: `Bearer ${JWT}`,
-						},
-					},
-				)
-					.then((res) => res.json())
-					.then((res) => {
-						if (res.success) {
-							setIsSuccess(true)
-						} else {
-							if (Platform.OS === 'ios') {
-								Alert.alert(JSON.stringify(res))
-							} else {
-								ToastAndroid.show(JSON.stringify(res), ToastAndroid.LONG)
-							}
-							setIsSuccess(false)
-						}
-					})
-					.catch((err) => {
-						console.log(err)
-						if (Platform.OS === 'ios') {
-							Alert.alert(JSON.stringify(err))
-						} else {
-							ToastAndroid.show(JSON.stringify(err), ToastAndroid.LONG)
-						}
-					})
-			} else {
-				return (
-					<View style={{ justifyContent: 'center', alignItems: 'center', width, height }}>
-						<Text style={{ fontSize: 20 }}>Payment failed please try again</Text>
-					</View>
-				)
-			}
-		}
+	if (isFailure) {
 		return (
 			<View style={{ justifyContent: 'center', alignItems: 'center', width, height }}>
-				<ActivityIndicator color="black" size="large" />
-				<Text style={{ fontSize: 20 }}>Confirming your payment status</Text>
-			</View>
-		)
-	}
-
-	if (isPressed) {
-		return (
-			<View style={{ width, height, justifyContent: 'center', alignItems: 'center' }}>
-				<View style={{ justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-					<TouchableOpacity
-						style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]}
-						onPress={() => {
-							setIsProccessed(true)
-							setIsPaymentSuccess(true)
-							setIsChecking(true)
-						}}>
-						<Text style={[styles.label, { color: '#fff' }]}>Payment Success</Text>
-					</TouchableOpacity>
-				</View>
-				<View style={{ justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-					<TouchableOpacity
-						style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]}
-						onPress={() => {
-							setIsProccessed(true)
-							setIsPaymentSuccess(false)
-							setIsChecking(true)
-						}}>
-						<Text style={[styles.label, { color: '#fff' }]}>Payment Failed</Text>
-					</TouchableOpacity>
-				</View>
+				<Text style={{ fontSize: 20 }}>Payment failed, please try again</Text>
 			</View>
 		)
 	}
@@ -188,7 +181,6 @@ const Payment = () => {
 						longitudeDelta: 0.002,
 					}}
 					provider={PROVIDER_GOOGLE}>
-					{/* <Marker coordinate={data.location} /> */}
 					<Polygon coordinates={data.points} strokeColor="rgba(44, 185, 176, 0.2)" fillColor="rgba(44, 185, 176, 0.2)" />
 				</MapView>
 			</View>
@@ -201,8 +193,8 @@ const Payment = () => {
 			</View>
 			<View style={{ justifyContent: 'center', alignItems: 'center', padding: 20 }}>
 				<TouchableOpacity
-					style={[styles.containerTouchableOpacity, { backgroundColor: '#2CB9B0' }]}
-					onPress={() => setIsPressed(true)}>
+					style={[styles.containerTouchableOpacity, { backgroundColor: isPressed ? 'rgba(12, 13, 52, 0.05)' : '#2CB9B0' }]}
+					onPress={isPressed ? () => true : processCheckout}>
 					<Text style={[styles.label, { color: '#fff' }]}>Continue with Payment</Text>
 				</TouchableOpacity>
 			</View>
