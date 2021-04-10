@@ -38,6 +38,7 @@ function generatePDF(land: ILand, savePath: PathLike) {
 
 function getDocDefinition(land: ILand): TDocumentDefinitions {
     return {
+        footer: 'Digitally Signed by Land Registration Department',
         content: [
             {
                 text: 'Land Record',

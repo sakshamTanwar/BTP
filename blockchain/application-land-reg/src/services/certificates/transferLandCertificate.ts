@@ -37,6 +37,7 @@ function generatePDF(landTransfer: any, savePath: PathLike) {
 
 function getDocDefinition(landTransfer: any): TDocumentDefinitions {
     return {
+        footer: 'Digitally Signed by Land Registration Department',
         content: [
             {
                 text: 'Land Transfer Record',
