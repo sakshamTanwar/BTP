@@ -74,6 +74,33 @@ export class PDFGenerator {
         ];
     }
 
+    private static getGenesisTxnRow(
+        landRecord: ILandRecord,
+        ownerName: string,
+    ) {
+        let row = [];
+        row.push('0');
+
+        row.push({
+            layout: 'noBorders',
+            table: {
+                headerRows: 0,
+                widths: ['*', '*'],
+                body: [
+                    [
+                        this.getTextWithBoldHeading(
+                            'Khasra No :- ',
+                            landRecord.khasraNo,
+                        ),
+                        this.getTextWithBoldHeading('Owner :- ', ownerName),
+                    ],
+                ],
+            },
+        });
+
+        return row;
+    }
+
     static generatePDF(history: Array<IOwnershipHistory>, saveFile: PathLike) {
         const fonts = {
             Roboto: {
@@ -100,6 +127,24 @@ export class PDFGenerator {
             });
             transactions.push(...record.transferHistory);
         });
+
+        transactions.reverse();
+
+        let genesisOwnerName = '';
+
+        if (history[history.length - 1].transferHistory.length === 0) {
+            genesisOwnerName = history[history.length - 1].land.owner.name;
+        } else {
+            genesisOwnerName =
+                history[history.length - 1].transferHistory[0].prevOwner.name;
+        }
+
+        rows.push(
+            this.getGenesisTxnRow(
+                history[history.length - 1].land,
+                genesisOwnerName,
+            ),
+        );
 
         for (let i = 0; i < transactions.length; i++) {
             rows.push(this.getTableRowFromTxn(transactions[i], i + 1));
