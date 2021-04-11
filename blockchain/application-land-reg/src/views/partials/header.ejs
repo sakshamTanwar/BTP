@@ -9,3 +9,6 @@
         <title><%= title %></title>
     </head>
     <body>
+        <% if (typeof show_navbar != 'undefined' && show_navbar) { %>
+            <%- include("navbar.ejs") %>
+        <% } %>
