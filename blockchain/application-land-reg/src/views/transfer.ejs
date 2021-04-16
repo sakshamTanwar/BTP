@@ -13,29 +13,29 @@
                                 <div class="form-group">
                                     <label for="currentKhataNo">Current Khata Number:</label>
                                     <input required type="number" name="currentKhataNo" class="form-control"
-                                        id="currentKhataNo" placeholder="Enter Current Khata number">
+                                        id="currentKhataNo" placeholder="Enter Current Khata number" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.currentKhataNo %> <% } %>">
                                 </div>
                                 <div class="form-group">
                                     <label for="currentOwnerName">Current Owner Name:</label>
                                     <input required type="text" name="currentOwnerName" class="form-control"
                                         id="currentOwnerName" placeholder="Enter Current Owner Name"
-                                        pattern="[a-zA-Z][a-zA-Z ]*">
+                                        pattern="[a-zA-Z][a-zA-Z ]*" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.currentOwnerName %> <% } %>">
                                 </div>
                                 <div class="form-group">
                                     <label for="newKhataNo">New Khata Number:</label>
                                     <input required type="number" name="newKhataNo" class="form-control"
-                                        id="newKhataNo" placeholder="Enter New Khata Number">
+                                        id="newKhataNo" placeholder="Enter New Khata Number" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.newKhataNo %> <% } %>">
                                 </div>
                                 <div class="form-group">
                                     <label for="newOwnerName">New Owner Name:</label>
                                     <input required type="text" name="newOwnerName" class="form-control"
                                         id="newOwnerName" placeholder="Enter New Owner Name"
-                                        pattern="[a-zA-Z][a-zA-Z ]*">
+                                        pattern="[a-zA-Z][a-zA-Z ]*" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.newOwnerName %> <% } %>">
                                 </div>
                                 <div class="form-group">
                                     <label for="price">Price:</label>
                                     <input required type="number" name="price" class="form-control" id="price"
-                                        placeholder="Enter Price">
+                                        placeholder="Enter Price" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.price %> <% } %>">
                                 </div>
                                 <div class="form-group">
                                     <label for="date">Date:</label>

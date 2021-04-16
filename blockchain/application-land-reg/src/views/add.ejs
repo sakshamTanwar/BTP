@@ -24,18 +24,18 @@
                                     <div class="form-group">
                                         <label for="area">Land Area:</label>
                                         <input required type="number" min="0.000001" step="0.000001" name="area"
-                                            class="form-control" id="area" placeholder="Enter land area">
+                                            class="form-control" id="area" placeholder="Enter land area" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.area %> <% } %> ">
                                     </div>
                                     <div class="form-group">
                                         <label for="khataNo">Khata Number:</label>
                                         <input required type="number" name="khataNo" class="form-control"
-                                            id="khataNo" placeholder="Enter Khata number of owner">
+                                            id="khataNo" placeholder="Enter Khata number of owner" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.khataNo %> <% } %>">
                                     </div>
                                     <div class="form-group">
                                         <label for="ownerName">Owner Name:</label>
                                         <input required type="text" name="ownerName" class="form-control"
                                             id="ownerName" placeholder="Enter owner name"
-                                            pattern="[a-zA-Z][a-zA-Z ]*">
+                                            pattern="[a-zA-Z][a-zA-Z ]*" value="<% if(typeof errorMsg != 'undefined') { %> <%= data.ownerName %> <% } %>">
                                     </div>
                                     <!-- <div class="form-group">
                                         <label for="certificate">Certificate:</label>
