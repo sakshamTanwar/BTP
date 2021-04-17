@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { queryRecords } from '../services/transactions/queryRecords';
+import { nameRe } from './constants';
 
 function isDataValid(
     village: any,
@@ -7,8 +8,6 @@ function isDataValid(
     district: any,
     state: any,
 ) {
-    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
-
     if (!nameRe.test(district) || !nameRe.test(state)) return false;
 
     if (subDistrict.length !== 0 && !nameRe.test(subDistrict)) return false;
