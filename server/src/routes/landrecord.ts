@@ -97,6 +97,34 @@ router.get(
                 },
             });
         } catch (err) {
+            console.log(
+                'Unable to find record in district, checking state records',
+            );
+        }
+
+        //Check all district records
+        try {
+            let record = await LandRecordExtractor.extractLandRecordFromBL({
+                village: '',
+                subDistrict: '',
+                district: '',
+                state: resolvedInfo.state,
+                country: resolvedInfo.country,
+                point: resolvedInfo.point,
+            });
+
+            res.json({
+                success: true,
+                data: {
+                    khasra: record.khasraNo,
+                    village: record.village,
+                    subDistrict: record.subDistrict,
+                    district: record.district,
+                    state: record.state,
+                    points: record.polygonPoints,
+                },
+            });
+        } catch (err) {
             next(err);
         }
     },
