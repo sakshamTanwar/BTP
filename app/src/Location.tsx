@@ -2,6 +2,7 @@ import {
 	ActivityIndicator,
 	Alert,
 	Dimensions,
+	Image,
 	Linking,
 	PermissionsAndroid,
 	Platform,
@@ -11,7 +12,7 @@ import {
 	View,
 } from 'react-native'
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import React, { useEffect, useState } from 'react'
+import React, { createRef, useEffect, useRef, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
@@ -24,7 +25,7 @@ const { width, height } = Dimensions.get('window')
 const styles = StyleSheet.create({
 	mainContainer: {
 		width,
-		height: height - 20,
+		height,
 	},
 	map: {
 		...StyleSheet.absoluteFillObject,
@@ -111,6 +112,8 @@ const LocationComponent = () => {
 	})
 	const [pressed, setPressed] = useState(false)
 	const navigation = useNavigation()
+	const map = createRef()
+	const marker = createRef()
 
 	const getJWT = async () => {
 		const jwt = await AsyncStorage.getItem('userJWT')
@@ -211,15 +214,47 @@ const LocationComponent = () => {
 
 	return (
 		<View style={styles.mainContainer}>
-			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE} showsUserLocation showsMyLocationButton>
+			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE} showsUserLocation ref={map}>
 				<Marker
 					draggable
 					coordinate={location ? location : currentLocation}
+					ref={marker}
 					onDragEnd={(e) => {
 						setLocation(e.nativeEvent.coordinate)
 					}}
 				/>
 			</MapView>
+			<View
+				style={{
+					position: 'absolute',
+					top: height * 0.875 - 55,
+					left: width - 55,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}>
+				<TouchableWithoutFeedback
+					onPress={() => {
+						marker.current.animateMarkerToCoordinate(currentLocation)
+						map.current.animateToRegion(
+							{
+								latitude: currentLocation.latitude,
+								longitude: currentLocation.longitude,
+								latitudeDelta: 0.001,
+								longitudeDelta: 0.001,
+							},
+							500,
+						)
+						setLocation(currentLocation)
+					}}>
+					<Image
+						source={require('./images/mylocation.png')}
+						style={{
+							width: 50,
+							height: 50,
+						}}
+					/>
+				</TouchableWithoutFeedback>
+			</View>
 			<View
 				style={{
 					position: 'absolute',
