@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import RazorpayCheckout from 'react-native-razorpay'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
 import { useRoute } from '@react-navigation/native'
 import Loading from './Loading'
 
@@ -171,7 +171,7 @@ const Payment = () => {
 	}
 
 	return (
-		<View style={styles.mainContainer}>
+		<ScrollView style={styles.mainContainer}>
 			<View style={styles.container}>
 				<MapView
 					style={styles.map}
@@ -198,7 +198,7 @@ const Payment = () => {
 					<Text style={[styles.label, { color: '#fff' }]}>Continue with Payment</Text>
 				</TouchableOpacity>
 			</View>
-		</View>
+		</ScrollView>
 	)
 }
 
