@@ -1,0 +1,27 @@
+<%- include("partials/header.ejs", { title: "Other Docs", show_navbar: true }) %>
+
+        <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
+            <div class="container" >
+                <div class="d-flex justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card rounded-0 shadow">
+                            <div class="card-body">
+                                <h3>Download Document</h3>
+                                <% if (typeof errorMsg != 'undefined') { %>
+                                    <div class="alert alert-danger">
+                                        <%= errorMsg %>
+                                    </div>
+                                <% } %>
+                                <form action="/otherdocs" method="POST">
+                                    <div class="form-group">
+                                        <label for="hash">Document IPFS Hash: </label>
+                                        <input required type="text" name="hash" class="form-control" id="hash" placeholder="Enter Hash">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+<%- include("partials/footer.ejs") %>
