@@ -12,7 +12,7 @@ import {
 	View,
 } from 'react-native'
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import React, { createRef, useEffect, useRef, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 
 import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
