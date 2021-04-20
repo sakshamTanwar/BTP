@@ -19,6 +19,7 @@ export interface ILandRecord {
     owner: IOwner;
     parentLandLastTxnID: string | null;
     certificate: string;
+    otherDocs: Array<string>;
 }
 
 export interface ILandTransfer {
@@ -28,6 +29,7 @@ export interface ILandTransfer {
     prevOwner: IOwner;
     newOwner: IOwner;
     certificate: string;
+    otherDocs: Array<string>;
 }
 
 export interface IOwnershipHistory {
