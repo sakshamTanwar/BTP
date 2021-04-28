@@ -266,7 +266,7 @@ export class LandContract extends Contract {
         let query = new QueryUtils(ctx, LANDLIST);
         let results;
         if (!district || district.length === 0) {
-            results = query.getAllRecordsByPartialKey([state]);
+            results = await query.getAllRecordsByPartialKey([state]);
         } else if (!subDistrict || subDistrict.length === 0) {
             results = await query.getAllRecordsByPartialKey([state, district]);
         } else if (!village || village.length === 0) {
