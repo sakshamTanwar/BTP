@@ -2,6 +2,7 @@ import {
 	ActivityIndicator,
 	Alert,
 	Dimensions,
+	Image,
 	Linking,
 	PermissionsAndroid,
 	Platform,
@@ -11,8 +12,9 @@ import {
 	View,
 } from 'react-native'
 import MapView, { LatLng, Marker, PROVIDER_GOOGLE } from 'react-native-maps'
-import React, { useEffect, useState } from 'react'
+import React, { createRef, useEffect, useState } from 'react'
 
+import AsyncStorage from '@react-native-community/async-storage'
 import Geolocation from 'react-native-geolocation-service'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
@@ -99,6 +101,7 @@ const hasLocationPermission = async () => {
 }
 
 const LocationComponent = () => {
+	const [JWT, setJWT] = useState('')
 	const [location, setLocation] = useState<LatLng>()
 	const [currentLocation, setCurrentLocation] = useState<LatLng>()
 	const [region, onRegionChange] = useState({
@@ -109,6 +112,15 @@ const LocationComponent = () => {
 	})
 	const [pressed, setPressed] = useState(false)
 	const navigation = useNavigation()
+	const map = createRef()
+	const marker = createRef()
+
+	const getJWT = async () => {
+		const jwt = await AsyncStorage.getItem('userJWT')
+		if (jwt) {
+			setJWT(jwt)
+		}
+	}
 
 	const getLocation = async () => {
 		const hasPermission = await hasLocationPermission()
@@ -150,6 +162,7 @@ const LocationComponent = () => {
 	}
 
 	useEffect(() => {
+		getJWT()
 		getLocation()
 	}, [])
 
@@ -160,14 +173,18 @@ const LocationComponent = () => {
 	const onButtonClick = () => {
 		setPressed(true)
 		const finalLocation: LatLng = location ? location : currentLocation
-		fetch(`http://3.20.66.6:8080/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`)
+		fetch(`http://34.122.11.191:8090/landrecord?lat=${finalLocation.latitude}&lon=${finalLocation.longitude}`, {
+			headers: {
+				Authorization: `Bearer ${JWT}`,
+			},
+		})
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.success) {
-					data.data.points = data.data.points.map((point: { lat: number; lon: number }) => {
+					data.data.points = data.data.points.map((point: { lat: string; lon: string }) => {
 						return {
-							latitude: point.lat,
-							longitude: point.lon,
+							latitude: parseFloat(point.lat),
+							longitude: parseFloat(point.lon),
 						}
 					})
 					const landData = {
@@ -197,15 +214,47 @@ const LocationComponent = () => {
 
 	return (
 		<View style={styles.mainContainer}>
-			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE}>
+			<MapView style={styles.map} initialRegion={region} provider={PROVIDER_GOOGLE} showsUserLocation ref={map}>
 				<Marker
 					draggable
 					coordinate={location ? location : currentLocation}
+					ref={marker}
 					onDragEnd={(e) => {
 						setLocation(e.nativeEvent.coordinate)
 					}}
 				/>
 			</MapView>
+			<View
+				style={{
+					position: 'absolute',
+					top: height * 0.875 - 55,
+					left: width - 55,
+					alignItems: 'center',
+					justifyContent: 'center',
+				}}>
+				<TouchableWithoutFeedback
+					onPress={() => {
+						marker.current.animateMarkerToCoordinate(currentLocation)
+						map.current.animateToRegion(
+							{
+								latitude: currentLocation.latitude,
+								longitude: currentLocation.longitude,
+								latitudeDelta: 0.001,
+								longitudeDelta: 0.001,
+							},
+							500,
+						)
+						setLocation(currentLocation)
+					}}>
+					<Image
+						source={require('./images/mylocation.png')}
+						style={{
+							width: 50,
+							height: 50,
+						}}
+					/>
+				</TouchableWithoutFeedback>
+			</View>
 			<View
 				style={{
 					position: 'absolute',

@@ -1,7 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { DbConnection } from './setup/db';
+import passport from 'passport';
+import passportInit from './setup/passport';
 import path from 'path';
 import formRouter from './routes/forms';
 import indexRouter from './routes/index';
+import session from 'express-session'
+import { isAuth } from './utils/auth'
 
 if (!process.env.CERT) {
     throw Error(
@@ -15,11 +20,21 @@ if (!process.env.IPFS_CLUSTER) {
     );
 }
 
+DbConnection.connect();
+passportInit(passport);
+
 const app = express();
 const port = process.env.port || 8080;
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(session({
+    secret: "SESSION_KEY",
+    cookie: { maxAge: 1000*60*60/4 }   // session expires after 15 minutes
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(
     '/bootstrap',
@@ -37,7 +52,7 @@ app.use(
 );
 
 app.use('/', indexRouter);
-app.use('/form', formRouter);
+app.use('/form', isAuth, formRouter);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     let statusCode = err.statusCode || 500;
     let errorCode = err.error || 'server_err';

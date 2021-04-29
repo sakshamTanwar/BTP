@@ -5,6 +5,7 @@ import { queryLand } from '../services/transactions/queryLand';
 import path from 'path';
 import genCertAddLand from '../services/certificates/addLandCertificate';
 import fs from 'fs';
+import { khasraRe, nameRe } from './constants';
 
 function isDataValid(
     khasraNo: any,
@@ -19,9 +20,6 @@ function isDataValid(
     numPtsB: any,
     areaB: any,
 ) {
-    const khasraRe = new RegExp('^[0-9]+(/[0-9]+)*$');
-    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
-
     if (
         !khasraRe.test(khasraNo) ||
         !nameRe.test(village) ||

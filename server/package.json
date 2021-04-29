@@ -17,6 +17,7 @@
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
@@ -24,6 +25,7 @@
     "fabric-network": "^2.2.5",
     "fs": "^0.0.1-security",
     "geolib": "^3.3.1",
+    "googleapis": "^67.1.1",
     "js-yaml": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^3.6.4",
@@ -35,6 +37,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pdfmake": "^0.1.70",
+    "razorpay": "^2.0.6",
     "validator": "^13.5.2"
   },
   "devDependencies": {
@@ -55,6 +58,7 @@
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "copyfiles": "^2.4.1",
+    "dotenv": "^8.2.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",

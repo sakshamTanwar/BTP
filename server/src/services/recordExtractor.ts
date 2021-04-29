@@ -1,12 +1,12 @@
 import { ILandRecord, ILandTransfer } from '../interfaces/blockchainInterfaces';
-import { queryAllVillageRecords } from '../blockchain/queryVillageRecords';
+import { queryRecords } from '../blockchain/queryRecords';
 import { IResolvedCoordInfo } from '../interfaces/coordResolverInterfaces';
 import { AppError } from '../utils/error';
 import { isPointInPolygon } from 'geolib';
 
 export class LandRecordExtractor {
     static async extractLandRecordFromBL(coordInfo: IResolvedCoordInfo) {
-        let records: Array<ILandRecord> = await queryAllVillageRecords(
+        let records: Array<ILandRecord> = await queryRecords(
             coordInfo.village,
             coordInfo.subDistrict,
             coordInfo.district,

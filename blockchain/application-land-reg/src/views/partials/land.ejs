@@ -2,7 +2,7 @@
     <label for="state">State: </label>
     <select required name="state" class="form-control" id="state">
         <option value="" selected hidden>Select State</option>
-    </select> 
+    </select>
 </div>
 <div class="form-group">
     <label for="district">District: </label>
@@ -10,6 +10,20 @@
         <option value="" selected hidden>Select District</option>
     </select>
 </div>
+<% if (allowEmpty) { %>
+<div class="form-group">
+    <label for="subDistrict">Sub-District: </label>
+    <select name="subDistrict" class="form-control" id="subDistrict">
+        <option value="" selected hidden>Select Sub-District</option>
+    </select>
+</div>
+<div class="form-group">
+    <label for="village">Village:</label>
+    <select name="village" class="form-control" id="village">
+        <option value="" selected hidden>Select Village</option>
+    </select>
+</div>
+<% } else { %>
 <div class="form-group">
     <label for="subDistrict">Sub-District: </label>
     <select required name="subDistrict" class="form-control" id="subDistrict">
@@ -22,9 +36,18 @@
         <option value="" selected hidden>Select Village</option>
     </select>
 </div>
-<% if (showKhasra) { %>
-    <div class="form-group">
-        <label for="khasraNo">Khasra Number: </label>
-        <input required type="text" name="khasraNo" class="form-control" id="khasraNo" aria-describedby="emailHelp" placeholder="Enter Khasra Number" pattern="[0-9]+(\/[0-9]+)*">
-    </div>
+<% } %> <% if (showKhasra) { %>
+<div class="form-group">
+    <label for="khasraNo">Khasra Number: </label>
+    <input
+        required
+        type="text"
+        name="khasraNo"
+        class="form-control"
+        id="khasraNo"
+        aria-describedby="emailHelp"
+        placeholder="Enter Khasra Number"
+        pattern="[0-9]+(\/[0-9]+)*"
+    />
+</div>
 <% } %>

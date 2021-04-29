@@ -1,14 +1,5 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
-        <title>Verify Certificate</title>
-    </head>
-    <body>
+<%- include("partials/header.ejs", { title: "Verify Certificate", show_navbar: true }) %>
+
         <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
             <div class="container" >
                 <div class="d-flex justify-content-center">
@@ -61,8 +52,4 @@
                     </div>
                 </div>
 
-                <script src="/jquery/jquery.min.js"></script>
-                <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-            </div>
-    </body>
-</html>
+<%- include("partials/footer.ejs") %>
