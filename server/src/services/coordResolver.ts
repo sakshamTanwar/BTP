@@ -1,49 +1,76 @@
-import fetch from 'node-fetch';
 import { IResolvedCoordInfo } from '../interfaces/coordResolverInterfaces';
+import fs from 'fs';
+import path from 'path';
+import { isPointInPolygon } from 'geolib';
 
+const locData = JSON.parse(
+    fs.readFileSync(path.join(process.cwd(), 'data.json'), 'utf8'),
+);
 
-let curr_key = 0;
-const api_keys = [
-    "nup6q766plnyngyj17u844z79fzjc45y",
-    "ch5m3gn4sefwzlglz3wzt6fsla3fqh22",
-    "ozvnhtiaknwgsxq2ysrdik3v27iphi45",
-];
-
-export function resolveCoords(lat:any, lon:any) : Promise<IResolvedCoordInfo>{
-    
-    // const api_key = "pk.f290968746686314a1c4977840cc0353";
-    // const api_url = `https://us1.locationiq.com/v1/reverse.php?key=${api_key}&lat=${lat}&lon=${lon}&format=json`;
-   
-    
-    const api_key = api_keys[curr_key];
-    curr_key = (curr_key+1)%api_keys.length;
-    console.log(api_key, curr_key);
-
-    const api_url = `https://apis.mapmyindia.com/advancedmaps/v1/${api_key}/rev_geocode?lat=${lat}&lng=${lon}`;
-
-    return new Promise((resolve, reject) => {
-        fetch(api_url)
-            .then(res => res.json())
-            .then(data => {
-                data = data.results[0];
-                let district = [
-                    ...data.district.matchAll(/(?<Name>[a-zA-Z]*) District/g),
-                ][0].groups.Name;
-                let resolvedInfo: IResolvedCoordInfo = {
-                    point: {
-                        lat: lat,
-                        lon: lon,
-                    },
-
-                    country: data.area.toLowerCase(),
-                    state: data.state.toLowerCase(),
-                    district: district.toLowerCase(),
-                    subDistrict: data.subDistrict.toLowerCase(),
-                    village: data.village.toLowerCase(),
-                };
-
-                return resolve(resolvedInfo);
-            })
-            .catch(err => reject(err));
+function findSubDivision(locationInfo: any, point: any) {
+    let result: any = {};
+    locationInfo.every((subD: any) => {
+        if (isPointInPolygon(point, subD.points)) {
+            result = subD;
+            return false;
+        }
+        return true;
     });
+    return result;
+}
+
+export function resolveCoords(lat: any, lon: any): Promise<IResolvedCoordInfo> {
+    const result: IResolvedCoordInfo = {
+        point: {
+            lat,
+            lon,
+        },
+        country: '',
+        state: '',
+        district: '',
+        subDistrict: '',
+        village: '',
+    };
+
+    result.country = locData.name;
+    result.point = {
+        lat,
+        lon,
+    };
+
+    console.log(locData);
+
+    const state = findSubDivision(locData.subDivision, result.point);
+
+    if (Object.keys(state).length === 0) {
+        return Promise.resolve(result);
+    }
+
+    result.state = state.name;
+
+    const district = findSubDivision(state.subDivision, result.point);
+
+    if (Object.keys(district).length === 0) {
+        return Promise.resolve(result);
+    }
+
+    result.district = district.name;
+
+    const subDistrict = findSubDivision(district.subDivision, result.point);
+
+    if (Object.keys(subDistrict).length === 0) {
+        return Promise.resolve(result);
+    }
+
+    result.subDistrict = subDistrict.name;
+
+    const village = findSubDivision(subDistrict.subDivision, result.point);
+
+    if (Object.keys(village).length === 0) {
+        return Promise.resolve(result);
+    }
+
+    result.village = village.name;
+
+    return Promise.resolve(result);
 }
