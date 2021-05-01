@@ -1,6 +1,6 @@
 
 # Land Records Retrieval System
-## # Overall Architecture
+## Overall Architecture
 ![](https://github.com/sakshamTanwar/BTP/blob/master/Design%20Artifacts/overall_architecture.jpeg)
 
 ## Modules
