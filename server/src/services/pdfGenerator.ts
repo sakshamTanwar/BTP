@@ -124,6 +124,14 @@ export class PDFGenerator {
         return row;
     }
 
+    static toTitleCase(phrase: string) {
+        return phrase
+            .toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+    }
+
     static generatePDF(history: Array<IOwnershipHistory>, saveFile: PathLike) {
         const fonts = {
             Roboto: {
@@ -144,16 +152,26 @@ export class PDFGenerator {
         let landRecord: ILandRecord = history[0].land;
         let transactions: Array<ILandTransfer> = [];
 
-        history.forEach((record: IOwnershipHistory) => {
-            record.transferHistory.sort((a, b) => {
-                return (b.timestamp as number) - (a.timestamp as number);
-            });
-            transactions.push(...record.transferHistory);
-        });
+        history.forEach(
+            (
+                record: IOwnershipHistory,
+                index: number,
+                arr: IOwnershipHistory[],
+            ) => {
+                record.transferHistory.sort((a, b) => {
+                    return (b.timestamp as number) - (a.timestamp as number);
+                });
+                transactions.push(...record.transferHistory);
+                record.transferHistory.reverse();
+                arr[index] = record;
+            },
+        );
 
         transactions.reverse();
 
         let genesisOwnerName = '';
+
+        console.log(JSON.stringify(history, null, 4));
 
         if (history[history.length - 1].transferHistory.length === 0) {
             genesisOwnerName = history[history.length - 1].land.owner.name;
@@ -179,15 +197,24 @@ export class PDFGenerator {
                     'Khasra No :- ',
                     landRecord.khasraNo,
                 ),
-                this.getTextWithBoldHeading('Village :- ', landRecord.village),
+                this.getTextWithBoldHeading(
+                    'Village :- ',
+                    this.toTitleCase(landRecord.village),
+                ),
                 this.getTextWithBoldHeading(
                     'Sub-District :- ',
-                    landRecord.subDistrict,
+                    this.toTitleCase(landRecord.subDistrict),
                 ),
             ],
             [
-                this.getTextWithBoldHeading('District :-', landRecord.district),
-                this.getTextWithBoldHeading('State :- ', landRecord.state),
+                this.getTextWithBoldHeading(
+                    'District :-',
+                    this.toTitleCase(landRecord.district),
+                ),
+                this.getTextWithBoldHeading(
+                    'State :- ',
+                    this.toTitleCase(landRecord.state),
+                ),
                 this.getTextWithBoldHeading(
                     'Area :- ',
                     `${landRecord.area} sq m`,

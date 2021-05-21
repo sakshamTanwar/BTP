@@ -17,7 +17,7 @@ export interface ILandRecord {
     polygonPoints: Array<IPoint>;
     area: Number;
     owner: IOwner;
-    parentLandLastTxnID: string | null;
+    parentLandKey: string | null;
     certificate: string;
     otherDocs: Array<string>;
 }
