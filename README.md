@@ -36,18 +36,21 @@ External Dependencies :-
 -   Reverse Geocoding Service :- The server is using MapMyIndia Reverse geocoding service. Provide the MapMyIndia API Key in the file src/services/coordResolver.ts    
 -   RazorPay Payment Integration :- RazorPay Payment service is used to initiate and verify the payment.
 
-Development Environment can be setup using the command :-
-`npm install`
-
-The project uses typescript and can be transpiled using the command :-
-`npm run build`
-
-Server can be started using the following command :-
-`node run start`
-
 Following environment variables are required by the server:
- - RZRPAY_KEY_ID
- - RZRPAY_KEY_SECRET
+ - RZRPAY_KEY_ID :- ID provided by RazorPay.
+ - RZRPAY_KEY_SECRET :- Secret provided by RazorPay.
+
+Development Environment can be setup using the commands :-
+```bash
+# Install required NodeJs modules
+npm install
+
+# Transpile
+npm run build
+
+# Start server
+RZRPAY_KEY_ID=<razorpay_key_id> RZRPAY_KEY_SECRET=<razorpay_key_secret> node dist/main.js
+```
 
 ###  Smartphone Application
 Located in the app folder of the project repository, the application is built using React Native.
@@ -67,6 +70,39 @@ All the source code is under the src/ folder which consists of different screens
 
 The Login/Signup screens are used according to their names and after successful login/signup the router is redirected to the Location screen. On this screen the user can select GPS coordinates according to the marker placed on the map whereafter, the data for the GPS coordinates is requested from the server and sent to the Payment screen. On this screen the land plot is highlighted on the map and after clicking on the button the user is redirected to the razorpay payment gateway. Then according to the payment gateway response a success or failure page is displayed and on success a request is made to the server to send the land record history report as email.
 
+#### Android
+To build Android APK, Android Studio is required with the following installed along with it:-
+
+ - Android 10 (Q) SDK
+
+- Android SDK Platform 29
+
+- Android Virtual Device
+
+- If not already using Hyper-V: Performance (Intel ® HAXM)
+
+#### IOS
+To build iOS IPA, version 10 or a newer version of Xcode is required, which can be installed from the Mac App Store, and after installation, Xcode Command Line Tools needs to installed from the Xcode Preferences tab. Along with Xcode, Cocoapods needs to installed, a dependency manager for Swift and Objective-C Cocoa projects. It can be installed using the following commands :-
+```bash
+# Install cocoapods
+sudo gem install cocoapods
+
+# Install required NodeJS modules
+npm install
+
+# Start Metro Bundler
+npx react-native start
+
+# Build and run Android debug apk
+npx react-native run-android
+
+# Build and run iOS debug apk
+cd ios; pod install; cd ..; npx react-native run-ios
+
+# Build Android release apk
+cd android; ./gradlew assembleRelease
+```
+
 ## Land Registration Department
 ### Records Server
 Located in the blockchain/application-land-reg folder in the project repo.
@@ -80,36 +116,41 @@ This portal provides following functionalities :-
 
 During any write transaction to the blockchain, a digitally signed PDF is generated that acts as a certificate, to be used by the verification server, and is uploaded to the IPFS.
 
-Development Environment can be setup using the commands :-
-`npm install`
-
-The project uses typescript and can be transpiled using the command :-
-`npm run build`
-
-Server can be started using the following command :-
-`node dist/app.js`
-
 Records server requires the following environment variables :-
 -   CERT :- Path to P12 certificate file used to sign the PDF documents
 -   IPFS_CLUSTER :- Link to IPFS cluster node
+
+Development Environment can be setup using the commands :-
+```bash
+# Install required NodeJs modules
+npm install
+
+# Transpile
+npm run build
+
+# Start server
+CERT=<cert_path> IPFS_CLUSTER=<ipfs_cluster_link> node dist/app.js
+```
 
 ###  Verification Server
 Located in the verification folder in the project repo.
 This serves as a portal to obtain PDF documents for each digitally signed by the Land Registration Department. These PDF documents act as certificates that contain information regarding the land records and the land transactions.
 This portal provides a field to enter IPFS hash/CID of the certificate required by the user, the server then searches the blockchain to see whether that hash matches with the one in the blockchain, if yes, it then downloads the file from IPFS and signs it again.
 
-Development Environment can be setup using the commands :-
-`npm install`
-
-The project uses typescript and can be transpiled using the command :-
-`npm run build`
-
-Server can be started using the following command :-
-`node dist/app.js`
-
 Verification server requires the following environment variables :-
 -   CERT :- Path to P12 certificate file used to sign the PDF documents
 
+Development Environment can be setup using the commands :-
+```bash
+# Install required NodeJs modules
+npm install
+
+# Transpile
+npm run build
+
+# Start server
+CERT=<cert_path> node dist/app.js
+```
 ## Blockchain
 Smart contract and applications that interact with blockchain run on the test net using the commercial paper [example](https://hyperledger-fabric.readthedocs.io/en/latest/tutorial/commercial_paper.html) replacing the smart contract and applications with our implementations.
 One can follow the tutorial in the example linked and replace the smart contract with the implementation on the github repo for our project.
@@ -127,8 +168,14 @@ This requires two environment variables to be provided :-
 -   CLUSTER_SECRET :- Required to manage the private IPFS cluster
 
 These can be provided in a .env file in the same directory as the docker-compose.yml file.
-Make sure that the init.sh file can be executed, its permissions can be modified as:-
-`chmod 740 init.sh`
+Make sure that the init.sh file can be executed.
+```bash
+# Modify init.sh file permissions to allow execution
+chmod 740 init.sh
+
+# In local development environment, IPFS network can be started by using the command:-
+docker-compose up
+```
 
 
 ##  Payment System
