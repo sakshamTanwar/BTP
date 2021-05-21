@@ -12,9 +12,12 @@ import cors from 'cors';
 import path from 'path';
 import https from 'https';
 import fs from 'fs';
+import { enrollUser } from './blockchain/enrollUser';
+
 require('dotenv').config();
 passportInit(passport);
 
+enrollUser();
 const app = express();
 const port = 8080; // default port to listen
 

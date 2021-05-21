@@ -5,8 +5,9 @@ import passportInit from './setup/passport';
 import path from 'path';
 import formRouter from './routes/forms';
 import indexRouter from './routes/index';
-import session from 'express-session'
-import { isAuth } from './utils/auth'
+import session from 'express-session';
+import { isAuth } from './utils/auth';
+import { enrollUser } from './enrollUser';
 
 if (!process.env.CERT) {
     throw Error(
@@ -20,6 +21,8 @@ if (!process.env.IPFS_CLUSTER) {
     );
 }
 
+enrollUser();
+
 DbConnection.connect();
 passportInit(passport);
 
@@ -29,10 +32,12 @@ const port = process.env.port || 8080;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.use(session({
-    secret: "SESSION_KEY",
-    cookie: { maxAge: 1000*60*60/4 }   // session expires after 15 minutes
-}));
+app.use(
+    session({
+        secret: 'SESSION_KEY',
+        cookie: { maxAge: (1000 * 60 * 60) / 4 }, // session expires after 15 minutes
+    }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -46,10 +51,7 @@ app.use(
     '/jquery',
     express.static(path.join(__dirname, '../../../node_modules/jquery/dist')),
 );
-app.use(
-    '/static',
-    express.static(path.join(__dirname, './static/')),
-);
+app.use('/static', express.static(path.join(__dirname, './static/')));
 
 app.use('/', indexRouter);
 app.use('/form', isAuth, formRouter);
