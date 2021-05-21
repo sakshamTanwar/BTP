@@ -5,7 +5,7 @@
 
 ## Modules
 
--  **Land Records Service Provider** :- Allows users to get an ownership history of a particular land by providing GPS coordinates.
+-  **Land Records Retrieval Service** :- Allows users to get an ownership history of a particular land by providing GPS coordinates.
 -   **Records Server** :- Serves a web application that allows the Land Registration Department to enter land records.
 -   **Verification Server** :- Serves a web application that allows users to verify the land records and obtain certificates which are digitally signed by the Land Registration Department.
 -  **Blockchain** :- Used as an immutable database that stores all the land records.
@@ -16,16 +16,16 @@
 -   *blockchain/application-land-reg* - Contains code for records server
 -   *verification* - Contains code for verification server
 -   ipfs-cluster - Contains docker-compose file for setting up IPFS cluster
-- *server* - Contains code for LRSP server  
+- *server* - Contains code for LRRP server  
 -  *app* - Contains code for smartphone application
 
-##  Land Records Service Provider
+##  Land Records Retrieval Service
 ### Server
 Located in the server folder in the project repo.
 It is a Node server that interacts with the application to provide the requested land record to the user. It takes GPS coordinates from the application, resolves it and fetches the corresponding land record information from the Blockchain. The land record is mailed to the user once the user completes the payment. It supports HTTPS for secured interaction.
 
-Following are the HTTPS endpoints exposed by the LRSP server:
--   POST /signup: This endpoint is used to register a new user to the LRSP server.
+Following are the HTTPS endpoints exposed by the LRRS server:
+-   POST /signup: This endpoint is used to register a new user to the LRRS server.
 -   POST /login: This endpoint is used to get the JWT access token to access endpoints which require authentication. The JWT token expires in 1 hour.
  -   GET /landrecord: This endpoint is used to get the land information like Khasra No, etc. that corresponds to a particular GPS coordinate (represented by a pair of Latitude and Longitude).
 -   GET /payment/initiate: This endpoint is used to initiate a payment request.
