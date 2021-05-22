@@ -5,7 +5,7 @@ import { queryOwnershipHistory } from '../transactions/queryOwnershipHistory';
 
 async function verifyCertificate(req: Request){
 
-    const { 
+    let { 
         khasraNo, 
         village,
         subDistrict,
@@ -29,6 +29,11 @@ async function verifyCertificate(req: Request){
     ) {
         throw new Error('Invalid Data')
     }
+
+    village = village.toLowerCase();
+    subDistrict = subDistrict.toLowerCase();
+    district = district.toLowerCase();
+    state = state.toLowerCase();
     
     let certificate = '';
 
@@ -45,6 +50,10 @@ async function verifyCertificate(req: Request){
         if(!record){
             throw new Error("Record doesnot exist");
         }
+
+	if (record.expired) {
+	    throw new Error("Record is Expired");
+	}
 
         certificate = record.certificate;
     
@@ -64,6 +73,7 @@ async function verifyCertificate(req: Request){
         }
 
         for(const land of response){
+	    console.log(land)
             if(land[1]){
                 const result =land[1].filter((history: any) => history.Record.certificate==hash);
                 console.log("!!", result);
