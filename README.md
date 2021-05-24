@@ -1,7 +1,7 @@
 
 # Land Records Retrieval System
 
-This project is carried out as part of Bachelor Dissertation Project, from Jan 2021 to May 2021, as part of the BTech in Computer Science and Engineering program at IIT Indore. This project is a joint work between Naman Jain, Pranshu Maheshwari, Saksham Tanwar,  and our project guide Dr. Gourinath banda
+This project is carried out as part of Bachelor Dissertation Project, from Jan 2021 to May 2021, as part of the BTech in Computer Science and Engineering program at IIT Indore. This project is a joint work between Naman Jain, Pranshu Maheshwari, Saksham Tanwar and our project guide Dr. Gourinath banda
 
 ## Overall Architecture
 ![](https://github.com/sakshamTanwar/BTP/blob/master/Design%20Artifacts/overall_architecture.jpeg)
@@ -39,7 +39,10 @@ External Dependencies :-
 -   Reverse Geocoding Service :- The server is using MapMyIndia Reverse geocoding service. Provide the MapMyIndia API Key in the file src/services/coordResolver.ts    
 -   RazorPay Payment Integration :- RazorPay Payment service is used to initiate and verify the payment.
 
-Following environment variables are required by the server:
+Following environment variables are required by the server, which can be provided in the `.env` file in the same directory:
+ - CLIENT_ID :- Client ID for OAuth Authentication, needed for sending Emails.
+ - CLIENT_SECRET :- Client Secret for OAuth Authentication, needed for sending Emails.
+ - REFRESH_TOKEN :- Refresh Token for OAuth Authentication, needed for sending Emails.
  - RZRPAY_KEY_ID :- ID provided by RazorPay.
  - RZRPAY_KEY_SECRET :- Secret provided by RazorPay.
 
@@ -52,7 +55,7 @@ npm install
 npm run build
 
 # Start server
-RZRPAY_KEY_ID=<razorpay_key_id> RZRPAY_KEY_SECRET=<razorpay_key_secret> node dist/main.js
+node dist/main.js
 ```
 
 ###  Smartphone Application
