@@ -1,5 +1,8 @@
 
 # Land Records Retrieval System
+
+This project is carried out as part of Bachelor Dissertation Project, from Jan 2021 to May 2021, as part of the BTech in Computer Science and Engineering program at IIT Indore. This project is a joint work between Naman Jain, Pranshu Maheshwari, Saksham Tanwar,  and our project guide Dr. Gourinath banda
+
 ## Overall Architecture
 ![](https://github.com/sakshamTanwar/BTP/blob/master/Design%20Artifacts/overall_architecture.jpeg)
 
