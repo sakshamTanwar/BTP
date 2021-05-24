@@ -8,8 +8,9 @@ function isDataValid(
     district: any,
     state: any,
 ) {
-    if (!nameRe.test(district) || !nameRe.test(state)) return false;
+    if (!nameRe.test(state)) return false;
 
+    if (district.length !== 0 && !nameRe.test(district)) return false;
     if (subDistrict.length !== 0 && !nameRe.test(subDistrict)) return false;
     if (village.length !== 0 && !nameRe.test(village)) return false;
 

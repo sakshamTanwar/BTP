@@ -42,7 +42,8 @@ router.post(
                 title: 'Land Registration Department',
             });
         } catch (err) {
-            res.render('add.ejs', { errorMsg: err.message });
+            console.log(req.body);
+            res.render('add.ejs', { errorMsg: err.message, data: req.body });
         }
     },
 );
@@ -58,7 +59,10 @@ router.post(
                 title: 'Land Registration Department',
             });
         } catch (err) {
-            res.render('add.ejs', { errorMsg: err.message });
+            res.render('transfer.ejs', {
+                errorMsg: err.message,
+                data: req.body,
+            });
         }
     },
 );
@@ -74,7 +78,7 @@ router.post(
                 title: 'Land Registration Department',
             });
         } catch (err) {
-            res.render('add.ejs', { errorMsg: err.message });
+            res.render('split.ejs', { errorMsg: err.message, data: req.body });
         }
     },
 );
@@ -87,7 +91,10 @@ router.post(
             let records = await queryRecordsController(req);
             return res.render('showRecords.ejs', { data: records });
         } catch (err) {
-            res.render('queryRecords.ejs', { errorMsg: err.message });
+            res.render('queryRecords.ejs', {
+                errorMsg: err.message,
+                data: req.body,
+            });
         }
     },
 );
@@ -100,7 +107,10 @@ router.post(
             let records = await queryHistoryController(req);
             return res.render('showHistory.ejs', { data: records });
         } catch (err) {
-            res.render('queryHistory.ejs', { errorMsg: err.message });
+            res.render('queryHistory.ejs', {
+                errorMsg: err.message,
+                data: req.body,
+            });
         }
     },
 );
