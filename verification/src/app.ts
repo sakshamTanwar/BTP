@@ -1,4 +1,7 @@
 import path from 'path'
+import http from 'http'
+import https from 'https'
+import fs from 'fs'
 import express, { NextFunction, Request, Response } from 'express'
 
 import { LandingRouter } from './routes'
@@ -8,7 +11,8 @@ if (!process.env.CERT) {
 }
 
 const app = express()
-const port = process.env.port || 3030
+const port = 3030
+const httpsPort = 3031
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
@@ -31,6 +35,14 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 	})
 })
 
-app.listen(port, () => {
-	console.log(`server started at http://localhost:${port}`)
-})
+console.log(`Creating HTTP server at port ${port}`)
+let server = http.createServer(app).listen(port)
+
+if (process.env.SSLKEY && process.env.SSLCERT) {
+	let sslOptions = {
+		key: fs.readFileSync(process.env.SSLKEY),
+		cert: fs.readFileSync(process.env.SSLCERT),
+	}
+	console.log(`Creating HTTPS server at port ${httpsPort}`)
+	let serverHttps = https.createServer(sslOptions, app).listen(httpsPort)
+}

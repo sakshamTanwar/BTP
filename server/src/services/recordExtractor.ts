@@ -7,15 +7,17 @@ import { isPointInPolygon } from 'geolib';
 export class LandRecordExtractor {
     static async extractLandRecordFromBL(coordInfo: IResolvedCoordInfo) {
         let records: Array<ILandRecord> = await queryRecords(
-            coordInfo.village,
-            coordInfo.subDistrict,
-            coordInfo.district,
-            coordInfo.state,
+            coordInfo.village.toLowerCase(),
+            coordInfo.subDistrict.toLowerCase(),
+            coordInfo.district.toLowerCase(),
+            coordInfo.state.toLowerCase(),
         );
 
         let landRecord: ILandRecord | null = null;
 
         for (const record of records) {
+		console.log(record);
+	    if (record.expired) continue;
             if (isPointInPolygon(coordInfo.point, record.polygonPoints)) {
                 landRecord = record;
                 break;
