@@ -63,66 +63,77 @@
                                         <label for="certificate">Certificate:</label>
                                         <input required type="file" name="certificate" class="form-control" id="certificate">
                                     </div> -->
-                                    <div class="form-group">
-                                        <label for="otherDocsA">Other Docs A:</label>
-                                        <input type="file" name="otherDocsA" class="form-control" id="otherDocsA"
-                                            multiple>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="otherDocsB">Other Docs B:</label>
-                                        <input type="file" name="otherDocsB" class="form-control" id="otherDocsB"
-                                            multiple>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                        </div>
+                            <div class="form-group">
+                                <label for="otherDocsA">Other Docs A:</label>
+                                <input
+                                    type="file"
+                                    name="otherDocsA"
+                                    class="form-control"
+                                    id="otherDocsA"
+                                    multiple
+                                />
+                            </div>
+                            <div class="form-group">
+                                <label for="otherDocsB">Other Docs B:</label>
+                                <input
+                                    type="file"
+                                    name="otherDocsB"
+                                    class="form-control"
+                                    id="otherDocsB"
+                                    multiple
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function addPointFields(numPts, containerID, lat, lon) {
-            var container = document.getElementById(containerID);
-            while (container.hasChildNodes()) {
-                container.removeChild(container.lastChild);
-            }
-            for (let i = 0; i < numPts; i++) {
-                var fieldSet = document.createElement("fieldset");
-                fieldSet.className = "form-group";
-
-                var rowDiv = document.createElement("div");
-                rowDiv.className = "row";
-
-                var legend = document.createElement("legend");
-                legend.className = "col-form-label col-sm-2";
-                legend.innerHTML = "Point " + (i + 1).toString();
-                rowDiv.appendChild(legend);
-
-                var latInput = document.createElement("input");
-                latInput.type = "text";
-                latInput.name = lat + i;
-                latInput.id = lat + i;
-                latInput.className = "form-control col-sm-4"
-                latInput.placeholder = "Enter Latitude";
-                latInput.required = true;
-                rowDiv.appendChild(latInput);
-
-                var lonInput = document.createElement("input");
-                lonInput.type = "text";
-                lonInput.name = lon + i;
-                lonInput.id = lon + i;
-                lonInput.className = "form-control ml-2 col-sm-4"
-                lonInput.placeholder = "Enter Longitude";
-                lonInput.required = true;
-                rowDiv.appendChild(lonInput);
-
-                fieldSet.appendChild(rowDiv);
-                container.appendChild(fieldSet);
-            }
-
+<script>
+    function addPointFields(numPts, containerID, lat, lon) {
+        var container = document.getElementById(containerID);
+        while (container.hasChildNodes()) {
+            container.removeChild(container.lastChild);
         }
-    </script>
+        for (let i = 0; i < numPts; i++) {
+            var fieldSet = document.createElement('fieldset');
+            fieldSet.className = 'form-group';
+
+            var rowDiv = document.createElement('div');
+            rowDiv.className = 'row';
+
+            var legend = document.createElement('legend');
+            legend.className = 'col-form-label col-sm-2';
+            legend.innerHTML = 'Point ' + (i + 1).toString();
+            rowDiv.appendChild(legend);
+
+            var latInput = document.createElement('input');
+            latInput.type = 'text';
+            latInput.name = lat + i;
+            latInput.id = lat + i;
+            latInput.className = 'form-control col-sm-4';
+            latInput.placeholder = 'Enter Latitude';
+            latInput.required = true;
+            rowDiv.appendChild(latInput);
+
+            var lonInput = document.createElement('input');
+            lonInput.type = 'text';
+            lonInput.name = lon + i;
+            lonInput.id = lon + i;
+            lonInput.className = 'form-control ml-2 col-sm-4';
+            lonInput.placeholder = 'Enter Longitude';
+            lonInput.required = true;
+            rowDiv.appendChild(lonInput);
+
+            fieldSet.appendChild(rowDiv);
+            container.appendChild(fieldSet);
+        }
+    }
+</script>
 
 <%- include("partials/footer.ejs") %>

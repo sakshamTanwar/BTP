@@ -9,6 +9,13 @@
     </select> 
 </div>
 <div class="form-group">
+    <label for="village">Village:</label>
+    <select name="village" class="form-control" id="village">
+        <option value="" selected hidden>Select Village</option>
+    </select>
+</div>
+<% } else { %>
+<div class="form-group">
     <label for="district">District: </label>
     <select required name="district" class="form-control" id="district">
         <% if (typeof errorMsg != 'undefined') { %>

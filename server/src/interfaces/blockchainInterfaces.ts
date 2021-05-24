@@ -17,8 +17,10 @@ export interface ILandRecord {
     polygonPoints: Array<IPoint>;
     area: Number;
     owner: IOwner;
-    parentLandLastTxnID: string | null;
+    parentLandKey: string | null;
     certificate: string;
+    otherDocs: Array<string>;
+    expired: Boolean;
 }
 
 export interface ILandTransfer {
@@ -28,6 +30,7 @@ export interface ILandTransfer {
     prevOwner: IOwner;
     newOwner: IOwner;
     certificate: string;
+    otherDocs: Array<string>;
 }
 
 export interface IOwnershipHistory {

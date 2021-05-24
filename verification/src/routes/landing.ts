@@ -19,17 +19,24 @@ router.use(
 	}),
 )
 
-router.get(`/`, (_, res) => {
-	res.render(`landing.ejs`)
+router.get('/', (req, res) => {
+	res.redirect('/certificate')
 })
 
-router.post(`/`, async (req, res, next) => {
-	try {
+router.get(`/certificate`, (_, res) => {
+	res.render(`certificate.ejs`)
+})
 
+router.get(`/otherdocs`, (_, res) => {
+	res.render(`otherdocs.ejs`)
+})
+
+router.post(`/certificate`, async (req, res, next) => {
+	try {
 		await verifyCertificate(req)
-        
-		const { hash } = req.body;	
-		const node = IpfsHttpClient()		
+
+		const { hash } = req.body
+		const node = IpfsHttpClient()
 		const chunks: Uint8Array[] = []
 
 		for await (const chunk of node.cat(new CID(hash))) {
@@ -42,9 +49,29 @@ router.post(`/`, async (req, res, next) => {
 		readStream.end(signedPdfBuffer)
 		res.set('Content-Type', 'application/pdf')
 		readStream.pipe(res)
-		
 	} catch (err) {
-		res.render('landing.ejs', { errorMsg: err.message })
+		res.render('certificate.ejs', { errorMsg: err.message })
+	}
+})
+
+router.post(`/otherdocs`, async (req, res, next) => {
+	try {
+		const { hash } = req.body
+		const node = IpfsHttpClient()
+		const chunks: Uint8Array[] = []
+
+		for await (const chunk of node.cat(new CID(hash))) {
+			chunks.push(chunk)
+		}
+
+		let pdfBuffer = Buffer.concat(chunks)
+		let signedPdfBuffer = signPDF(pdfBuffer, process.env.CERT)
+		const readStream = new stream.PassThrough()
+		readStream.end(signedPdfBuffer)
+		res.set('Content-Type', 'application/pdf')
+		readStream.pipe(res)
+	} catch (err) {
+		res.render('otherdocs.ejs', { errorMsg: err.message })
 	}
 })
 

@@ -22,6 +22,14 @@ export default async function generateCertificate(
     signPDF(savePath, p12Cert);
 }
 
+function toTitleCase(phrase: string) {
+    return phrase
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
 function generatePDF(landTransfer: any, savePath: PathLike) {
     let docDefinition: TDocumentDefinitions = getDocDefinition(landTransfer);
 
@@ -37,6 +45,7 @@ function generatePDF(landTransfer: any, savePath: PathLike) {
 
 function getDocDefinition(landTransfer: any): TDocumentDefinitions {
     return {
+        header: 'Digitally Signed by Land Registration Department',
         content: [
             {
                 text: 'Land Transfer Record',
@@ -58,7 +67,7 @@ function getDocDefinition(landTransfer: any): TDocumentDefinitions {
                         text: 'Village: ',
                         bold: true,
                     },
-                    landTransfer.village,
+                    toTitleCase(landTransfer.village),
                 ],
             },
             {
@@ -67,7 +76,7 @@ function getDocDefinition(landTransfer: any): TDocumentDefinitions {
                         text: 'Sub-District: ',
                         bold: true,
                     },
-                    landTransfer.subDistrict,
+                    toTitleCase(landTransfer.subDistrict),
                 ],
             },
             {
@@ -76,7 +85,7 @@ function getDocDefinition(landTransfer: any): TDocumentDefinitions {
                         text: 'District: ',
                         bold: true,
                     },
-                    landTransfer.district,
+                    toTitleCase(landTransfer.district),
                 ],
             },
             {
@@ -85,7 +94,7 @@ function getDocDefinition(landTransfer: any): TDocumentDefinitions {
                         text: 'State: ',
                         bold: true,
                     },
-                    landTransfer.state,
+                    toTitleCase(landTransfer.state),
                 ],
             },
             {

@@ -23,6 +23,14 @@ export default async function generateCertificate(
     signPDF(savePath, p12Cert);
 }
 
+function toTitleCase(phrase: string) {
+    return phrase
+        .toLowerCase()
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
 function generatePDF(land: ILand, savePath: PathLike) {
     let docDefinition: TDocumentDefinitions = getDocDefinition(land);
 
@@ -38,6 +46,7 @@ function generatePDF(land: ILand, savePath: PathLike) {
 
 function getDocDefinition(land: ILand): TDocumentDefinitions {
     return {
+        header: 'Digitally Signed by Land Registration Department',
         content: [
             {
                 text: 'Land Record',
@@ -59,7 +68,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'Village: ',
                         bold: true,
                     },
-                    land.village,
+                    toTitleCase(land.village),
                 ],
             },
             {
@@ -68,7 +77,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'Sub-District: ',
                         bold: true,
                     },
-                    land.subDistrict,
+                    toTitleCase(land.subDistrict),
                 ],
             },
             {
@@ -77,7 +86,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'District: ',
                         bold: true,
                     },
-                    land.district,
+                    toTitleCase(land.district),
                 ],
             },
             {
@@ -86,7 +95,7 @@ function getDocDefinition(land: ILand): TDocumentDefinitions {
                         text: 'State: ',
                         bold: true,
                     },
-                    land.state,
+                    toTitleCase(land.state),
                 ],
             },
             {

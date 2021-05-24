@@ -5,6 +5,7 @@ import { uploadFile } from '../services/ipfs/uploadFile';
 import genCertAddLand from '../services/certificates/addLandCertificate';
 import { ILand } from '../../../contract/src/land';
 import fs from 'fs';
+import { khasraRe, nameRe } from './constants';
 
 function isDataValid(
     khasraNo: any,
@@ -17,9 +18,6 @@ function isDataValid(
     khataNo: any,
     ownerName: any,
 ) {
-    const khasraRe = new RegExp('^[0-9]+(/[0-9]+)*$');
-    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
-
     if (
         !khasraRe.test(khasraNo) ||
         !nameRe.test(village) ||

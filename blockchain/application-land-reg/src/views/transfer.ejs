@@ -1,4 +1,4 @@
-<%- include("partials/header.ejs", { title: "Transfer Land" }) %>
+<%- include("partials/header.ejs", { title: "Transfer Land" , show_navbar: true }) %>
 
     <div class="d-flex align-items-center bg-light" style="min-height: 100vh;">
         <div class="container">
@@ -47,26 +47,33 @@
                                 <label for="certificate">Certificate:</label>
                                 <input required type="file" name="certificate" class="form-control" id="certificate">
                             </div> -->
-                                <div class="form-group">
-                                    <label for="otherDocs">Other Docs:</label>
-                                    <input type="file" name="otherDocs" class="form-control" id="otherDocs"
-                                        multiple>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </form>
-                        </div>
+                            <div class="form-group">
+                                <label for="otherDocs">Other Docs:</label>
+                                <input
+                                    type="file"
+                                    name="otherDocs"
+                                    class="form-control"
+                                    id="otherDocs"
+                                    multiple
+                                />
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                Submit
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        function updateDate() {
-            var dateVal = document.getElementById("date").valueAsNumber;
-            var container = document.getElementById("dateTime");
-            container.value = dateVal;
-        }
-    </script>
+<script>
+    function updateDate() {
+        var dateVal = document.getElementById('date').valueAsNumber;
+        var container = document.getElementById('dateTime');
+        container.value = dateVal;
+    }
+</script>
 
 <%- include("partials/footer.ejs") %>

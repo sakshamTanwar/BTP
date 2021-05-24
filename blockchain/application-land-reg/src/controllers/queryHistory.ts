@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { queryOwnershipHistory } from '../services/transactions/queryOwnershipHistory';
+import { khasraRe, nameRe } from './constants';
 
 function isDataValid(
     khasraNo: any,
@@ -8,9 +9,6 @@ function isDataValid(
     district: any,
     state: any,
 ) {
-    const khasraRe = new RegExp('^[0-9]+(/[0-9]+)*$');
-    const nameRe = new RegExp('^[a-zA-Z][a-zA-Z ]*$');
-
     if (
         !khasraRe.test(khasraNo) ||
         !nameRe.test(village) ||

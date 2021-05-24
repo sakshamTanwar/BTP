@@ -5,7 +5,7 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "yarn copy && tsc-watch --onSuccess \"node ./dist/app.js\"",
-		"copy": "copyfiles src/views/*.ejs dist/views -f",
+		"copy": "copyfiles -u 1 src/views/*.ejs src/views/partials/*.ejs dist/",
 		"build": "tsc && yarn copy",
 		"lint": "eslint ./src/ --ext .js,.jsx,.ts,.tsx"
 	},
