@@ -7,7 +7,7 @@ This project is carried out as part of Bachelor Dissertation Project, from Jan 2
 ![](https://github.com/sakshamTanwar/BTP/blob/master/Design%20Artifacts/overall_architecture.jpeg)
 
 ## Modules
-
+- **Smartphone Application** :- Provides a user interface for users to interact with where users can request land records for a particular land by marking the point on the map.
 -  **Land Records Retrieval Service** :- Allows users to get an ownership history of a particular land by providing GPS coordinates.
 -   **Records Server** :- Serves a web application that allows the Land Registration Department to enter land records.
 -   **Verification Server** :- Serves a web application that allows users to verify the land records and obtain certificates which are digitally signed by the Land Registration Department.
@@ -18,7 +18,7 @@ This project is carried out as part of Bachelor Dissertation Project, from Jan 2
 -   *blockchain/contract* - Contains code for smart contract
 -   *blockchain/application-land-reg* - Contains code for records server
 -   *verification* - Contains code for verification server
--   ipfs-cluster - Contains docker-compose file for setting up IPFS cluster
+-   *ipfs-cluster* - Contains docker-compose file for setting up IPFS cluster
 - *server* - Contains code for LRRP server  
 -  *app* - Contains code for smartphone application
 
