@@ -20,6 +20,7 @@ export interface ILandRecord {
     parentLandKey: string | null;
     certificate: string;
     otherDocs: Array<string>;
+    expired: Boolean;
 }
 
 export interface ILandTransfer {
